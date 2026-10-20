@@ -1,7 +1,7 @@
 import type { Driver } from "neo4j-driver";
-import type { Bibliography, Emergence, Entity, EntryLabel, HistoricalEvent, Idea, IdeaLink, ReviewRecord } from "../../src/content/schema.ts";
+import type { Bibliography, Emergence, Entity, EntryLabel, EventScope, HistoricalEvent, Idea, IdeaLink, ReviewRecord } from "../../src/content/schema.ts";
 import { compact, entryToProps } from "./mapping.ts";
-import { harvestStates, loadContent, putSource, replaceEmergences, replaceLinks, setHarvest, upsertEntity, type HarvestState } from "./repository.ts";
+import { eventScopes, harvestStates, loadContent, putSource, replaceEmergences, replaceLinks, setEventScope, setHarvest, upsertEntity, type HarvestState } from "./repository.ts";
 
 /**
  * A portable, diffable copy of the graph's content: the backup for the Docker
@@ -25,6 +25,8 @@ export interface Snapshot {
   timestamps: Record<string, { createdAt?: string; updatedAt?: string }>;
   /** Harvest bookkeeping per source key (optional: older snapshots have none). */
   harvests?: Record<string, HarvestState>;
+  /** Event scopes (see eventScopes), per event id (optional: older snapshots have none). */
+  scopes?: Record<string, { scope: EventScope; by: string; note?: string }>;
 }
 
 /** Version 1 had no events or emergences, and keyed reviews and INVOLVES by idea only. */
@@ -78,14 +80,14 @@ export async function exportSnapshot(driver: Driver): Promise<Snapshot> {
         (r) => [r.key, compact({ createdAt: r.createdAt, updatedAt: r.updatedAt })],
       ),
     ),
-    harvests: await (async () => {
+    ...(await (async () => {
       const session = driver.session();
       try {
-        return await session.executeRead((tx) => harvestStates(tx));
+        return await session.executeRead(async (tx) => ({ harvests: await harvestStates(tx), scopes: Object.fromEntries(await eventScopes(tx)) }));
       } finally {
         await session.close();
       }
-    })(),
+    })()),
     agentRuns: (await q(`MATCH (r:AgentRun) OPTIONAL MATCH (r)-[:ABOUT]->(t) RETURN r {.*, createdAt: toString(r.createdAt), aboutLabel: head(labels(t)), aboutKey: coalesce(t.id, t.key)} AS r ORDER BY r.createdAt`)).map((x) =>
       compact(x.r),
     ),
@@ -122,6 +124,7 @@ export async function restoreSnapshot(driver: Driver, input: Snapshot | Snapshot
       }
       const emergenceEvents = [...new Set(s.emergences.map((e) => e.event))];
       if (emergenceEvents.length) await replaceEmergences(tx, emergenceEvents, s.emergences);
+      for (const [id, x] of Object.entries(s.scopes ?? {})) await setEventScope(tx, id, x.scope, x.by, x.note);
       for (const e of s.entities) await upsertEntity(tx, e);
       for (const x of s.involves) {
         await tx.run(`MATCH (n:${x.label} {id: $id}), (e:Entity {id: $entity}) MERGE (n)-[r:INVOLVES {role: $role}]->(e) SET r.runId = $runId`, { ...x, runId: x.runId ?? null });
