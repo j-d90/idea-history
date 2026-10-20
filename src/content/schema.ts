@@ -322,16 +322,4 @@ interface Rendered {
   references: { key: string; html: string }[];
 }
 
-export type RenderedIdea = Omit<Idea, "body" | "sources" | "aliases"> &
-  Rendered & {
-    /** Links to earlier ideas. */
-    links: Pick<IdeaLink, "to" | "type" | "why" | "origin" | "status">[];
-    /** Events that show the idea emerging. */
-    emergesIn: Pick<Emergence, "event" | "stage" | "why" | "status">[];
-  };
-
-export type RenderedEvent = Omit<HistoricalEvent, "body" | "sources" | "aliases"> &
-  Rendered & {
-    /** Ideas this event shows emerging. */
-    ideas: Pick<Emergence, "idea" | "stage" | "why" | "status">[];
-  };
+export type RenderedEvent = Omit<HistoricalEvent, "body" | "sources" | "aliases"> & Rendered;

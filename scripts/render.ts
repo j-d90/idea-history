@@ -1,6 +1,6 @@
 import MarkdownIt from "markdown-it";
 import { CITATION, parseCitation, type Citation } from "../src/content/rules.ts";
-import type { Bibliography, Emergence, Entry, HistoricalEvent, Idea, IdeaLink, RenderedEvent, RenderedIdea, Source } from "../src/content/schema.ts";
+import type { Bibliography, Entry, HistoricalEvent, RenderedEvent, Source } from "../src/content/schema.ts";
 import { escapeHtml as esc, formatYear } from "../src/format.ts";
 
 // Raw HTML in content is escaped, and markdown-it refuses javascript: links.
@@ -110,21 +110,7 @@ function renderCommon(entry: Entry, anchor: string, bib: Bibliography) {
   };
 }
 
-export function renderIdea(idea: Idea, bib: Bibliography, links: IdeaLink[], emergences: Emergence[]): RenderedIdea {
-  const { body: _b, sources: _s, aliases: _a, ...rest } = idea;
-  return {
-    ...rest,
-    ...renderCommon(idea, anchorOf("Idea", idea.id), bib),
-    links: links.filter((l) => l.from === idea.id).map(({ to, type, why, origin, status }) => ({ to, type, why, origin, status })),
-    emergesIn: emergences.filter((e) => e.idea === idea.id).map(({ event, stage, why, status }) => ({ event, stage, why, status })),
-  };
-}
-
-export function renderEvent(event: HistoricalEvent, bib: Bibliography, emergences: Emergence[]): RenderedEvent {
+export function renderEvent(event: HistoricalEvent, bib: Bibliography): RenderedEvent {
   const { body: _b, sources: _s, aliases: _a, ...rest } = event;
-  return {
-    ...rest,
-    ...renderCommon(event, anchorOf("Event", event.id), bib),
-    ideas: emergences.filter((e) => e.event === event.id).map(({ idea, stage, why, status }) => ({ idea, stage, why, status })),
-  };
+  return { ...rest, ...renderCommon(event, anchorOf("Event", event.id), bib) };
 }

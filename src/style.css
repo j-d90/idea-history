@@ -165,7 +165,7 @@ a { color: inherit; text-decoration: none; }
 
 .stats {
   display: inline-grid;
-  grid-template-columns: repeat(5, auto);
+  grid-template-columns: repeat(3, auto);
   margin: 48px 0 0;
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -235,21 +235,6 @@ a { color: inherit; text-decoration: none; }
   border-color: var(--fg);
 }
 
-.cat-dot {
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--dot, var(--fg-faint));
-}
-.cat-technology { --dot: var(--cat-technology); }
-.cat-philosophy { --dot: var(--cat-philosophy); }
-.cat-religion { --dot: var(--cat-religion); }
-.cat-politics { --dot: var(--cat-politics); }
-.cat-science { --dot: var(--cat-science); }
-.cat-mathematics { --dot: var(--cat-mathematics); }
-.cat-economics { --dot: var(--cat-economics); }
-
 /* ---------- Timeline ---------- */
 
 .timeline {
@@ -312,13 +297,6 @@ a { color: inherit; text-decoration: none; }
   color: var(--fg-muted);
 }
 
-.idea {
-  display: grid;
-  grid-template-columns: var(--year-col) var(--node-col) 1fr;
-  align-items: start;
-  padding: 10px 0;
-}
-
 .idea-year {
   padding-top: 18px;
   padding-right: 4px;
@@ -329,30 +307,6 @@ a { color: inherit; text-decoration: none; }
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-
-.idea-node {
-  justify-self: center;
-  margin-top: 23px;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--bg);
-  border: 1.5px solid var(--border-strong);
-  transition: border-color 0.2s, background 0.2s;
-}
-
-.idea-card {
-  margin-left: 24px;
-  padding: 16px 20px 18px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  transition: border-color 0.2s, box-shadow 0.2s, background 0.6s;
-}
-
-.idea:hover .idea-card { border-color: var(--border-strong); }
-.idea:hover .idea-node { border-color: var(--fg); background: var(--fg); }
-.idea.is-flash .idea-card { background: var(--flash); border-color: var(--cat-technology); }
 
 /* Events: the observations ideas are identified from. Lighter than idea cards. */
 .event {
@@ -394,16 +348,7 @@ a { color: inherit; text-decoration: none; }
   font-size: 14px;
   color: var(--fg-muted);
 }
-.event .idea-links { margin-top: 8px; padding-top: 8px; }
-.event-dot {
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  border-radius: 1px;
-  background: var(--fg-faint);
-}
-.filter.is-active .event-dot { background: var(--bg); }
-.chip-event { font-variant-numeric: tabular-nums; }
+
 
 .idea-meta {
   display: flex;
@@ -448,40 +393,6 @@ a { color: inherit; text-decoration: none; }
   margin: 10px 0 0;
   color: var(--fg-muted);
 }
-
-.idea-links {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px dashed var(--border);
-}
-
-.idea-links-label {
-  margin-right: 4px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--fg-faint);
-}
-
-.chip {
-  padding: 2px 10px;
-  font-size: 12px;
-  color: var(--fg-muted);
-  background: var(--bg-subtle);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  transition: color 0.15s, border-color 0.15s;
-}
-.chip:hover { color: var(--fg); border-color: var(--border-strong); }
-.chip-seed { border-style: dashed; color: var(--fg-faint); }
-.chip-linker { border-style: dashed; }
-.chip-reviewed { border-color: color-mix(in srgb, var(--cat-science) 45%, var(--border)); }
-.idea-links + .idea-links { margin-top: 6px; padding-top: 0; border-top: 0; }
 
 .idea-details {
   margin-top: 12px;
@@ -582,15 +493,14 @@ a { color: inherit; text-decoration: none; }
   .timeline { padding: 32px 16px 48px; }
   .timeline::before { left: calc(16px + var(--node-col) / 2); }
   .era-header { padding-left: 16px; }
-  .idea, .event { grid-template-columns: var(--node-col) 1fr; grid-template-rows: auto auto; }
-  .idea-year, .event .idea-year {
+  .event { grid-template-columns: var(--node-col) 1fr; grid-template-rows: auto auto; }
+  .event .idea-year {
     grid-column: 2;
     grid-row: 1;
     padding: 0 0 4px 16px;
     text-align: left;
   }
-  .idea-node, .event-node { grid-column: 1; grid-row: 1 / span 2; margin-top: 4px; }
-  .idea-card { grid-column: 2; margin-left: 16px; }
+  .event-node { grid-column: 1; grid-row: 1 / span 2; margin-top: 4px; }
   .event-body { grid-column: 2; margin-left: 0; padding: 0 0 4px 16px; }
   .event .idea-meta { flex-wrap: wrap; row-gap: 2px; }
   .event-place { order: 3; flex-basis: 100%; }

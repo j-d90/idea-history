@@ -1,6 +1,6 @@
 # History of Ideas
 
-A visual, scrollable timeline of historical events and the ideas that emerged from them, from the invention of writing to the present. Events are the raw observations of history, gathered from sources; ideas are identified from them.
+A visual, scrollable timeline of historical events, from the invention of writing to the present, each quoting the sources it rests on. The timeline shows events only. The graph also holds ideas identified from those events, which aren't on the site for now.
 
 ## Getting started
 
@@ -28,14 +28,14 @@ Requires Node 23.6+ (scripts run TypeScript directly via Node's type stripping) 
 | `npm run link -- <idea>` | Linker agent: typed, evidenced links to earlier ideas |
 | `npm run review -- <id>` | Fact-checker agent: independent review of a sourced idea or event |
 | `npm run extract -- <source>` | Extractor agent: ideas, aliases and entities from one source |
-| `npm run pipeline` | What everything needs next, with cost estimates; `--run --budget <usd>` runs it |
+| `npm run pipeline` | What events need next, with cost estimates (`--ideas` adds idea work); `--run --budget <usd>` runs it |
 | `npm run check-tools` | Confirm the API accepts every agent's tool schemas |
 | `npm test`, `npm run typecheck` | Unit tests, TypeScript |
 | `npm run review-hash -- <id>`, `npm run pdftext -- <src>` | Content hash for reviews; read a PDF source |
 
 ## Stack
 
-- **Site:** Vite + TypeScript, no framework, plain CSS with design tokens and automatic light and dark mode. It's static; content is queried from Neo4j, validated with `zod` and rendered at build time.
+- **Site:** Vite + TypeScript, no framework, plain CSS with design tokens and automatic light and dark mode. It's static; events are queried from Neo4j, validated with `zod` (along with the rest of the graph) and rendered at build time.
 - **Content store:** Neo4j 2026.09 in Docker, with vector indexes over OpenAI `text-embedding-3-large` embeddings (512 dimensions).
 - **Agents:** the Anthropic API (Claude Sonnet 5.5 by default), with a shared harness that verifies every quoted excerpt against the documents the agent actually read.
 
@@ -96,7 +96,7 @@ lam-2010:
   #           accessed, consulted: false (metadata only), note
 ```
 
-**Emergences** (`EMERGES_IN`) connect an idea to the events that show it emerging, with a stage (earliest evidence, articulation, institutionalization or spread), a verified excerpt and a confidence. The interpreter agent proposes them; the site shows them as "Seen in" on ideas and "Ideas" on events.
+**Emergences** (`EMERGES_IN`) connect an idea to the events that show it emerging, with a stage (earliest evidence, articulation, institutionalization or spread), a verified excerpt and a confidence. The interpreter agent proposes them.
 
 **Links** between ideas (`BUILDS_ON`, `REACTS_AGAINST`, `PARALLELS`) are proposed by the linker agent with a verified excerpt as evidence. They point from the later idea to the earlier one. Links left from the original placeholder content are marked `seed` and shown as unverified.
 

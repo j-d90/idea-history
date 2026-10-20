@@ -2,8 +2,10 @@
 //   npm run pipeline -- [--from <year> --to <year> [--step <years>]] [--only <stages>]   show the plan (free)
 //   npm run pipeline -- ... --run --budget <usd> [--limit <tasks>]                       run it
 //
-// Stages, in the order they run: review, revise, link, author, interpret, gather.
-// Downstream work goes first, so the budget finishes entries before starting new ones.
+// By default only events are processed: gather, review, revise. --ideas adds the idea
+// stages (interpret, author, link) and idea reviews. Stages run in this order:
+// review, revise, link, author, interpret, gather (downstream first, so the budget
+// finishes entries before starting new ones).
 // --from/--to add gathering windows for that range (years negative for BCE, or
 // like 2500bce); periods gathered before are always considered for interpretation.
 import { parseArgs } from "node:util";
@@ -20,7 +22,7 @@ import { linkIdea } from "../linker/link.ts";
 import { planWork, STAGES, taskKey, windows, type Stage, type Task } from "./plan.ts";
 
 const USAGE = `usage:
-  npm run pipeline -- [--from <year> --to <year> [--step <years>]] [--only <stages>]
+  npm run pipeline -- [--from <year> --to <year> [--step <years>]] [--only <stages>] [--ideas]
   npm run pipeline -- ... --run --budget <usd> [--limit <tasks>]`;
 const { values } = parseArgs({
   args: joinNegativeValues(process.argv.slice(2), ["--from", "--to"]),
@@ -32,6 +34,7 @@ const { values } = parseArgs({
     run: { type: "boolean", default: false },
     budget: { type: "string" },
     limit: { type: "string" },
+    ideas: { type: "boolean", default: false },
   },
 });
 
@@ -84,7 +87,7 @@ async function runTask(t: Task, rt: Runtime): Promise<{ costUsd: number; outcome
 if (!values.run) {
   const driver = await connect(neo4jConfigFromEnv()).catch((e: Error) => fail(e.message));
   try {
-    const plan = await planWork(driver, { periods, stages });
+    const plan = await planWork(driver, { periods, stages, ideas: values.ideas });
     if (!plan.tasks.length) console.log("Nothing to do.");
     let total = 0;
     for (const stage of STAGES) {
@@ -112,7 +115,7 @@ let spent = 0;
 let done = 0;
 try {
   while (done < limit && !rt.signal.aborted) {
-    const plan = await planWork(rt.driver, { periods, stages });
+    const plan = await planWork(rt.driver, { periods, stages, ideas: values.ideas });
     const next = plan.tasks.find((t) => !attempted.has(taskKey(t)));
     if (!next) {
       console.log("Nothing left to do.");

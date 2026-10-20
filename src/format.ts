@@ -1,4 +1,4 @@
-import type { Category, EmergenceStage, EventKind, Status } from "./types";
+import type { EventKind, Status } from "./types";
 
 export function formatYear(year: number, approx = false): string {
   const prefix = approx ? "c. " : "";
@@ -22,16 +22,6 @@ export function escapeHtml(s: string): string {
     .replace(/'/g, "&#39;");
 }
 
-export const categoryLabels: Record<Category, string> = {
-  technology: "Technology",
-  philosophy: "Philosophy",
-  religion: "Religion",
-  politics: "Politics & Law",
-  science: "Science",
-  mathematics: "Mathematics",
-  economics: "Economics",
-};
-
 export const eventKindLabels: Record<EventKind, string> = {
   political: "Political",
   military: "Military",
@@ -44,13 +34,6 @@ export const eventKindLabels: Record<EventKind, string> = {
   construction: "Construction",
   migration: "Migration",
   environmental: "Environment",
-};
-
-export const stageLabels: Record<EmergenceStage, string> = {
-  "earliest-evidence": "Earliest evidence",
-  articulation: "Articulated",
-  institutionalization: "Institutionalized",
-  spread: "Spread",
 };
 
 export const statusLabels: Record<Status, string> = {

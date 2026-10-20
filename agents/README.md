@@ -28,7 +28,7 @@ Years are negative for BCE, or written like `2500bce`. Exit codes: 0 success, 1 
 
 ## The pipeline
 
-`npm run pipeline` works out from the graph what each item needs next, and prints the plan with cost estimates. Planning is free; it runs nothing.
+`npm run pipeline` works out from the graph what each item needs next, and prints the plan with cost estimates. Planning is free; it runs nothing. By default it handles only events (gather, review, revise); `--ideas` adds the idea stages (interpret, author, link) and idea reviews.
 
 ```bash
 npm run pipeline                                   # plan for everything already in the graph

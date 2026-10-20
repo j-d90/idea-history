@@ -1,5 +1,4 @@
-declare module "virtual:ideas" {
-  import type { RenderedEvent, RenderedIdea } from "./content/schema";
-  export const ideas: RenderedIdea[];
+declare module "virtual:events" {
+  import type { RenderedEvent } from "./content/schema";
   export const events: RenderedEvent[];
 }

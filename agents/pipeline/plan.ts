@@ -12,6 +12,9 @@ import type { Period } from "../core/period.ts";
 export const STAGES = ["review", "revise", "link", "author", "interpret", "gather"] as const;
 export type Stage = (typeof STAGES)[number];
 
+/** Stages that only concern ideas; the pipeline skips them unless asked to include ideas. */
+export const IDEA_STAGES: Stage[] = ["link", "author", "interpret"];
+
 export type Task =
   | { stage: "gather"; period: Period }
   | { stage: "interpret"; period: Period }
@@ -65,7 +68,7 @@ export interface Plan {
 const DEFAULT_COST: Record<Stage, number> = { review: 0.6, revise: 0.8, link: 0.15, author: 0.8, interpret: 0.8, gather: 2.5 };
 const STAGE_AGENT: Record<Stage, string> = { review: "fact-checker", revise: "author", link: "linker", author: "author", interpret: "interpreter", gather: "gatherer" };
 
-export async function planWork(driver: Driver, opts: { periods: Period[]; stages?: Stage[] }): Promise<Plan> {
+export async function planWork(driver: Driver, opts: { periods: Period[]; stages?: Stage[]; ideas?: boolean }): Promise<Plan> {
   const content = await loadContent(driver);
   const q = async (cypher: string) => (await driver.executeQuery(cypher)).records.map((r) => r.toObject());
   const runs = (await q(
@@ -87,7 +90,7 @@ export async function planWork(driver: Driver, opts: { periods: Period[]; stages
   // review: sourced entries whose current content has no review yet.
   // revise: sourced entries whose current content failed review (unless the author already tried since).
   // author: candidates and drafts (unless the author already ran on them since their last change).
-  for (const entry of [...content.events, ...content.ideas]) {
+  for (const entry of opts.ideas ? [...content.events, ...content.ideas] : content.events) {
     const label = labelOf(entry);
     const key = entryKey(label, entry.id);
     const sources = Object.fromEntries(entry.sources.map((k) => [k, content.bibliography[k]]));
@@ -142,5 +145,6 @@ export async function planWork(driver: Driver, opts: { periods: Period[]; stages
   ) as Record<Stage, number>;
 
   const order = (t: Task) => STAGES.indexOf(t.stage);
-  return { tasks: tasks.filter((t) => stages.has(t.stage)).sort((a, b) => order(a) - order(b)), averageCost };
+  const wanted = (t: Task) => stages.has(t.stage) && (opts.ideas || !IDEA_STAGES.includes(t.stage));
+  return { tasks: tasks.filter(wanted).sort((a, b) => order(a) - order(b)), averageCost };
 }

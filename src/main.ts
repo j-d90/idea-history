@@ -1,15 +1,13 @@
 import "./style.css";
-import { events, ideas } from "virtual:ideas";
+import { events } from "virtual:events";
 import { eras } from "./data/eras";
 import { formatYear } from "./format";
 import { observeReveal, renderFilters, renderTimeline, trackCurrentYear } from "./timeline";
 
-const categories = [...new Set(ideas.map((i) => i.category))];
-const entries = [...events, ...ideas];
-const start = Math.min(-3200, ...entries.map((e) => e.date.year));
+const kinds = [...new Set(events.map((e) => e.kind))];
+const start = events.length ? Math.min(...events.map((e) => e.date.year)) : -3200;
 const span = new Date().getFullYear() - start;
-const sourced = entries.filter((e) => e.status !== "draft").length;
-const reviewed = entries.filter((e) => e.status === "reviewed").length;
+const reviewed = events.filter((e) => e.status === "reviewed").length;
 
 const app = document.querySelector<HTMLDivElement>("#app")!;
 
@@ -26,26 +24,24 @@ app.innerHTML = `
     <section class="hero">
       <div class="hero-grid" aria-hidden="true"></div>
       <p class="eyebrow">${formatYear(start, true)} — Present</p>
-      <h1>The ideas that<br />made the world.</h1>
+      <h1>What happened,<br />and how we know.</h1>
       <p class="lede">
-        What happened, as the sources record it — from the first marks pressed into clay
-        to machines that learn — and the ideas that emerged from it.
+        A timeline of recorded events, from the first marks pressed into clay to the present.
+        Every entry quotes the sources it rests on.
       </p>
       <dl class="stats">
         <div><dt>Years</dt><dd>${span.toLocaleString("en-US")}</dd></div>
         <div><dt>Events</dt><dd>${events.length}</dd></div>
-        <div><dt>Ideas</dt><dd>${ideas.length}</dd></div>
-        <div><dt>Sourced</dt><dd>${sourced}<span class="stats-of">/${entries.length}</span></dd></div>
-        <div><dt>Reviewed</dt><dd>${reviewed}<span class="stats-of">/${entries.length}</span></dd></div>
+        <div><dt>Reviewed</dt><dd>${reviewed}<span class="stats-of">/${events.length}</span></dd></div>
       </dl>
     </section>
 
-    <nav class="filters" aria-label="Filter by category">
-      <div class="filters-inner">${renderFilters(categories, events.length > 0)}</div>
+    <nav class="filters" aria-label="Filter by kind of event">
+      <div class="filters-inner">${renderFilters(kinds)}</div>
     </nav>
 
     <div class="timeline" id="timeline">
-      ${renderTimeline(eras, ideas, events)}
+      ${renderTimeline(eras, events)}
     </div>
 
     <footer class="footer">
@@ -65,8 +61,7 @@ filterButtons.forEach((btn) =>
     const f = btn.dataset.filter!;
     filterButtons.forEach((b) => b.classList.toggle("is-active", b === btn));
     timeline.querySelectorAll<HTMLElement>(".entry").forEach((el) => {
-      const isEvent = el.classList.contains("event");
-      el.hidden = f === "all" ? false : f === "events" ? !isEvent : isEvent || el.dataset.category !== f;
+      el.hidden = f !== "all" && el.dataset.kind !== f;
     });
     timeline.querySelectorAll<HTMLElement>(".era").forEach((era) => {
       era.classList.toggle("is-empty", !era.querySelector(".entry:not([hidden])"));
@@ -74,7 +69,7 @@ filterButtons.forEach((btn) =>
   }),
 );
 
-// Briefly highlight an idea or event when jumped to via a chip
+// Briefly highlight an event when jumped to by link
 window.addEventListener("hashchange", () => {
   const el = document.getElementById(location.hash.slice(1));
   if (!el?.classList.contains("entry")) return;
