@@ -1,10 +1,11 @@
 import neo4j, { type Driver, type ManagedTransaction } from "neo4j-driver";
-import { checkContent, checkEntry, contentHash, ContentError, entryKey } from "../../src/content/rules.ts";
+import { checkContent, checkEntry, contentHash, ContentError, entryKey, isVerified } from "../../src/content/rules.ts";
 import {
   emergenceSchema,
   ideaLinkSchema,
   labelOf,
   linkTypes,
+  statusFor,
   type Bibliography,
   type Emergence,
   type Entity,
@@ -129,7 +130,7 @@ export async function loadLatestReviews(tx: Tx): Promise<Map<string, ReviewRecor
     `MATCH (r:Review)-[:REVIEWS]->(n)
      WITH n, r ORDER BY r.createdAt DESC
      WITH n, head(collect(r)) AS r
-     RETURN head(labels(n)) AS label, n.id AS id, r {.runId, .verdict, .by, .date, .hash, .report, createdAt: toString(r.createdAt)} AS r`,
+     RETURN head(labels(n)) AS label, n.id AS id, r {.runId, .verdict, mode: coalesce(r.mode, "full"), .by, .date, .hash, .report, createdAt: toString(r.createdAt)} AS r`,
   );
   return new Map(
     res.records.map((rec) => [entryKey(rec.get("label"), rec.get("id")), { label: rec.get("label"), id: rec.get("id"), ...rec.get("r") } as ReviewRecord]),
@@ -154,9 +155,9 @@ export interface PutResult {
 
 /**
  * Create or update an idea or event, validating it against the graph first.
- * Authors can't set "reviewed": that status (and the review record) is kept only
- * while the reviewed content is unchanged; any change sends the entry back to
- * "sourced". `updatedAt` moves only when the content or status changes.
+ * Authors can't set "checked" or "reviewed": those statuses (and the review
+ * record) are kept only while the verified content is unchanged; any change sends
+ * the entry back to "sourced". `updatedAt` moves only when the content or status changes.
  */
 export async function putEntry(tx: Tx, incoming: Entry): Promise<PutResult> {
   const label = labelOf(incoming);
@@ -165,17 +166,17 @@ export async function putEntry(tx: Tx, incoming: Entry): Promise<PutResult> {
   const entry: Entry = { ...incoming, review: undefined };
   let reviewInvalidated = false;
 
-  if (incoming.status === "reviewed" || incoming.review) {
-    const unchanged = existing?.status === "reviewed" && existing.review && existing.review.hash === contentHash(incoming, sources);
-    if (!existing || existing.status !== "reviewed") {
-      throw new ContentError([`only the fact-checker can mark ${incoming.id} reviewed`]);
+  if (isVerified(incoming.status) || incoming.review) {
+    const unchanged = existing?.status === incoming.status && existing.review && existing.review.hash === contentHash(incoming, sources);
+    if (!existing || existing.status !== incoming.status) {
+      throw new ContentError([`only the fact-checker can mark ${incoming.id} ${isVerified(incoming.status) ? incoming.status : "checked or reviewed"}`]);
     }
     if (unchanged) entry.review = existing.review;
     else {
       entry.status = "sourced";
       reviewInvalidated = true;
     }
-  } else if (existing?.status === "reviewed") {
+  } else if (existing && isVerified(existing.status)) {
     reviewInvalidated = true;
   }
 
@@ -261,16 +262,17 @@ export async function replaceEmergences(tx: Tx, eventIds: string[], emergences: 
 }
 
 export async function addReview(tx: Tx, r: Omit<ReviewRecord, "createdAt">): Promise<void> {
-  const params = { runId: r.runId, id: r.id, by: r.by, date: r.date, hash: r.hash, verdict: r.verdict, report: r.report };
+  const params = { runId: r.runId, id: r.id, by: r.by, date: r.date, hash: r.hash, verdict: r.verdict, mode: r.mode, report: r.report, status: statusFor[r.mode] };
   await tx.run(
     `MATCH (n:${r.label} {id: $id})
-     CREATE (rev:Review {runId: $runId, by: $by, date: $date, hash: $hash, verdict: $verdict, report: $report, createdAt: datetime()})-[:REVIEWS]->(n)`,
+     CREATE (rev:Review {runId: $runId, mode: $mode, by: $by, date: $date, hash: $hash, verdict: $verdict, report: $report, createdAt: datetime()})-[:REVIEWS]->(n)`,
     params,
   );
   if (r.verdict === "pass") {
-    await tx.run(`MATCH (n:${r.label} {id: $id}) SET n.status = "reviewed", n.reviewBy = $by, n.reviewDate = $date, n.reviewHash = $hash`, params);
+    await tx.run(`MATCH (n:${r.label} {id: $id}) SET n.status = $status, n.reviewBy = $by, n.reviewDate = $date, n.reviewHash = $hash`, params);
   } else {
-    await tx.run(`MATCH (n:${r.label} {id: $id}) WHERE n.status = "reviewed" SET n.status = "sourced" REMOVE n.reviewBy, n.reviewDate, n.reviewHash`, params);
+    // A failed check or review leaves the entry sourced, whatever it was before.
+    await tx.run(`MATCH (n:${r.label} {id: $id}) WHERE n.status IN ["checked", "reviewed"] SET n.status = "sourced" REMOVE n.reviewBy, n.reviewDate, n.reviewHash`, params);
   }
 }
 

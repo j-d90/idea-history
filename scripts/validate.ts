@@ -16,7 +16,7 @@ try {
 
   const byStatus = (entries: { status: string }[]) => {
     const counts = Object.groupBy(entries, (e) => e.status);
-    return (["candidate", "draft", "sourced", "reviewed"] as const).map((s) => `${counts[s]?.length ?? 0} ${s}`).join(", ");
+    return (["candidate", "draft", "sourced", "checked", "reviewed"] as const).map((s) => `${counts[s]?.length ?? 0} ${s}`).join(", ");
   };
   const linkSummary = Object.entries(Object.groupBy(links, (l) => `${l.origin}/${l.status}`)).map(([k, v]) => `${v!.length} ${k}`).join(", ");
   console.log(`✓ valid: ${events.length} events (${byStatus(events)}); ${ideas.length} ideas (${byStatus(ideas)})`);

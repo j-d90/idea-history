@@ -57,13 +57,23 @@ test("link rules: existence, direction, candidates, linker evidence", () => {
 test("a reviewed idea needs a matching passing review record", () => {
   const hash = contentHash(idea(), bib);
   const reviewed = idea({ status: "reviewed", review: { by: "fact-checker", date: "2026-10-20", hash } });
-  const pass: ReviewRecord = { runId: "r1", label: "Idea", id: "alphabet", verdict: "pass", by: "fact-checker", date: "2026-10-20", hash, report: "" };
+  const pass: ReviewRecord = { runId: "r1", label: "Idea", id: "alphabet", verdict: "pass", mode: "full", by: "fact-checker", date: "2026-10-20", hash, report: "" };
   assert.deepEqual(check([reviewed, writing], [], new Map([["Idea:alphabet", pass]])), []);
   assert.ok(check([reviewed, writing]).some((x) => x.includes("no passing review record")));
   assert.ok(check([reviewed, writing], [], new Map([["Idea:alphabet", { ...pass, verdict: "fail" }]])).some((x) => x.includes("no passing review record")));
   assert.ok(check([reviewed, writing], [], new Map([["Event:alphabet", pass]])).some((x) => x.includes("no passing review record")), "an event's review doesn't count for an idea");
   const edited = { ...reviewed, summary: "Changed." };
   assert.ok(check([edited, writing], [], new Map([["Idea:alphabet", pass]])).some((x) => x.includes("changed since it was reviewed")));
+  assert.ok(check([reviewed, writing], [], new Map([["Idea:alphabet", { ...pass, mode: "check" }]])).some((x) => x.includes("no passing review record")), "a check doesn't make an entry reviewed");
+});
+
+test("a checked entry needs a matching passing check record", () => {
+  const hash = contentHash(event(), bib);
+  const checked = event({ status: "checked", review: { by: "fact-checker", date: "2026-10-20", hash } });
+  const pass: ReviewRecord = { runId: "c1", label: "Event", id: checked.id, verdict: "pass", mode: "check", by: "fact-checker", date: "2026-10-20", hash, report: "" };
+  assert.deepEqual(check([idea(), writing], [], new Map([[`Event:${checked.id}`, pass]]), [checked]), []);
+  assert.ok(check([idea(), writing], [], new Map([[`Event:${checked.id}`, { ...pass, mode: "full" }]]), [checked]).some((x) => x.includes("no passing check record")));
+  assert.ok(check([idea(), writing], [], new Map(), [checked]).some((x) => x.includes("no passing check record")));
 });
 
 test("aliases and status don't affect the content hash; content does", () => {

@@ -2,6 +2,34 @@ import type { Era } from "../types";
 
 export const eras: Era[] = [
   {
+    id: "toolmakers",
+    name: "The First Toolmakers",
+    start: -3_400_000,
+    end: -300_000,
+    blurb: "Hominins shape stone, control fire and spread beyond Africa, over millions of years.",
+  },
+  {
+    id: "our-species",
+    name: "Our Species",
+    start: -300_000,
+    end: -50_000,
+    blurb: "Homo sapiens appears in Africa. Ochre, beads and burials leave the first traces of symbolic life.",
+  },
+  {
+    id: "across-the-world",
+    name: "Across the World",
+    start: -50_000,
+    end: -10_000,
+    blurb: "People reach almost every continent, painting caves and carving figures through the last Ice Age.",
+  },
+  {
+    id: "farming",
+    name: "Farming and Villages",
+    start: -10_000,
+    end: -3_400,
+    blurb: "Plants and animals are domesticated; villages, towns and the first monuments rise.",
+  },
+  {
     id: "early",
     name: "Early Civilizations",
     start: -3400,

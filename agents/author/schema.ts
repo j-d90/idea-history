@@ -2,12 +2,14 @@ import { z } from "zod/v4";
 import { checkEntry, CITATION, scanCitations } from "../../src/content/rules.ts";
 import { isIdea, type Bibliography, type Entry } from "../../src/content/schema.ts";
 import type { EvidenceLedger } from "../core/evidence.ts";
-import { checkCitedExcerpt, Citation, type SourceRegistry } from "../core/sources.ts";
+import { checkCitedExcerpt, Citation, quote, type SourceRegistry } from "../core/sources.ts";
 import { defineTool, ToolError } from "../core/tools/types.ts";
 
 // The author's structured output and the harness checks applied to it. The
 // author rewrites an entry's content; the harness keeps its id, classification
-// and aliases, derives its sources from the citations, and sets it to "sourced".
+// and aliases, appends the supporting excerpts to the body as quotes (so the
+// fact-checker's batch check can verify them), derives its sources from the
+// citations, and sets it to "sourced".
 
 export const AuthorSubmissionSchema = z.strictObject({
   decision: z.enum(["write", "decline"]).describe("decline: the entry shouldn't exist as it stands, or you couldn't source it"),
@@ -21,8 +23,10 @@ export const AuthorSubmissionSchema = z.strictObject({
   approx: z.boolean(),
   date_marks: z.string().describe("What the year marks"),
   date_note: z.string().nullable().describe("Why the date is uncertain or contested; may contain [@key, locator] citations"),
-  body: z.string().describe("Markdown; every claim cited as [@key, locator]"),
-  support: z.array(Citation).describe("For every distinct [@key, locator] in the body and date note, a verbatim excerpt from that source at that locator"),
+  body: z.string().describe("Markdown prose, every claim cited as [@key, locator]; may be empty if the excerpts say it all. Don't include the excerpts: they're appended as quotes"),
+  support: z
+    .array(Citation)
+    .describe("Verbatim excerpts backing every claim, including the title, byline, summary and date; at least one for every distinct [@key, locator] you cite. Appended to the body as quotes"),
 });
 
 export type AuthorSubmission = z.infer<typeof AuthorSubmissionSchema>;
@@ -40,10 +44,16 @@ const norm = (s: string | undefined | null) => (s ?? "").trim().toLowerCase().re
 /** Quoted passages of four or more words: "…" or “…”. */
 const QUOTED = /[“"]([^”"]{12,}?)[”"]/g;
 
-/** The entry the submission describes, with sources in order of first citation. */
+/** The entry the submission describes: prose, then the supporting excerpts as quotes; sources in order of first citation. */
 export function buildEntry(s: AuthorSubmission, current: Entry): Entry {
+  const prose = s.body
+    .split("\n")
+    .filter((l) => !l.trimStart().startsWith(">"))
+    .join("\n")
+    .trim();
+  const body = [prose, ...s.support.map(quote)].filter(Boolean).join("\n\n");
   const keys: string[] = [];
-  for (const text of [s.body, s.date_note ?? ""]) for (const c of scanCitations(text).cites) if (!keys.includes(c.key)) keys.push(c.key);
+  for (const text of [body, s.date_note ?? ""]) for (const c of scanCitations(text).cites) if (!keys.includes(c.key)) keys.push(c.key);
   const common = {
     id: current.id,
     title: s.title.trim(),
@@ -59,7 +69,7 @@ export function buildEntry(s: AuthorSubmission, current: Entry): Entry {
     summary: s.summary.trim(),
     aliases: current.aliases,
     sources: keys,
-    body: s.body.trim(),
+    body,
   };
   return isIdea(current) ? { ...common, category: current.category, origin: s.byline.trim() } : { ...common, kind: current.kind, place: s.byline.trim() };
 }
@@ -71,7 +81,9 @@ export function checkAuthorSubmission(s: AuthorSubmission, ctx: AuthorContext): 
   const bibliography: Bibliography = { ...ctx.bibliography, ...Object.fromEntries(ctx.registry) };
   const intYears = [s.year, s.earliest, s.latest].every((y) => y === null || (Number.isInteger(y) && y !== 0));
   if (!intYears) problems.push("years must be integers, and there is no year 0 (1 BCE is -1)");
-  if (!s.title.trim() || !s.byline.trim() || !s.summary.trim() || !s.body.trim()) problems.push("title, byline, summary and body are required");
+  if (!s.title.trim() || !s.byline.trim() || !s.summary.trim()) problems.push("title, byline and summary are required");
+  if (!s.support.length) problems.push("at least one supporting excerpt is required");
+  if (s.support.some((c) => /\[@|\n/.test(c.excerpt))) problems.push('an excerpt can\'t contain "[@" or line breaks');
 
   const entry = buildEntry(s, ctx.current);
   if (intYears) {

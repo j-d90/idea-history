@@ -29,7 +29,7 @@ export interface Snapshot {
 interface SnapshotV1 extends Omit<Snapshot, "version" | "events" | "emergences" | "involves" | "reviews" | "timestamps"> {
   version: 1;
   involves: { idea: string; entity: string; role: string; runId?: string }[];
-  reviews: (Omit<ReviewRecord, "label" | "id"> & { ideaId: string; createdAt: string })[];
+  reviews: (Omit<ReviewRecord, "label" | "id" | "mode"> & { ideaId: string; createdAt: string })[];
 }
 
 function upgrade(s: Snapshot | SnapshotV1): Snapshot {
@@ -42,7 +42,7 @@ function upgrade(s: Snapshot | SnapshotV1): Snapshot {
     emergences: [],
     timestamps: {},
     involves: s.involves.map(({ idea, ...x }) => ({ label: "Idea", id: idea, ...x })),
-    reviews: s.reviews.map(({ ideaId, ...r }) => ({ label: "Idea", id: ideaId, ...r })),
+    reviews: s.reviews.map(({ ideaId, ...r }) => ({ label: "Idea", id: ideaId, mode: "full", ...r })),
   };
 }
 
@@ -68,7 +68,7 @@ export async function exportSnapshot(driver: Driver): Promise<Snapshot> {
     ),
     reviews: (await q(
       `MATCH (r:Review)-[:REVIEWS]->(n)
-       RETURN r.runId AS runId, head(labels(n)) AS label, n.id AS id, r.verdict AS verdict, r.by AS by, r.date AS date, r.hash AS hash, r.report AS report, toString(r.createdAt) AS createdAt
+       RETURN r.runId AS runId, head(labels(n)) AS label, n.id AS id, r.verdict AS verdict, coalesce(r.mode, "full") AS mode, r.by AS by, r.date AS date, r.hash AS hash, r.report AS report, toString(r.createdAt) AS createdAt
        ORDER BY createdAt`,
     )) as Snapshot["reviews"],
     timestamps: Object.fromEntries(
@@ -125,7 +125,7 @@ export async function restoreSnapshot(driver: Driver, input: Snapshot | Snapshot
       for (const r of s.reviews) {
         await tx.run(
           `MATCH (n:${r.label} {id: $id}) MERGE (rev:Review {runId: $runId})
-           SET rev.by = $by, rev.date = $date, rev.hash = $hash, rev.verdict = $verdict, rev.report = $report, rev.createdAt = datetime($createdAt)
+           SET rev.by = $by, rev.date = $date, rev.hash = $hash, rev.verdict = $verdict, rev.mode = coalesce($mode, "full"), rev.report = $report, rev.createdAt = datetime($createdAt)
            MERGE (rev)-[:REVIEWS]->(n)`,
           r,
         );

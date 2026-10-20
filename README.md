@@ -26,7 +26,8 @@ Requires Node 23.6+ (scripts run TypeScript directly via Node's type stripping) 
 | `npm run interpret -- --from <y> --to <y>` | Interpreter agent: the ideas a period's events show emerging |
 | `npm run author -- <id>` | Author agent: curate, source or revise an idea or event |
 | `npm run link -- <idea>` | Linker agent: typed, evidenced links to earlier ideas |
-| `npm run review -- <id>` | Fact-checker agent: independent review of a sourced idea or event |
+| `npm run check -- --from <y> --to <y>` | Fact-checker batch check: events' claims against their re-verified quotes, about half a cent each |
+| `npm run review -- <id>` | Fact-checker full review of a sourced idea or event |
 | `npm run extract -- <source>` | Extractor agent: ideas, aliases and entities from one source |
 | `npm run pipeline` | What events need next, with cost estimates (`--ideas` adds idea work); `--run --budget <usd>` runs it |
 | `npm run check-tools` | Confirm the API accepts every agent's tool schemas |
@@ -59,7 +60,7 @@ Content lives in the graph. Authors edit it through `npm run kg`, which validate
 id: alphabet
 title: The Alphabet
 category: technology        # technology | philosophy | religion | politics | science | mathematics | economics
-status: sourced             # candidate | draft | sourced | reviewed (reviewed is set only by the fact-checker)
+status: sourced             # candidate | draft | sourced | checked | reviewed (the last two are set only by the fact-checker)
 date:
   year: -1850               # placement on the timeline; negative = BCE
   marks: The earliest known alphabetic inscriptions   # what the year marks (required once sourced)
@@ -107,6 +108,7 @@ lam-2010:
 - **candidate:** proposed by an agent (interpreter or extractor), not yet curated. Hidden from the site.
 - **draft:** unverified. Shown with an "Unverified" badge.
 - **sourced:** the author has cited every claim. Requires `date.marks`, a body with citations, and every listed source cited.
+- **checked:** the fact-checker's batch check passed: every claim is supported by the entry's quoted excerpts, which the harness re-verified verbatim against their sources. Cheap, and narrower than a review: it doesn't look for other sources or disagreement.
 - **reviewed:** the fact-checker agent has independently checked every claim and passed it. The review record's hash must match the current content, including the cited sources. Editing the idea sends it back to `sourced`.
 
 ### Rules the validator enforces

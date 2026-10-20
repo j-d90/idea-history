@@ -14,9 +14,9 @@ gatherer ─► events ─► interpreter ─► ideas (candidates) ─► autho
 |---|---|---|---|
 | **Gatherer** | `npm run gather -- events --from <year> --to <year>` | Collect observations of one type (events, for now) for a period, from sources it reads and quotes | `sourced` events, the new sources they cite, entities |
 | **Interpreter** | `npm run interpret -- --from <year> --to <year>` | Decide which of a period's events show an idea emerging (earliest evidence, articulation, institutionalization, spread), with evidence; match ideas by vector search | `EMERGES_IN` links, aliases, new `candidate` ideas |
-| **Author** | `npm run author -- <idea-id \| event:id>` | Curate candidates (write or decline), source drafts, revise entries that failed review; every citation backed by a quote from that source | The entry, now `sourced`; its new sources |
+| **Author** | `npm run author -- <idea-id \| event:id>` | Curate candidates (write or decline), source drafts, revise entries that failed review; every citation backed by a quote from that source, appended to the entry so it can be batch-checked. `--light` revises after a failed check without research, within the existing excerpts (about 2 cents) | The entry, now `sourced`; its new sources |
 | **Linker** | `npm run link -- <idea-id>` | Find similar earlier ideas by vector search and decide whether a link exists, and of what type (`BUILDS_ON`, `REACTS_AGAINST`, `PARALLELS`), with evidence | `linker` links, replacing the idea's unverified `seed` links |
-| **Fact-checker** | `npm run review -- <idea-id \| event:id>` | Check every claim in a sourced idea or event against its sources; the only path to `reviewed` | A `Review` record; the entry's status |
+| **Fact-checker** | `npm run check -- --from <y> --to <y>` (batch check) and `npm run review -- <idea-id \| event:id>` (full review) | Batch check: the harness re-verifies each event's quoted excerpts against its sources, then one call judges up to 12 events at once on whether their claims stay within those excerpts (about half a cent per event); a pass sets `checked`. Full review: re-research every claim; a pass sets `reviewed`. The only path to either status | A `Review` record (mode `check` or `full`); the entry's status |
 | **Extractor** | `npm run extract -- <source-key>` | Read one source document; extract the ideas it discusses, their synonyms and the entities involved | Aliases on existing ideas, new `candidate` ideas, entities, `DISCUSSES` |
 
 Every agent takes `--dry-run` (run the agent, write nothing). Other flags:
@@ -28,7 +28,13 @@ Years are negative for BCE, or written like `2500bce`. Exit codes: 0 success, 1 
 
 ## The pipeline
 
-`npm run pipeline` works out from the graph what each item needs next, and prints the plan with cost estimates. Planning is free; it runs nothing. By default it handles only events (gather, review, revise); `--ideas` adds the idea stages (interpret, author, link) and idea reviews.
+`npm run pipeline` works out from the graph what each item needs next, and prints the plan with cost estimates. Planning is free; it runs nothing. By default it handles only events, on the cheap path:
+1. Gather.
+2. Batch check.
+3. On a fail, a light revision, then check again. After two failed light revisions it escalates to a full revision.
+4. A full review for a stable 5% sample of checked events (`--sample`), to measure what the batch check misses.
+
+That's about $0.10 per event. `--ideas` adds the idea stages (interpret, author, link) and idea reviews.
 
 ```bash
 npm run pipeline                                   # plan for everything already in the graph
@@ -41,8 +47,9 @@ npm run pipeline -- --from 2500bce --to 2001bce --run --budget 10   # run it, sp
 
   | Stage | Picks up |
   |---|---|
-  | review | Sourced entries whose current content hasn't been reviewed |
-  | revise | Entries whose current content failed review |
+  | review | Sampled checked events; events with no quotes to batch-check; (with `--ideas`) sourced ideas |
+  | revise | Entries whose current content failed a check (light) or review (full) |
+  | check | Sourced events not yet checked, in batches of 12 |
   | link | Sourced ideas not linked since they changed |
   | author | Candidates and drafts |
   | interpret | Gathered periods whose events changed since they were last interpreted |

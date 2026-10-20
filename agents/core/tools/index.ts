@@ -1,4 +1,5 @@
 import type Anthropic from "@anthropic-ai/sdk";
+import { SEARCH_BLOCKED_DOMAINS } from "../policy.ts";
 import { readSource, searchSource } from "./documents.ts";
 import { findArchivedCopy, getArxivAbstract, getEuropePmcFullText, lookupDoi, searchEuropePmc } from "./scholarly.ts";
 import type { AgentTool } from "./types.ts";
@@ -11,5 +12,6 @@ export const sourceTools = [readSource, searchSource, lookupDoi, searchEuropePmc
  * results are leads only: evidence must come from a document read with read_source.
  */
 export function webSearch(maxUses: number): Anthropic.Beta.BetaToolUnion[] {
-  return maxUses > 0 ? [{ type: "web_search_20260209", name: "web_search", max_uses: maxUses }] : [];
+  // Results from sources that can't be cited would only use up searches.
+  return maxUses > 0 ? [{ type: "web_search_20260209", name: "web_search", max_uses: maxUses, blocked_domains: SEARCH_BLOCKED_DOMAINS }] : [];
 }

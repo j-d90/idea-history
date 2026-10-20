@@ -7,11 +7,14 @@ const eventAnchor = (id: string) => `event-${id}`;
 function renderDetails(idea: Event, anchor: string): string {
   if (!idea.bodyHtml && !idea.references.length) return "";
 
-  const review = idea.review
-    ? `Reviewed by the ${esc(idea.review.by)} agent on ${idea.review.date}.`
-    : idea.status === "sourced"
-      ? "Sourced, awaiting independent review."
-      : "Unverified draft.";
+  const review =
+    idea.status === "reviewed" && idea.review
+      ? `Reviewed by the ${esc(idea.review.by)} agent on ${idea.review.date}: every claim independently re-researched.`
+      : idea.status === "checked" && idea.review
+        ? `Checked by the ${esc(idea.review.by)} agent on ${idea.review.date}: its claims match the quoted excerpts, which were re-verified against the sources.`
+        : idea.status === "sourced"
+          ? "Sourced, awaiting a check."
+          : "Unverified draft.";
 
   return `
     <details class="idea-details">

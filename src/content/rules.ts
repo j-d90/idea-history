@@ -5,6 +5,7 @@ import {
   eventFieldsSchema,
   ideaFieldsSchema,
   labelOf,
+  modeFor,
   type Bibliography,
   type Emergence,
   type Entry,
@@ -78,7 +79,8 @@ export function contentHash(entry: Entry, bibliography: Bibliography): string {
 /** Key for an entry in maps that hold both ideas and events. */
 export const entryKey = (label: string, id: string) => `${label}:${id}`;
 
-const strictStatus = (s: Entry["status"]) => s === "sourced" || s === "reviewed";
+const strictStatus = (s: Entry["status"]) => s === "sourced" || s === "checked" || s === "reviewed";
+export const isVerified = (s: Entry["status"]): s is "checked" | "reviewed" => s === "checked" || s === "reviewed";
 const DIRECTIONAL = new Set(["BUILDS_ON", "REACTS_AGAINST"]);
 
 /** Cross-record rules beyond what the schemas express. Returns every problem found. */
@@ -100,16 +102,17 @@ export function checkContent(c: {
     const at = `${label.toLowerCase()} ${entry.id}`;
     problems.push(...checkEntry(entry, c.bibliography).map((p) => `${at}: ${p}`));
 
-    if (entry.status === "reviewed") {
-      if (!entry.review) problems.push(`${at}: status "reviewed" requires a review record; only the fact-checker agent may set it`);
+    if (isVerified(entry.status)) {
+      const mode = modeFor[entry.status];
+      if (!entry.review) problems.push(`${at}: status "${entry.status}" requires a review record; only the fact-checker agent may set it`);
       else {
         const hash = contentHash(entry, c.bibliography);
         if (entry.review.hash !== hash) {
-          problems.push(`${at}: changed since it was reviewed (hash ${entry.review.hash}, now ${hash}); set it back to "sourced" and re-review`);
+          problems.push(`${at}: changed since it was ${entry.status} (hash ${entry.review.hash}, now ${hash}); set it back to "sourced" and re-check`);
         }
         const record = c.latestReviews.get(entryKey(label, entry.id));
-        if (!record || record.verdict !== "pass" || record.hash !== entry.review.hash) {
-          problems.push(`${at}: no passing review record for hash ${entry.review.hash}`);
+        if (!record || record.verdict !== "pass" || record.mode !== mode || record.hash !== entry.review.hash) {
+          problems.push(`${at}: no passing ${mode === "check" ? "check" : "review"} record for hash ${entry.review.hash}`);
         }
       }
     }
@@ -215,4 +218,22 @@ function parseMarkdown<S extends z.ZodTypeAny>(text: string, schema: S): z.infer
   const result = schema.safeParse(data);
   if (!result.success) throw new ContentError(result.error.issues.map((i) => `${i.path.join(".") || "(root)"}: ${i.message}`));
   return { ...result.data, body: match[2].trim() };
+}
+
+// ---------- Quoted excerpts ----------
+
+/** A blockquote line ending in a citation: "> excerpt [@key, locator]". */
+const QUOTE_LINE = /^>\s*(.+?)\s*\[(@[^\]]+)\]\s*$/gm;
+
+/**
+ * The verbatim excerpts an entry quotes in its body, each with the citation it
+ * ends with. These are what the fact-checker's batch check verifies against.
+ */
+export function quotedExcerpts(body: string): { excerpt: string; key: string; locator?: string }[] {
+  const out: { excerpt: string; key: string; locator?: string }[] = [];
+  for (const [, excerpt, inner] of body.matchAll(QUOTE_LINE)) {
+    const cites = parseCitation(inner);
+    if (cites?.length === 1) out.push({ excerpt, key: cites[0].key, locator: cites[0].locator });
+  }
+  return out;
 }

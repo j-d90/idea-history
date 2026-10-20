@@ -15,7 +15,8 @@ Everything here, including the site, needs Neo4j running (`npm run kg:up`).
   - `npm run interpret -- --from <year> --to <year>`
   - `npm run author -- <id>`
   - `npm run link -- <idea-id>`
-  - `npm run review -- <id>`
+  - `npm run check -- --from <year> --to <year>` (the fact-checker's cheap batch check of events)
+  - `npm run review -- <id>` (the full review)
   - `npm run extract -- <source-key>`
 
   Events are addressed as `event:<id>`; years are negative for BCE or written like `2500bce`.
@@ -32,20 +33,21 @@ Everything here, including the site, needs Neo4j running (`npm run kg:up`).
 
 ## Content workflow
 
-Statuses, for ideas and events alike: `candidate` (proposed by an agent) → `draft` → `sourced` → `reviewed` (fact-checker only)
+Statuses, for ideas and events alike: `candidate` (proposed by an agent) → `draft` → `sourced` → `checked` or `reviewed` (fact-checker only). `checked` means the claims match the entry's quoted excerpts, re-verified against the sources; `reviewed` means every claim was independently re-researched.
 
 1. **Gather:** `npm run gather -- events --from <year> --to <year>` records a period's events, each quoting the sources it rests on (registered as it goes). Gathered events are `sourced`.
 2. **Interpret:** `npm run interpret -- --from <year> --to <year>` decides which events show an idea emerging (`EMERGES_IN`, with a stage and evidence), matching existing ideas or proposing `candidate` ideas. Candidates are hidden from the site.
 3. **Author:** `npm run author -- <id>` curates a candidate (writes or declines it), sources a draft, or revises an entry after a failed review. To edit by hand instead: `npm run kg -- idea get <id> > /tmp/x.md` (or `event get`), edit, then `idea put` / `event put`. Cite with `[@key, locator]` and set `status: sourced` once every claim is cited. The format is in `README.md`; the schema is `src/content/schema.ts`.
 4. **Link:** `npm run link -- <id>` proposes typed links to earlier ideas, each with verified evidence, and replaces the idea's unverified seed links.
-5. **Review:** `npm run review -- <id>` (or `event:<id>`). The fact-checker checks every claim and records a review; only a pass sets `reviewed`.
-6. **On fail:** the author revises from the report (`MATCH (r:Review)-[:REVIEWS]->({id: $id}) RETURN r.report ORDER BY r.createdAt DESC LIMIT 1`), then it's reviewed again.
+5. **Check / review:** `npm run check` batch-checks events against their quoted excerpts; a pass sets `checked`. `npm run review -- <id>` (or `event:<id>`) is the full review; a pass sets `reviewed`. The pipeline gives a 5% sample of checked events a full review too.
+6. **On fail:** the author revises from the report (`--light` after a failed check) (`MATCH (r:Review)-[:REVIEWS]->({id: $id}) RETURN r.report ORDER BY r.createdAt DESC LIMIT 1`), then it's reviewed again.
 
 `npm run pipeline` plans all of this from the graph's state; see `agents/README.md`. `npm run extract -- <source-key>` is the older, source-driven way in: it records which ideas a document discusses, with their aliases and entities.
 
 Rules for authors:
 
-- **Never** set `status: reviewed` or write review records; `idea put` refuses, and validation rejects reviews that don't match a passing review record and the current content hash.
+- **Never** set `status: checked` or `reviewed`, or write review records; `idea put` refuses, and validation rejects them unless they match a passing record of that mode and the current content hash.
+- Quote evidence in an entry's body as `> verbatim excerpt [@key, locator]` lines: the batch check works only from those.
 - Editing a reviewed entry, or any source it cites, invalidates its review. `idea put` / `event put` sets it back to `sourced` automatically.
 - Cite only what you have read. Quote verbatim from the source, never from memory. If you only verified a reference's metadata, mark it `consulted: false`.
 - Prefer scholarship (university presses, peer-reviewed journals, museum and research-institute publications) and primary texts. Never cite Wikipedia, AI output, content farms or exam-prep sites. Use encyclopedias only for uncontroversial facts.

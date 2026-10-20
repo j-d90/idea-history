@@ -13,6 +13,7 @@
     "pdftext": "node --disable-warning=ExperimentalWarning scripts/pdftext.ts",
     "check-tools": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env scripts/check-tools.ts",
     "review": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agents/fact-checker/cli.ts",
+    "check": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agents/fact-checker/check-cli.ts",
     "kg:up": "node --disable-warning=ExperimentalWarning kg/src/compose.ts up",
     "kg:down": "node --disable-warning=ExperimentalWarning kg/src/compose.ts down",
     "kg:migrate": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env kg/src/migrate.ts",

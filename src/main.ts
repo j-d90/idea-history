@@ -7,7 +7,7 @@ import { observeReveal, renderFilters, renderTimeline, trackCurrentYear } from "
 const kinds = [...new Set(events.map((e) => e.kind))];
 const start = events.length ? Math.min(...events.map((e) => e.date.year)) : -3200;
 const span = new Date().getFullYear() - start;
-const reviewed = events.filter((e) => e.status === "reviewed").length;
+const checked = events.filter((e) => e.status === "checked" || e.status === "reviewed").length;
 
 const app = document.querySelector<HTMLDivElement>("#app")!;
 
@@ -32,7 +32,7 @@ app.innerHTML = `
       <dl class="stats">
         <div><dt>Years</dt><dd>${span.toLocaleString("en-US")}</dd></div>
         <div><dt>Events</dt><dd>${events.length}</dd></div>
-        <div><dt>Reviewed</dt><dd>${reviewed}<span class="stats-of">/${events.length}</span></dd></div>
+        <div><dt>Checked</dt><dd>${checked}<span class="stats-of">/${events.length}</span></dd></div>
       </dl>
     </section>
 

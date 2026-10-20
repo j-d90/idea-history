@@ -140,6 +140,9 @@ test("author: a supported entry passes and keeps the id, category and aliases", 
   assert.deepEqual(checkAuthorSubmission(authored(), actx()), []);
   const entry = buildEntry(authored(), draft) as Idea;
   assert.deepEqual([entry.id, entry.category, entry.status, entry.aliases, entry.sources], ["victory-stele", "politics", "sourced", ["triumphal stele"], ["louvre-ao-50"]]);
+  assert.match(entry.body, new RegExp(`\\n\\n> ${QUOTE} \\[@louvre-ao-50, notice\\]$`), "support excerpts are appended as quotes");
+  const quotesOnly = buildEntry(authored({ body: "> pasted quote [@louvre-ao-50, notice]" }), draft);
+  assert.equal(quotesOnly.body, `> ${QUOTE} [@louvre-ao-50, notice]`, "quotes in the submitted body are dropped in favour of the support excerpts");
   assert.deepEqual(checkAuthorSubmission(authored({ decision: "decline", reason: "Not an idea." }), actx()), []);
   const quotedLocator = authored({
     body: `A victory is recorded [@louvre-ao-50, paragraph beginning "The stele records"].`,
@@ -152,12 +155,12 @@ test("author: unsupported citations, unverified quotations and rule breaks are r
   const p = [
     ...checkAuthorSubmission(authored({ support: [] }), actx()),
     ...checkAuthorSubmission(authored({ body: `As "Eannatum invented the stele entirely by himself" [@louvre-ao-50, notice].` }), actx()),
-    ...checkAuthorSubmission(authored({ body: "Uncited claim only." }), actx()),
+    ...checkAuthorSubmission(authored({ body: "Uncited claim only.", support: [] }), actx()),
     ...checkAuthorSubmission(authored({ body: "A claim [@nowhere, p. 1].", support: [{ source_key: "nowhere", locator: "p. 1", excerpt: QUOTE }] }), actx()),
     ...checkAuthorSubmission(authored({ support: [{ source_key: "louvre-ao-50", locator: "notice", excerpt: "words that are not there" }] }), actx()),
     ...checkAuthorSubmission(authored({ decision: "decline", reason: " " }), actx()),
   ];
-  for (const e of ["has no support item", "was not found in any document you read", "requires at least one [@citation]", "register new works", "excerpt was not found", "a decline needs a reason"]) {
+  for (const e of ["has no support item", "was not found in any document you read", "at least one supporting excerpt is required", "register new works", "excerpt was not found", "a decline needs a reason"]) {
     assert.ok(p.some((x) => x.includes(e)), `${e}\n${p.join("\n")}`);
   }
 });
@@ -171,4 +174,38 @@ test("ids, years and gathering windows", () => {
   assert.deepEqual(joinNegativeValues(["events", "--from", "-2500", "--to", "-2400"], ["--from", "--to"]), ["events", "--from=-2500", "--to=-2400"]);
   assert.deepEqual(windows(-2500, -2301), [{ from: -2500, to: -2401 }, { from: -2400, to: -2301 }]);
   assert.deepEqual(windows(-60, 40, 50), [{ from: -60, to: -11 }, { from: -10, to: 40 }], "a window spanning 1 BCE to 1 CE skips year 0");
+});
+
+// ---------- Batch check ----------
+
+import { quotedExcerpts } from "../../src/content/rules.ts";
+import { checkCheckSubmission } from "../fact-checker/check-schema.ts";
+import { sampled } from "../pipeline/plan.ts";
+
+test("check: quoted excerpts are the blockquote lines ending in one citation", () => {
+  const body = `Prose with a claim [@a, p. 1].\n\n> First excerpt, verbatim [@lam-2010, p. 190]\n\n> Second one [@b]\n\n> Not cited\n\n> Two sources [@a; @b]`;
+  assert.deepEqual(quotedExcerpts(body), [
+    { excerpt: "First excerpt, verbatim", key: "lam-2010", locator: "p. 190" },
+    { excerpt: "Second one", key: "b", locator: undefined },
+  ]);
+});
+
+test("check: every entry gets exactly one consistent result", () => {
+  const ok = { event_id: "a", verdict: "pass" as const, issues: [] };
+  assert.deepEqual(checkCheckSubmission({ results: [ok, { event_id: "b", verdict: "fail", issues: [{ field: "summary", problem: "x" }] }] }, ["a", "b"]), []);
+  const p = checkCheckSubmission(
+    { results: [ok, ok, { event_id: "c", verdict: "fail", issues: [] }, { event_id: "d", verdict: "pass", issues: [{ field: "date", problem: "x" }] }] },
+    ["a", "b", "c", "d"],
+  );
+  for (const e of ['"a" is listed twice', 'no result for "b"', "a fail needs at least one issue", "a pass can't list issues"]) {
+    assert.ok(p.some((x) => x.includes(e)), `${e}\n${p.join("\n")}`);
+  }
+});
+
+test("check: the full-review sample is stable and about the requested size", () => {
+  const ids = Array.from({ length: 4000 }, (_, i) => `event-${i}`);
+  const share = ids.filter((id) => sampled(id, 0.05)).length / ids.length;
+  assert.ok(share > 0.04 && share < 0.06, String(share));
+  assert.equal(sampled("event-17", 0.05), sampled("event-17", 0.05));
+  assert.equal(ids.filter((id) => sampled(id, 0)).length, 0);
 });

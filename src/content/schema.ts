@@ -12,14 +12,25 @@ export const categories = [
 
 /**
  * candidate: proposed by an agent (extractor, interpreter); not curated, not shown on the site.
- * draft: written but not sourced. sourced: every claim cited. reviewed: passed the fact-checker.
+ * draft: written but not sourced. sourced: every claim cited.
+ * checked: passed the fact-checker's batch check (its claims match its quoted, re-verified excerpts).
+ * reviewed: passed the fact-checker's full review (every claim independently re-researched).
  */
-export const statuses = ["candidate", "draft", "sourced", "reviewed"] as const;
+export const statuses = ["candidate", "draft", "sourced", "checked", "reviewed"] as const;
+
+/** Statuses only the fact-checker can set, each backed by a passing record of its mode. */
+export const verifiedStatuses = ["checked", "reviewed"] as const;
+
+/** check: the batch check against quoted excerpts. full: the full review. */
+export type ReviewMode = "check" | "full";
+export const modeFor = { checked: "check", reviewed: "full" } as const;
+export const statusFor = { check: "checked", full: "reviewed" } as const;
 
 /** The one agent accountable for reviews. See agents/README.md. */
 export const REVIEWER = "fact-checker";
 
-const year = z.number().int().min(-10000).max(2100);
+/** Years back to the earliest known stone tools (about 3.3 million years ago). */
+const year = z.number().int().min(-4_000_000).max(2100);
 export const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "use YYYY-MM-DD");
 const httpUrl = z
   .string()
@@ -298,6 +309,7 @@ export interface ReviewRecord {
   /** The reviewed idea or event. */
   id: string;
   verdict: "pass" | "fail";
+  mode: ReviewMode;
   by: string;
   date: string;
   hash: string;

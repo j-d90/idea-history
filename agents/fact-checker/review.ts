@@ -80,7 +80,7 @@ export async function reviewEntry(label: EntryLabel, id: string, rt: Runtime, op
       // Re-read inside the write transaction: never record a review of content that changed during the run.
       const current = await loadSubject(tx, label, id);
       if (current.hash !== subject.hash) throw new Error(`${id} changed during review (reviewed ${subject.hash}, now ${current.hash}); the review was not saved`);
-      await addReview(tx, { runId: run.id, label, id, verdict: decision.verdict, by: REVIEWER, date: run.today, hash: subject.hash, report });
+      await addReview(tx, { runId: run.id, label, id, verdict: decision.verdict, mode: "full", by: REVIEWER, date: run.today, hash: subject.hash, report });
     });
   }
   run.log.event("end", { verdict: decision.verdict, costUsd: loop.costUsd, turns: loop.turns });

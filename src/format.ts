@@ -40,5 +40,6 @@ export const statusLabels: Record<Status, string> = {
   candidate: "Candidate",
   draft: "Unverified",
   sourced: "Sourced",
+  checked: "Checked",
   reviewed: "Reviewed",
 };

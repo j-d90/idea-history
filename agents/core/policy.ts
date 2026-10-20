@@ -15,6 +15,9 @@ const BLOCKED_HOSTS: RegExp[] = [
   /(^|\.)(savemyexams|biologynotesonline|microbeonline|preceden)\.(com|co\.uk)$/,
 ];
 
+/** Domains left out of web search results: the most common sources that can't be cited. */
+export const SEARCH_BLOCKED_DOMAINS = ["wikipedia.org", "wikiwand.com", "wikidata.org", "fandom.com", "quora.com", "reddit.com", "coursehero.com", "studocu.com", "chegg.com"];
+
 /** The URL a Wayback Machine snapshot points at, or the URL itself. */
 function originalUrl(url: string): string {
   const m = /^https?:\/\/web\.archive\.org\/web\/[^/]+\/(.+)$/.exec(url);

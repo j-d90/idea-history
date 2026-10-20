@@ -9,6 +9,7 @@ import { runAgentLoop } from "../core/loop.ts";
 import { SOURCE_POLICY } from "../core/policy.ts";
 import { recordAgentRun, startRun, withRead, withWrite, type Runtime } from "../core/runtime.ts";
 import { createRegisterSourceTool, type SourceRegistry } from "../core/sources.ts";
+import { loadDocument } from "../core/tools/documents.ts";
 import { findSimilarIdeas, getEvent, getIdea } from "../core/tools/graph.ts";
 import { sourceTools, webSearch } from "../core/tools/index.ts";
 import type { AgentTool } from "../core/tools/types.ts";
@@ -38,23 +39,41 @@ export function authorTask(entry: Entry, review: ReviewRecord | undefined, hash:
  *   register new ones, write, support every citation, submit)
  *   → harness checks → write the entry and its new sources in one transaction.
  * The entry ends up "sourced", ready for the fact-checker.
+ *
+ * `light`: revise after a failed batch check without research. The harness loads
+ * the entry's cited sources itself; the agent has no tools but submit, and
+ * rewrites the entry within its existing, verified excerpts. Costs about a cent.
  */
-export async function authorEntry(label: EntryLabel, id: string, rt: Runtime, opts: { dryRun?: boolean; force?: boolean } = {}): Promise<AuthorResult> {
+export async function authorEntry(label: EntryLabel, id: string, rt: Runtime, opts: { dryRun?: boolean; force?: boolean; light?: boolean } = {}): Promise<AuthorResult> {
   const setup = await withRead(rt.driver, async (tx) => {
     const subject = await loadSubject(tx, label, id);
     const review = (await loadLatestReviews(tx)).get(entryKey(label, id));
     return { ...subject, review, bibliography: await loadSources(tx) };
   });
   const { entry, review } = setup;
-  const task = authorTask(entry, review, setup.hash) ?? (opts.force && entry.status !== "reviewed" ? "revise" : null);
+  const task = authorTask(entry, review, setup.hash) ?? (opts.force && entry.status === "sourced" ? "revise" : null);
   if (!task) {
     return { status: "skipped", label, id, runId: "-", costUsd: 0, reason: `${entry.status}${review ? ` (last review: ${review.verdict})` : ""}; nothing for the author to do (use --force to rewrite a sourced entry)` };
   }
 
+  const light = !!opts.light && task === "revise";
   const run = startRun("author", id);
   let accepted: AuthorSubmission | undefined;
   let gaveUp: string[] | undefined;
-  run.log.event("start", { label, id, task, hash: setup.hash, model: rt.config.model, dryRun: !!opts.dryRun });
+  run.log.event("start", { label, id, task, light, hash: setup.hash, model: rt.config.model, dryRun: !!opts.dryRun });
+
+  if (light) {
+    // The excerpts are checked against the sources as fetched now, so load them before the agent starts.
+    for (const [key, source] of Object.entries(setup.sources)) {
+      const url = source.url ?? (source.doi ? `https://doi.org/${source.doi}` : undefined);
+      if (!url) continue;
+      try {
+        await loadDocument(url, { evidence: run.evidence, signal: rt.signal });
+      } catch (e) {
+        return { status: "incomplete", label, id, runId: run.id, costUsd: 0, reason: `couldn't re-read "${key}" for a light revision (${(e as Error).message})` };
+      }
+    }
+  }
 
   const registry: SourceRegistry = new Map();
   const register = createRegisterSourceTool({ evidence: run.evidence, sourceExists: (k) => k in setup.bibliography, today: run.today }, registry);
@@ -67,13 +86,13 @@ export async function authorEntry(label: EntryLabel, id: string, rt: Runtime, op
   const loop = await runAgentLoop({
     client: rt.client,
     model: rt.config.model,
-    effort: rt.config.effort,
+    effort: light ? "medium" : rt.config.effort,
     fallback: rt.config.fallback,
-    system: `${readFileSync(join(import.meta.dirname, "prompt.md"), "utf8")}\n${SOURCE_POLICY}\n`,
+    system: light ? readFileSync(join(import.meta.dirname, "light-prompt.md"), "utf8") : `${readFileSync(join(import.meta.dirname, "prompt.md"), "utf8")}\n${SOURCE_POLICY}\n`,
     prompt: taskPrompt(task, entry, setup.sources, task === "revise" ? review : undefined, run.today),
-    tools: [...sourceTools, getIdea, getEvent, findSimilarIdeas, register, submit] as AgentTool[],
-    serverTools: webSearch(rt.config.maxWebSearches),
-    maxTurns: rt.config.maxTurns,
+    tools: (light ? [submit] : [...sourceTools, getIdea, getEvent, findSimilarIdeas, register, submit]) as AgentTool[],
+    serverTools: light ? [] : webSearch(rt.config.maxWebSearches),
+    maxTurns: light ? 6 : rt.config.maxTurns,
     maxUsd: rt.config.maxUsd,
     ctx: { evidence: run.evidence, signal: rt.signal, graph: { driver: rt.driver, embedder: rt.embedder } },
     log: run.log,
@@ -105,7 +124,8 @@ export async function authorEntry(label: EntryLabel, id: string, rt: Runtime, op
       model: rt.config.model,
       loop,
       outcome: s.decision === "write" ? "written" : "declined",
-      summary: `${task}: ${s.reason}`,
+      props: { light: light ? 1 : 0 },
+      summary: `${light ? "light " : ""}${task}: ${s.reason}`,
       about: { label: labelOf(entry), key: id },
     });
   });
