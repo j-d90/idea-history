@@ -18,6 +18,11 @@ npm run dev        # http://localhost:5173
 | `npm run typecheck`          | Run the TypeScript compiler only                  |
 | `npm run review-hash -- <id>` | Print the content hash a review must record      |
 | `npm run pdftext -- <src>`   | Print a PDF's text page by page, for checking sources |
+| `npm run review -- <id>`     | Run the fact-checker agent on an idea ([agent/README.md](agent/README.md)) |
+| `npm test`                   | Fact-checker unit tests                           |
+| `npm run kg:up` / `kg:migrate` / `kg:import` | Local Neo4j knowledge graph ([kg/README.md](kg/README.md)) |
+
+Copy `.env.example` to `.env` and fill in `ANTHROPIC_API_KEY` (for reviews) and `NEO4J_PASSWORD` (for the graph).
 
 Requires Node 23.6+ (scripts run TypeScript directly via Node's type stripping).
 
@@ -38,7 +43,8 @@ scripts/vite-plugin-content.ts  # exposes rendered content to the app as `virtua
 scripts/validate.ts, review-hash.ts, pdftext.ts
 src/data/eras.ts                # era boundaries and descriptions
 src/timeline.ts, main.ts, format.ts, style.css
-.claude/agents/fact-checker.md  # the review agent
+agent/                          # the fact-checker service
+kg/                             # Neo4j knowledge graph (replaces content/ after the prototype)
 ```
 
 ## Content format
@@ -92,7 +98,7 @@ lam-2010:
 
 - **draft**: unverified, shown with an "Unverified" badge. May have no sources.
 - **sourced**: the author has cited every claim. Requires `date.marks`, a body with citations, a `why` and sources for every link, and every listed source cited somewhere.
-- **reviewed**: the [fact-checker agent](.claude/agents/fact-checker.md) has independently checked every claim and passed it. Requires a `review` block whose hash matches the current content, including the cited sources, and a passing report in `content/reviews/<id>.md`. Any later edit to the idea or its sources fails the build until it is re-reviewed or set back to `sourced`.
+- **reviewed**: the [fact-checker agent](agent/README.md) has independently checked every claim and passed it. Requires a `review` block whose hash matches the current content, including the cited sources, and a passing report in `content/reviews/<id>.md`. Any later edit to the idea or its sources fails the build until it is re-reviewed or set back to `sourced`.
 
 See [CLAUDE.md](CLAUDE.md) for the authoring workflow.
 

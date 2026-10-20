@@ -10,7 +10,13 @@
     "validate": "node --disable-warning=ExperimentalWarning scripts/validate.ts",
     "typecheck": "tsc",
     "review-hash": "node --disable-warning=ExperimentalWarning scripts/review-hash.ts",
-    "pdftext": "node --disable-warning=ExperimentalWarning scripts/pdftext.ts"
+    "pdftext": "node --disable-warning=ExperimentalWarning scripts/pdftext.ts",
+    "review": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agent/src/cli.ts",
+    "kg:up": "docker compose --env-file .env -f kg/docker-compose.yml up -d --wait",
+    "kg:down": "docker compose --env-file .env -f kg/docker-compose.yml down",
+    "kg:migrate": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env kg/src/migrate.ts",
+    "kg:import": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env kg/src/import.ts",
+    "test": "node --disable-warning=ExperimentalWarning --test agent/test/*.test.ts kg/test/*.test.ts"
   },
   "devDependencies": {
     "@types/markdown-it": "^14.2.0",
@@ -21,5 +27,9 @@
     "vite": "^5.4.10",
     "yaml": "^2.9.1",
     "zod": "^3.25.76"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.135.0",
+    "neo4j-driver": "^6.2.0"
   }
 }

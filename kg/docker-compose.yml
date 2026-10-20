@@ -1,0 +1,25 @@
+# Local Neo4j for the History of Ideas knowledge graph.
+# Start with `npm run kg:up` (reads NEO4J_PASSWORD from the project's .env).
+name: history-of-ideas
+
+services:
+  neo4j:
+    image: neo4j:5.26-community
+    # Bound to localhost only: the graph is not exposed to the network.
+    ports:
+      - "127.0.0.1:7474:7474" # browser UI: http://localhost:7474
+      - "127.0.0.1:7687:7687" # bolt
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:?set NEO4J_PASSWORD in .env (at least 8 characters)}
+    volumes:
+      - neo4j-data:/data
+      - neo4j-logs:/logs
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:7474 || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+volumes:
+  neo4j-data:
+  neo4j-logs:

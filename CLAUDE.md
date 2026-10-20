@@ -7,15 +7,25 @@ A public timeline of human ideas. Accuracy matters more than coverage: an entry 
 - `npm run dev`: dev server at http://localhost:5173
 - `npm run validate`: check all content (also runs first in `npm run build`)
 - `npm run typecheck`
+- `npm test`: agent unit tests
+- `npm run review -- <id> [--dry-run]`: run the fact-checker (see `agent/README.md`); costs API credits
 - `npm run review-hash -- <id>`: the hash a review of an idea must record
+- `npm run kg:up` / `kg:migrate` / `kg:import`: local Neo4j knowledge graph (see `kg/README.md`)
 - `npm run pdftext -- <url-or-path> [first] [last]`: read a PDF source
+
+## Layout
+
+- `content/`: prototype content store (ideas, bibliography, review reports); the site reads it
+- `kg/`: Neo4j knowledge graph that will replace `content/`
+- `agent/`: the fact-checker service
+- `src/`, `scripts/`: the site and content tooling
 
 ## Content workflow
 
 `draft` → `sourced` (author) → `reviewed` (fact-checker only)
 
 1. **Author** (you, or any agent writing content): research the idea, add sources to `content/sources.yaml`, write the idea in `content/ideas/<id>.md` with `[@key, locator]` citations, and set `status: sourced` once every claim is cited. The format is in `README.md`; the schema is `src/content/schema.ts`.
-2. **Review**: hand the idea to the `fact-checker` subagent (`.claude/agents/fact-checker.md`). It checks every claim against its sources, writes `content/reviews/<id>.md`, and sets `status: reviewed` only on a pass.
+2. **Review**: run `npm run review -- <id>`. The fact-checker agent (`agent/`) checks every claim against its sources, writes `content/reviews/<id>.md`, and sets `status: reviewed` only on a pass. Ask the user before running it, since each review costs API credits.
 3. **On fail**: fix what the report lists, then send it back for review. Don't argue a verdict by editing the report.
 
 Rules for authors:

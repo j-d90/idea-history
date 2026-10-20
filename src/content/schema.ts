@@ -12,7 +12,7 @@ export const categories = [
 
 export const statuses = ["draft", "sourced", "reviewed"] as const;
 
-/** The one agent accountable for reviews. See .claude/agents/fact-checker.md. */
+/** The one agent accountable for reviews. See agent/README.md. */
 export const REVIEWER = "fact-checker";
 
 const year = z.number().int().min(-10000).max(2100);
