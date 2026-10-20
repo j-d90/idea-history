@@ -9,7 +9,7 @@ import type { CheckContext, ObservationType } from "./observations/types.ts";
 // the same way for every type. New sources are registered during the run with
 // register_source, and cited here by key.
 
-export const MAX_OBSERVATIONS = 30;
+export const MAX_OBSERVATIONS = 60;
 const MAX_REJECTIONS = 3;
 
 export function submissionSchema<I>(type: ObservationType<I>) {

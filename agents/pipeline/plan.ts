@@ -52,11 +52,12 @@ export function sampled(id: string, rate: number): boolean {
  * it's dense. A first guess, to be tuned as coverage grows.
  */
 export function windowSize(year: number): number {
-  if (year < -1_000_000) return 1_000_000;
-  if (year < -100_000) return 100_000;
-  if (year < -30_000) return 10_000;
-  if (year < -10_000) return 5_000;
-  if (year < -4_000) return 1_000;
+  if (year < -1_000_000) return 500_000;
+  if (year < -300_000) return 100_000;
+  if (year < -100_000) return 25_000;
+  if (year < -50_000) return 10_000;
+  if (year < -10_000) return 2_500;
+  if (year < -4_000) return 500;
   if (year < -1000) return 100;
   if (year < 500) return 50;
   if (year < 1500) return 25;

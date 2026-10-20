@@ -54,7 +54,7 @@ export async function gather<I>(
   const run = startRun("gatherer", `${type.name}-${periodSlug(period)}`);
   let accepted: Submission<I> | undefined;
   let gaveUp: string[] | undefined;
-  const searches = opts.maxSearches ?? Math.max(rt.config.maxWebSearches, 20);
+  const searches = opts.maxSearches ?? Math.max(rt.config.maxWebSearches, 30);
   run.log.event("start", { type: type.name, period, focus: opts.focus, model: rt.config.model, searches, dryRun: !!opts.dryRun });
 
   const registry: SourceRegistry = new Map();
@@ -105,7 +105,7 @@ export async function gather<I>(
   }
   const s: Submission<I> = accepted;
   const newSources = citedRegistered(type, s, registry);
-  const sources = Object.keys(newSources);
+  let sources = Object.keys(newSources);
   run.log.event("accepted", { submission: s, newSources });
 
   if (opts.dryRun) {
@@ -121,8 +121,23 @@ export async function gather<I>(
   }
 
   const written = await withWrite(rt.driver, async (tx) => {
-    for (const [key, source] of Object.entries(newSources)) await putSource(tx, key, source);
-    const result = await type.write(tx, s.observations, { runId: run.id, bibliography: { ...setup.bibliography, ...newSources } });
+    // Another run may have registered the same key meanwhile: reuse it if it's the same work, otherwise rename ours.
+    const current = await loadSources(tx, Object.keys(newSources));
+    const renamed = new Map<string, string>();
+    for (const [key, source] of Object.entries(newSources)) {
+      const other = current[key];
+      if (other && other.url === source.url) continue;
+      let final = key;
+      for (let n = 2; other && (await loadSources(tx, [final]))[final]; n++) final = `${key}-${n}`;
+      if (final !== key) renamed.set(key, final);
+      await putSource(tx, final, source);
+    }
+    for (const o of s.observations) for (const c of type.citations(o)) c.source_key = renamed.get(c.source_key) ?? c.source_key;
+    for (const [from, to] of renamed) {
+      newSources[to] = newSources[from];
+      delete newSources[from];
+    }
+    const result = await type.write(tx, s.observations, { runId: run.id, bibliography: { ...setup.bibliography, ...current, ...newSources } });
     await recordAgentRun(tx, run, {
       model: rt.config.model,
       loop,
@@ -133,6 +148,7 @@ export async function gather<I>(
     return result;
   });
 
+  sources = Object.keys(newSources);
   await refreshEmbeddings(rt.driver, rt.embedder);
   run.log.event("end", { ...written, costUsd: loop.costUsd });
   return { ...base, status: "saved", ...written, sources, omitted: s.omitted.length, coverage: s.coverage_notes };

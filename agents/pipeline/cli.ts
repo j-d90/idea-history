@@ -1,12 +1,14 @@
 // Plan or run the content pipeline. Usage:
 //   npm run pipeline -- [--from <year> --to <year> [--step <years>]] [--only <stages>]   show the plan (free)
-//   npm run pipeline -- ... --run --budget <usd> [--limit <tasks>]                       run it
+//   npm run pipeline -- ... --run --budget <usd> [--limit <tasks>] [--concurrency <n>]   run it
 //
 // By default only events are processed: gather, batch check, light revision after a
 // failed check, and a full review for a sample of checked events (--sample, default
 // 0.05). --ideas adds the idea stages (interpret, author, link) and idea reviews.
 // Stages run in this order: review, revise, check, link, author, interpret, gather
 // (downstream first, so the budget finishes entries before starting new ones).
+// --concurrency n runs n tasks at once from a plan fixed at the start (it doesn't
+// re-plan between tasks), e.g. to populate many gathering windows quickly.
 // --from/--to add gathering windows for that range (years negative for BCE, or
 // like 2500bce); periods gathered before are always considered for interpretation.
 import { parseArgs } from "node:util";
@@ -25,7 +27,7 @@ import { planWork, STAGES, taskKey, windows, type Stage, type Task } from "./pla
 
 const USAGE = `usage:
   npm run pipeline -- [--from <year> --to <year> [--step <years>]] [--only <stages>] [--ideas] [--sample <0-1>]
-  npm run pipeline -- ... --run --budget <usd> [--limit <tasks>]`;
+  npm run pipeline -- ... --run --budget <usd> [--limit <tasks>] [--concurrency <n>]`;
 const { values } = parseArgs({
   args: joinNegativeValues(process.argv.slice(2), ["--from", "--to"]),
   options: {
@@ -38,6 +40,7 @@ const { values } = parseArgs({
     limit: { type: "string" },
     ideas: { type: "boolean", default: false },
     sample: { type: "string" },
+    concurrency: { type: "string" },
   },
 });
 
@@ -53,6 +56,8 @@ const periods = from !== undefined && to !== undefined ? windows(from, to, value
 const sample = values.sample !== undefined ? Number(values.sample) : undefined;
 if (sample !== undefined && !(sample >= 0 && sample <= 1)) fail("--sample takes a share between 0 and 1, e.g. 0.05");
 const planOpts = { periods, stages, ideas: values.ideas, sample };
+const concurrency = values.concurrency ? Number(values.concurrency) : 1;
+if (!(Number.isInteger(concurrency) && concurrency >= 1 && concurrency <= 8)) fail("--concurrency takes a whole number from 1 to 8");
 
 function fail(message: string): never {
   console.log(`${message}\n\n${USAGE}`);
@@ -78,8 +83,10 @@ const describe = (t: Task): string => {
 async function runTask(t: Task, rt: Runtime): Promise<{ costUsd: number; outcome: string }> {
   const out = (r: { costUsd: number; status: string; reason?: string }) => ({ costUsd: r.costUsd, outcome: r.status + (r.reason ? `: ${r.reason}` : "") });
   switch (t.stage) {
-    case "gather":
-      return out(await gather(events, t.period, rt));
+    case "gather": {
+      const r = await gather(events, t.period, rt);
+      return { costUsd: r.costUsd, outcome: r.status === "incomplete" ? `incomplete: ${r.reason}` : `${r.created.length} new event(s), ${r.sources.length} new source(s)` };
+    }
     case "interpret":
       return out(await interpretPeriod(t.period, rt));
     case "check": {
@@ -130,7 +137,8 @@ const attempted = new Set<string>();
 let spent = 0;
 let done = 0;
 try {
-  while (done < limit && !rt.signal.aborted) {
+  if (concurrency > 1) await runConcurrently();
+  while (concurrency === 1 && done < limit && !rt.signal.aborted) {
     const plan = await planWork(rt.driver, planOpts);
     const next = plan.tasks.find((t) => !attempted.has(taskKey(t)));
     if (!next) {
@@ -157,3 +165,38 @@ try {
   await rt.close();
 }
 console.log(`\n${done} task(s) run, about $${spent.toFixed(2)} spent.`);
+
+/** Run a fixed plan with several workers. Each task's estimate is held against the budget while it runs. */
+async function runConcurrently(): Promise<void> {
+  const plan = await planWork(rt.driver, planOpts);
+  const queue = plan.tasks.slice(0, Number.isFinite(limit) ? limit : undefined);
+  let reserved = 0;
+  let stopped = false;
+  console.error(`${queue.length} task(s) planned; running ${concurrency} at a time.`);
+  const worker = async () => {
+    while (queue.length && !stopped && !rt.signal.aborted) {
+      const next = queue[0];
+      const estimate = plan.cost(next);
+      if (spent + reserved + estimate > budget!) {
+        if (!stopped) console.log(`Stopping: the next task (${next.stage} ${describe(next)}, about $${estimate.toFixed(2)}) would likely exceed the budget.`);
+        stopped = true;
+        return;
+      }
+      queue.shift();
+      reserved += estimate;
+      const n = ++done;
+      console.error(`[${n}] ${next.stage} ${describe(next)} started`);
+      try {
+        const r = await runTask(next, rt);
+        spent += r.costUsd;
+        console.log(`[${n}] ${next.stage} ${describe(next)}: ${r.outcome} ($${r.costUsd.toFixed(2)}; $${spent.toFixed(2)} spent)`);
+      } catch (e) {
+        if (rt.signal.aborted) return;
+        console.log(`[${n}] ${next.stage} ${describe(next)}: error: ${(e as Error).message}`);
+      } finally {
+        reserved -= estimate;
+      }
+    }
+  };
+  await Promise.all(Array.from({ length: concurrency }, worker));
+}
