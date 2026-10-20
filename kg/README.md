@@ -35,7 +35,8 @@ Authors, editors and translators become shared `Person` nodes, so queries like "
 
 | File | |
 |---|---|
-| `docker-compose.yml` | Neo4j 5.26 Community, localhost-only, persistent volumes |
+| `docker-compose.yml` | Neo4j 2026.09 Community, localhost-only, persistent volumes |
+| `src/compose.ts` | Runs compose for `kg:up`/`kg:down`, after checking the Docker engine responds |
 | `schema.cypher` | Uniqueness constraints and indexes |
 | `src/driver.ts` | Connection from environment variables |
 | `src/migrate.ts`, `src/import.ts` | Schema and content sync |

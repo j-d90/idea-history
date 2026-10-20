@@ -11,7 +11,10 @@ const statements = readFileSync(join(import.meta.dirname, "..", "schema.cypher")
   .map((s) => s.trim())
   .filter(Boolean);
 
-const driver = await connect(neo4jConfigFromEnv());
+const driver = await connect(neo4jConfigFromEnv()).catch((e: Error) => {
+  console.error(e.message);
+  process.exit(1);
+});
 try {
   for (const statement of statements) await driver.executeQuery(statement);
   console.log(`✓ applied ${statements.length} schema statements`);

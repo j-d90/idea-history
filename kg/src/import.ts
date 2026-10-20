@@ -27,7 +27,10 @@ const reviews = ideas
     return { id: i.id, runId, by: i.review!.by, date: i.review!.date, hash: i.review!.hash, report };
   });
 
-const driver = await connect(neo4jConfigFromEnv());
+const driver = await connect(neo4jConfigFromEnv()).catch((e: Error) => {
+  console.error(e.message);
+  process.exit(1);
+});
 const session = driver.session();
 try {
   await session.executeWrite(async (tx) => {

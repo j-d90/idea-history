@@ -14,7 +14,12 @@ export function neo4jConfigFromEnv(env: NodeJS.ProcessEnv = process.env): Neo4jC
 export async function connect(cfg: Neo4jConfig): Promise<Driver> {
   if (!cfg.password) throw new Error("NEO4J_PASSWORD is not set (see .env.example)");
   // Plain JS numbers instead of neo4j Integer objects; our values are small.
-  const driver = neo4j.driver(cfg.uri, neo4j.auth.basic(cfg.user, cfg.password), { disableLosslessIntegers: true });
+  const driver = neo4j.driver(cfg.uri, neo4j.auth.basic(cfg.user, cfg.password), {
+    disableLosslessIntegers: true,
+    // Fail fast instead of hanging when Neo4j is down or unreachable.
+    connectionTimeout: 10_000,
+    connectionAcquisitionTimeout: 15_000,
+  });
   try {
     await driver.verifyConnectivity();
   } catch (e) {

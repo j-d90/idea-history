@@ -4,7 +4,8 @@ name: history-of-ideas
 
 services:
   neo4j:
-    image: neo4j:5.26-community
+    # Calendar-versioned release; pinned so upgrades are deliberate.
+    image: neo4j:2026.09.0-community
     # Bound to localhost only: the graph is not exposed to the network.
     ports:
       - "127.0.0.1:7474:7474" # browser UI: http://localhost:7474
@@ -15,10 +16,12 @@ services:
       - neo4j-data:/data
       - neo4j-logs:/logs
     healthcheck:
-      test: ["CMD-SHELL", "wget -q --spider http://localhost:7474 || exit 1"]
+      # Healthy once Bolt accepts connections (what the scripts use).
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/7687' || exit 1"]
       interval: 5s
       timeout: 5s
       retries: 30
+      start_period: 10s
 
 volumes:
   neo4j-data:
