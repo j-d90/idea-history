@@ -165,7 +165,7 @@ a { color: inherit; text-decoration: none; }
 
 .stats {
   display: inline-grid;
-  grid-template-columns: repeat(3, auto);
+  grid-template-columns: repeat(4, auto);
   margin: 48px 0 0;
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -188,6 +188,7 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
 }
+.stats-of { font-size: 14px; font-weight: 500; color: var(--fg-faint); }
 
 /* ---------- Filters ---------- */
 
@@ -363,6 +364,20 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: 0.06em;
   color: var(--fg-faint);
 }
+.status {
+  margin-left: auto;
+  padding: 1px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+.status-draft { color: var(--fg-faint); border-style: dashed; }
+.status-sourced { color: var(--cat-science); border-color: color-mix(in srgb, var(--cat-science) 35%, transparent); }
+
+.idea-year[title] { cursor: help; }
+.idea-year-mark { margin-left: 1px; color: var(--fg-faint); }
+
 .idea-title {
   margin: 6px 0 0;
   font-size: 18px;
@@ -412,6 +427,26 @@ a { color: inherit; text-decoration: none; }
 }
 .chip:hover { color: var(--fg); border-color: var(--border-strong); }
 
+.idea-sources {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--fg-muted);
+}
+.idea-sources summary {
+  width: fit-content;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fg-faint);
+  cursor: pointer;
+}
+.idea-sources summary:hover { color: var(--fg); }
+.idea-sources ol { margin: 8px 0 0; padding-left: 20px; }
+.idea-sources li + li { margin-top: 4px; }
+.idea-sources a { text-decoration: underline; text-decoration-color: var(--border-strong); text-underline-offset: 2px; }
+.idea-sources a:hover { text-decoration-color: var(--fg); }
+
 /* reveal on scroll */
 .idea, .era-header {
   opacity: 0;
@@ -442,7 +477,7 @@ a { color: inherit; text-decoration: none; }
   :root { --year-col: 0px; --node-col: 20px; }
   .topbar, .filters-inner { padding-left: 16px; padding-right: 16px; }
   .hero { padding: 80px 16px 64px; }
-  .stats div { padding: 12px 18px; }
+  .stats div { padding: 12px 14px; }
   .timeline { padding: 32px 16px 48px; }
   .timeline::before { left: calc(16px + var(--node-col) / 2); }
   .era-header { padding-left: 16px; }

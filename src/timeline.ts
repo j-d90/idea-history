@@ -1,28 +1,52 @@
-import type { Category, Era, Idea } from "./types";
-import { categoryLabels, formatRange, formatYear } from "./format";
+import type { Category, Era, Idea, Link } from "./types";
+import {
+  categoryLabels,
+  describeDate,
+  escapeHtml as esc,
+  formatRange,
+  formatSource,
+  formatYear,
+  statusLabels,
+} from "./format";
 
 const byId = (ideas: Idea[]) => new Map(ideas.map((i) => [i.id, i]));
 
 function renderIdea(idea: Idea, lookup: Map<string, Idea>): string {
-  const links = (idea.buildsOn ?? [])
-    .map((id) => lookup.get(id))
-    .filter((i): i is Idea => !!i)
-    .map((i) => `<a class="chip" href="#${i.id}">${i.title}</a>`)
+  const links = idea.buildsOn
+    .map((link) => ({ link, target: lookup.get(link.id) }))
+    .filter((l): l is { link: Link; target: Idea } => !!l.target)
+    .map(
+      ({ link, target }) =>
+        `<a class="chip" href="#${target.id}"${link.why ? ` title="${esc(link.why)}"` : ""}>${esc(target.title)}</a>`,
+    )
     .join("");
 
+  const sources = idea.sources.length
+    ? `<details class="idea-sources">
+        <summary>Sources (${idea.sources.length})</summary>
+        <ol>${idea.sources.map((s) => `<li>${formatSource(s)}</li>`).join("")}</ol>
+      </details>`
+    : "";
+
+  const dateNote = describeDate(idea.date);
+
   return `
-    <article class="idea" id="${idea.id}" data-category="${idea.category}" data-year="${idea.year}">
-      <div class="idea-year">${formatYear(idea.year, idea.approx)}</div>
+    <article class="idea" id="${idea.id}" data-category="${idea.category}" data-status="${idea.status}" data-year="${idea.date.year}">
+      <div class="idea-year"${dateNote ? ` title="${esc(dateNote)}"` : ""}>
+        ${formatYear(idea.date.year, idea.date.approx)}${dateNote ? `<span class="idea-year-mark" aria-hidden="true">*</span>` : ""}
+      </div>
       <div class="idea-node" aria-hidden="true"></div>
       <div class="idea-card">
         <div class="idea-meta">
           <span class="cat-dot cat-${idea.category}"></span>
           <span>${categoryLabels[idea.category]}</span>
+          ${idea.status === "reviewed" ? "" : `<span class="status status-${idea.status}">${statusLabels[idea.status]}</span>`}
         </div>
-        <h3 class="idea-title">${idea.title}</h3>
-        <p class="idea-origin">${idea.origin}</p>
-        <p class="idea-summary">${idea.summary}</p>
+        <h3 class="idea-title">${esc(idea.title)}</h3>
+        <p class="idea-origin">${esc(idea.origin)}</p>
+        <p class="idea-summary">${esc(idea.summary)}</p>
         ${links ? `<div class="idea-links"><span class="idea-links-label">Builds on</span>${links}</div>` : ""}
+        ${sources}
       </div>
     </article>`;
 }
@@ -42,13 +66,13 @@ function renderEra(era: Era, ideas: Idea[], lookup: Map<string, Idea>): string {
 }
 
 export function renderTimeline(eras: Era[], ideas: Idea[]): string {
-  const sorted = [...ideas].sort((a, b) => a.year - b.year);
+  const sorted = [...ideas].sort((a, b) => a.date.year - b.date.year);
   const lookup = byId(sorted);
   return eras
     .map((era) =>
       renderEra(
         era,
-        sorted.filter((i) => i.year >= era.start && i.year < era.end),
+        sorted.filter((i) => i.date.year >= era.start && i.date.year < era.end),
         lookup,
       ),
     )

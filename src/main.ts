@@ -1,12 +1,12 @@
 import "./style.css";
+import { ideas } from "virtual:ideas";
 import { eras } from "./data/eras";
-import { ideas } from "./data/ideas";
-import type { Category } from "./types";
 import { formatYear } from "./format";
 import { observeReveal, renderFilters, renderTimeline, trackCurrentYear } from "./timeline";
 
-const categories = [...new Set(ideas.map((i) => i.category))] as Category[];
-const span = new Date().getFullYear() - Math.min(...ideas.map((i) => i.year));
+const categories = [...new Set(ideas.map((i) => i.category))];
+const span = new Date().getFullYear() - Math.min(...ideas.map((i) => i.date.year));
+const verified = ideas.filter((i) => i.status !== "draft").length;
 
 const app = document.querySelector<HTMLDivElement>("#app")!;
 
@@ -32,6 +32,7 @@ app.innerHTML = `
         <div><dt>Years</dt><dd>${span.toLocaleString("en-US")}</dd></div>
         <div><dt>Ideas</dt><dd>${ideas.length}</dd></div>
         <div><dt>Eras</dt><dd>${eras.length}</dd></div>
+        <div><dt>Sourced</dt><dd>${verified}<span class="stats-of">/${ideas.length}</span></dd></div>
       </dl>
     </section>
 
