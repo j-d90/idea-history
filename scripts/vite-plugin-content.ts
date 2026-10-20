@@ -1,14 +1,17 @@
 import type { Plugin } from "vite";
-import { contentRoot, loadContent } from "./content.ts";
+import { connect, neo4jConfigFromEnv } from "../kg/src/driver.ts";
+import { loadContent } from "../kg/src/repository.ts";
 import { renderIdea } from "./render.ts";
 
 const VIRTUAL_ID = "virtual:ideas";
 const RESOLVED_ID = "\0" + VIRTUAL_ID;
 
 /**
- * Exposes validated, pre-rendered content as `virtual:ideas`. Parsing, validation
- * and Markdown rendering run in Node, so the browser bundle only receives JSON.
- * Invalid content fails the build, and in dev shows Vite's error overlay.
+ * Exposes validated, pre-rendered content from the knowledge graph as
+ * `virtual:ideas`. Querying, validation and Markdown rendering run in Node, so
+ * the browser bundle only receives JSON. Candidate ideas (uncurated extractor
+ * output) are left out. Invalid content fails the build, and in dev shows
+ * Vite's error overlay. In dev, each page load re-reads the graph.
  */
 export function content(): Plugin {
   return {
@@ -16,23 +19,28 @@ export function content(): Plugin {
     resolveId(id) {
       if (id === VIRTUAL_ID) return RESOLVED_ID;
     },
-    load(id) {
+    async load(id) {
       if (id !== RESOLVED_ID) return;
-      const { ideas, bibliography, warnings } = loadContent();
-      for (const w of warnings) this.warn(w);
-      return `export const ideas = ${JSON.stringify(ideas.map((i) => renderIdea(i, bibliography)))};`;
+      const driver = await connect(neo4jConfigFromEnv());
+      try {
+        const { ideas, bibliography, links } = await loadContent(driver, { validate: true });
+        const visible = ideas.filter((i) => i.status !== "candidate");
+        const shown = new Set(visible.map((i) => i.id));
+        const visibleLinks = links.filter((l) => shown.has(l.from) && shown.has(l.to));
+        return `export const ideas = ${JSON.stringify(visible.map((i) => renderIdea(i, bibliography, visibleLinks)))};`;
+      } finally {
+        await driver.close();
+      }
     },
     configureServer(server) {
-      server.watcher.add(contentRoot);
-      const reload = (file: string) => {
-        if (!file.startsWith(contentRoot)) return;
-        const mod = server.moduleGraph.getModuleById(RESOLVED_ID);
-        if (mod) server.moduleGraph.invalidateModule(mod);
-        server.ws.send({ type: "full-reload" });
-      };
-      server.watcher.on("change", reload);
-      server.watcher.on("add", reload);
-      server.watcher.on("unlink", reload);
+      // The graph has no file to watch, so refresh content on each page request.
+      server.middlewares.use((req, _res, next) => {
+        if (req.url === "/" || req.url === "/index.html") {
+          const mod = server.moduleGraph.getModuleById(RESOLVED_ID);
+          if (mod) server.moduleGraph.invalidateModule(mod);
+        }
+        next();
+      });
     },
   };
 }

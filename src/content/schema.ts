@@ -10,23 +10,27 @@ export const categories = [
   "economics",
 ] as const;
 
-export const statuses = ["draft", "sourced", "reviewed"] as const;
+/**
+ * candidate: proposed by the extractor agent from a source; not curated, not shown on the site.
+ * draft: written but not sourced. sourced: every claim cited. reviewed: passed the fact-checker.
+ */
+export const statuses = ["candidate", "draft", "sourced", "reviewed"] as const;
 
-/** The one agent accountable for reviews. See agent/README.md. */
+/** The one agent accountable for reviews. See agents/README.md. */
 export const REVIEWER = "fact-checker";
 
 const year = z.number().int().min(-10000).max(2100);
-const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "use YYYY-MM-DD");
+export const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "use YYYY-MM-DD");
 const httpUrl = z
   .string()
   .url()
   .refine((u) => /^https?:\/\//.test(u), "url must be http(s)");
 
-export const sourceKey = z
-  .string()
-  .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "use lowercase letters, digits and hyphens");
+const slug = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "use lowercase letters, digits and hyphens");
+export const sourceKey = slug;
+export const ideaId = slug;
 
-// ---------- Bibliography (content/sources.yaml) ----------
+// ---------- Sources (bibliography) ----------
 
 export const sourceSchema = z
   .object({
@@ -77,7 +81,7 @@ export const sourceSchema = z
 
 export const bibliographySchema = z.record(sourceKey, sourceSchema);
 
-// ---------- Ideas (content/ideas/*.md) ----------
+// ---------- Ideas ----------
 
 export const dateSchema = z
   .object({
@@ -100,16 +104,6 @@ export const dateSchema = z
     message: "latest must be >= year",
   });
 
-export const linkSchema = z
-  .object({
-    id: z.string(),
-    /** One line on how this idea draws on the earlier one. */
-    why: z.string().optional(),
-    /** Keys into this idea's `sources`. */
-    sources: z.array(sourceKey).default([]),
-  })
-  .strict();
-
 export const reviewSchema = z
   .object({
     by: z.literal(REVIEWER),
@@ -119,8 +113,10 @@ export const reviewSchema = z
   })
   .strict();
 
-export const frontmatterSchema = z
+/** An idea as authors edit it (`npm run kg -- idea get|put`), minus the body. */
+export const ideaFieldsSchema = z
   .object({
+    id: ideaId,
     title: z.string().min(1),
     category: z.enum(categories),
     status: z.enum(statuses),
@@ -129,42 +125,101 @@ export const frontmatterSchema = z
     origin: z.string().min(1),
     /** Shown on the card. No citations; the body carries them. */
     summary: z.string().min(1).max(320),
-    buildsOn: z.array(linkSchema).default([]),
-    /** Keys into content/sources.yaml. */
+    /** Other names for the idea; used for search and matching, not shown or reviewed. */
+    aliases: z.array(z.string()).default([]),
+    /** Keys of the sources the idea cites. */
     sources: z.array(sourceKey).default([]),
     review: reviewSchema.optional(),
   })
   .strict();
 
-export const reportSchema = z
+export type Idea = z.infer<typeof ideaFieldsSchema> & {
+  /** Markdown body with [@key, locator] citations. */
+  body: string;
+};
+
+// ---------- Links between ideas ----------
+
+/**
+ * BUILDS_ON: the later idea draws on or develops the earlier one.
+ * REACTS_AGAINST: the later idea critiques or rejects the earlier one.
+ * PARALLELS: similar ideas that arose independently, with no influence between them.
+ */
+export const linkTypes = ["BUILDS_ON", "REACTS_AGAINST", "PARALLELS"] as const;
+
+/**
+ * seed: from the original placeholder content, unverified.
+ * linker: proposed by the linker agent with verified evidence.
+ */
+export const linkOrigins = ["seed", "linker"] as const;
+export const linkStatuses = ["proposed", "reviewed"] as const;
+
+export const ideaLinkSchema = z
   .object({
-    idea: z.string(),
-    verdict: z.enum(["pass", "fail"]),
-    reviewer: z.literal(REVIEWER),
-    date: isoDate,
-    hash: z.string().regex(/^[0-9a-f]{16}$/),
+    /** The later idea. */
+    from: ideaId,
+    /** The earlier idea it relates to. */
+    to: ideaId,
+    type: z.enum(linkTypes),
+    why: z.string().optional(),
+    origin: z.enum(linkOrigins),
+    status: z.enum(linkStatuses),
+    /** Verbatim excerpt supporting the link, from the document at evidenceUrl. */
+    evidence: z.string().optional(),
+    evidenceUrl: z.string().optional(),
+    sourceKey: sourceKey.optional(),
+    locator: z.string().optional(),
+    confidence: z.enum(["low", "medium", "high"]).optional(),
+    runId: z.string().optional(),
+    model: z.string().optional(),
   })
-  .passthrough();
+  .strict();
+
+export type LinkType = (typeof linkTypes)[number];
+export type IdeaLink = z.infer<typeof ideaLinkSchema>;
+
+// ---------- Entities ----------
+
+export const entityKinds = ["person", "group", "place", "work", "institution", "tradition", "language", "concept", "period"] as const;
+
+export const entitySchema = z
+  .object({
+    id: slug,
+    name: z.string().min(1),
+    kind: z.enum(entityKinds),
+    description: z.string().optional(),
+    aliases: z.array(z.string()).default([]),
+  })
+  .strict();
+
+export type EntityKind = (typeof entityKinds)[number];
+export type Entity = z.infer<typeof entitySchema>;
+
+// ---------- Reviews ----------
+
+export interface ReviewRecord {
+  runId: string;
+  ideaId: string;
+  verdict: "pass" | "fail";
+  by: string;
+  date: string;
+  hash: string;
+  report: string;
+}
 
 export type Category = (typeof categories)[number];
 export type Status = (typeof statuses)[number];
 export type Source = z.infer<typeof sourceSchema>;
 export type Bibliography = Record<string, Source>;
 export type IdeaDate = z.infer<typeof dateSchema>;
-export type Link = z.infer<typeof linkSchema>;
 export type Review = z.infer<typeof reviewSchema>;
 
-export type Idea = z.infer<typeof frontmatterSchema> & {
-  /** From the filename. */
-  id: string;
-  /** Markdown body with [@key, locator] citations. */
-  body: string;
-};
-
 /** What the browser receives: content pre-rendered at build time. */
-export type RenderedIdea = Omit<Idea, "body" | "sources"> & {
+export type RenderedIdea = Omit<Idea, "body" | "sources" | "aliases"> & {
   bodyHtml: string;
   /** Plain-text description of the date, citations resolved. */
   dateText: string;
   references: { key: string; html: string }[];
+  /** Links to earlier ideas. */
+  links: Pick<IdeaLink, "to" | "type" | "why" | "origin" | "status">[];
 };

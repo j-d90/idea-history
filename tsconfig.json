@@ -15,5 +15,5 @@
     "isolatedModules": true,
     "skipLibCheck": true
   },
-  "include": ["src", "scripts", "agent", "kg", "vite.config.ts"]
+  "include": ["src", "scripts", "agents", "kg", "vite.config.ts"]
 }

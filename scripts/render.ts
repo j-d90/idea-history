@@ -1,7 +1,7 @@
 import MarkdownIt from "markdown-it";
-import type { Bibliography, Idea, RenderedIdea, Source } from "../src/content/schema.ts";
+import { CITATION, parseCitation, type Citation } from "../src/content/rules.ts";
+import type { Bibliography, Idea, IdeaLink, RenderedIdea, Source } from "../src/content/schema.ts";
 import { escapeHtml as esc, formatYear } from "../src/format.ts";
-import { CITATION, parseCitation, type Citation } from "./content.ts";
 
 // Raw HTML in content is escaped, and markdown-it refuses javascript: links.
 const md = new MarkdownIt({ html: false, linkify: false, typographer: true });
@@ -96,10 +96,11 @@ function describeDate(idea: Idea, bib: Bibliography): string {
   return parts.join(" ");
 }
 
-export function renderIdea(idea: Idea, bib: Bibliography): RenderedIdea {
-  const { body, sources, ...rest } = idea;
+export function renderIdea(idea: Idea, bib: Bibliography, links: IdeaLink[]): RenderedIdea {
+  const { body, sources, aliases: _aliases, ...rest } = idea;
   return {
     ...rest,
+    links: links.filter((l) => l.from === idea.id).map(({ to, type, why, origin, status }) => ({ to, type, why, origin, status })),
     bodyHtml: body ? linkCitations(md.render(body), idea.id, bib) : "",
     dateText: describeDate(idea, bib),
     references: sources

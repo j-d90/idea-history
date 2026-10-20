@@ -7,16 +7,18 @@
     "dev": "vite",
     "build": "npm run validate && tsc && vite build",
     "preview": "vite preview",
-    "validate": "node --disable-warning=ExperimentalWarning scripts/validate.ts",
+    "validate": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env scripts/validate.ts",
     "typecheck": "tsc",
-    "review-hash": "node --disable-warning=ExperimentalWarning scripts/review-hash.ts",
+    "review-hash": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env scripts/review-hash.ts",
     "pdftext": "node --disable-warning=ExperimentalWarning scripts/pdftext.ts",
-    "review": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agent/src/cli.ts",
+    "review": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agents/fact-checker/cli.ts",
     "kg:up": "node --disable-warning=ExperimentalWarning kg/src/compose.ts up",
     "kg:down": "node --disable-warning=ExperimentalWarning kg/src/compose.ts down",
     "kg:migrate": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env kg/src/migrate.ts",
-    "kg:import": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env kg/src/import.ts",
-    "test": "node --disable-warning=ExperimentalWarning --test agent/test/*.test.ts kg/test/*.test.ts"
+    "test": "node --disable-warning=ExperimentalWarning --test agents/test/*.test.ts kg/test/*.test.ts",
+    "extract": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agents/extractor/cli.ts",
+    "link": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agents/linker/cli.ts",
+    "kg": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env kg/src/cli.ts"
   },
   "devDependencies": {
     "@types/markdown-it": "^14.2.0",
@@ -30,6 +32,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.135.0",
-    "neo4j-driver": "^6.2.0"
+    "neo4j-driver": "^6.2.0",
+    "openai": "^7.39.0"
   }
 }

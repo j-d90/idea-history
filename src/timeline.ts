@@ -1,4 +1,4 @@
-import type { Category, Era, Link, RenderedIdea as Idea } from "./types";
+import type { Category, Era, LinkType, RenderedIdea as Idea } from "./types";
 import { categoryLabels, escapeHtml as esc, formatRange, formatYear, statusLabels } from "./format";
 
 const byId = (ideas: Idea[]) => new Map(ideas.map((i) => [i.id, i]));
@@ -29,15 +29,35 @@ function renderDetails(idea: Idea): string {
     </details>`;
 }
 
-function renderIdea(idea: Idea, lookup: Map<string, Idea>): string {
-  const links = idea.buildsOn
-    .map((link) => ({ link, target: lookup.get(link.id) }))
-    .filter((l): l is { link: Link; target: Idea } => !!l.target)
-    .map(
-      ({ link, target }) =>
-        `<a class="chip" href="#${target.id}"${link.why ? ` title="${esc(link.why)}"` : ""}>${esc(target.title)}</a>`,
-    )
+const LINK_LABELS: Record<LinkType, string> = {
+  BUILDS_ON: "Builds on",
+  REACTS_AGAINST: "Reacts against",
+  PARALLELS: "Parallels",
+};
+
+const LINK_STATUS: Record<string, string> = {
+  seed: "Unverified link from the original placeholder content",
+  linker: "Proposed by the linker agent with cited evidence; not yet reviewed",
+};
+
+function renderLinks(idea: Idea, lookup: Map<string, Idea>): string {
+  return (Object.keys(LINK_LABELS) as LinkType[])
+    .map((type) => {
+      const chips = idea.links
+        .filter((l) => l.type === type && lookup.has(l.to))
+        .map((l) => {
+          const status = l.status === "reviewed" ? "Reviewed" : LINK_STATUS[l.origin];
+          const title = [l.why, status].filter(Boolean).join(" · ");
+          return `<a class="chip chip-${l.status === "reviewed" ? "reviewed" : l.origin}" href="#${l.to}" title="${esc(title)}">${esc(lookup.get(l.to)!.title)}</a>`;
+        })
+        .join("");
+      return chips ? `<div class="idea-links"><span class="idea-links-label">${LINK_LABELS[type]}</span>${chips}</div>` : "";
+    })
     .join("");
+}
+
+function renderIdea(idea: Idea, lookup: Map<string, Idea>): string {
+  const links = renderLinks(idea, lookup);
 
   const d = idea.date;
   const dateDetail = d.marks || d.note || d.earliest !== undefined || d.latest !== undefined;
@@ -57,7 +77,7 @@ function renderIdea(idea: Idea, lookup: Map<string, Idea>): string {
         <h3 class="idea-title">${esc(idea.title)}</h3>
         <p class="idea-origin">${esc(idea.origin)}</p>
         <p class="idea-summary">${esc(idea.summary)}</p>
-        ${links ? `<div class="idea-links"><span class="idea-links-label">Builds on</span>${links}</div>` : ""}
+        ${links}
         ${renderDetails(idea)}
       </div>
     </article>`;

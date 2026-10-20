@@ -33,6 +33,7 @@ export const categoryLabels: Record<Category, string> = {
 };
 
 export const statusLabels: Record<Status, string> = {
+  candidate: "Candidate",
   draft: "Unverified",
   sourced: "Sourced",
   reviewed: "Reviewed",

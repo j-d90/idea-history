@@ -1,0 +1,1657 @@
+{
+  "version": 1,
+  "exportedAt": "2026-10-20T16:09:42.343Z",
+  "sources": {
+    "bahdanau-2014": {
+      "type": "primary",
+      "kind": "preprint",
+      "authors": [
+        "Dzmitry Bahdanau",
+        "Kyunghyun Cho",
+        "Yoshua Bengio"
+      ],
+      "etAl": false,
+      "editors": [],
+      "translators": [],
+      "title": "Neural Machine Translation by Jointly Learning to Align and Translate",
+      "container": "arXiv",
+      "year": 2014,
+      "url": "https://arxiv.org/abs/1409.0473",
+      "accessed": "2026-10-20",
+      "consulted": true
+    },
+    "blevins-2010": {
+      "type": "secondary",
+      "kind": "article",
+      "authors": [
+        "Steve M. Blevins",
+        "Michael S. Bronze"
+      ],
+      "etAl": false,
+      "editors": [],
+      "translators": [],
+      "title": "Robert Koch and the 'golden age' of bacteriology",
+      "container": "International Journal of Infectious Diseases",
+      "volume": 14,
+      "issue": 9,
+      "pages": "e744–e751",
+      "year": 2010,
+      "doi": "10.1016/j.ijid.2009.12.003",
+      "accessed": "2026-10-20",
+      "consulted": true,
+      "note": "Only the abstract was consulted."
+    },
+    "brown-2020": {
+      "type": "primary",
+      "kind": "preprint",
+      "authors": [
+        "Tom B. Brown"
+      ],
+      "etAl": true,
+      "editors": [],
+      "translators": [],
+      "title": "Language Models are Few-Shot Learners",
+      "container": "arXiv",
+      "year": 2020,
+      "url": "https://arxiv.org/abs/2005.14165",
+      "accessed": "2026-10-20",
+      "consulted": true
+    },
+    "cavaillon-2022": {
+      "type": "secondary",
+      "kind": "article",
+      "authors": [
+        "Jean-Marc Cavaillon",
+        "Sandra Legout"
+      ],
+      "etAl": false,
+      "editors": [],
+      "translators": [],
+      "title": "Louis Pasteur: Between Myth and Reality",
+      "container": "Biomolecules",
+      "volume": 12,
+      "issue": 4,
+      "pages": "596",
+      "year": 2022,
+      "doi": "10.3390/biom12040596",
+      "accessed": "2026-10-20",
+      "consulted": true
+    },
+    "cousins-1996": {
+      "type": "secondary",
+      "kind": "article",
+      "authors": [
+        "L. S. Cousins"
+      ],
+      "etAl": false,
+      "editors": [],
+      "translators": [],
+      "title": "The Dating of the Historical Buddha: A Review Article",
+      "container": "Journal of the Royal Asiatic Society",
+      "volume": 6,
+      "issue": 1,
+      "pages": "57–63",
+      "year": 1996,
+      "doi": "10.1017/S1356186300014760",
+      "accessed": "2026-10-20",
+      "consulted": true,
+      "note": "Paywalled. The c. 400 BCE conclusion was checked against a reproduction of the passage, and the citation against the author's own post to the INDOLOGY list (October 1997)."
+    },
+    "devlin-2018": {
+      "type": "primary",
+      "kind": "preprint",
+      "authors": [
+        "Jacob Devlin",
+        "Ming-Wei Chang",
+        "Kenton Lee",
+        "Kristina Toutanova"
+      ],
+      "etAl": false,
+      "editors": [],
+      "translators": [],
+      "title": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+      "container": "arXiv",
+      "year": 2018,
+      "url": "https://arxiv.org/abs/1810.04805",
+      "accessed": "2026-10-20",
+      "consulted": true
+    },
+    "englund-2004": {
+      "type": "secondary",
+      "kind": "chapter",
+      "authors": [
+        "Robert K. Englund"
+      ],
+      "etAl": false,
+      "editors": [
+        "Stephen D. Houston"
+      ],
+      "translators": [],
+      "title": "The State of Decipherment of Proto-Elamite",
+      "container": "The First Writing: Script Invention as History and Process",
+      "publisher": "Cambridge University Press",
+      "year": 2004,
+      "url": "https://cdli.earth/files-up/publications/englund2004c.pdf",
+      "accessed": "2026-10-20",
+      "consulted": true
+    },
+    "herrmann-2023": {
+      "type": "secondary",
+      "kind": "article",
+      "authors": [
+        "Virginia R. Herrmann"
+      ],
+      "etAl": false,
+      "editors": [],
+      "translators": [],
+      "title": "The Alphabet: A Remarkable Journey from Sinai to Beijing",
+      "container": "Expedition Magazine",
+      "publisher": "Penn Museum",
+      "volume": 64,
+      "issue": 3,
+      "year": 2023,
+      "url": "https://www.penn.museum/sites/expedition/the-alphabet/",
+      "accessed": "2026-10-20",
+      "consulted": true
+    },
+    "koch-1876": {
+      "type": "primary",
+      "kind": "article",
+      "authors": [
+        "Robert Koch"
+      ],
+      "etAl": false,
+      "editors": [],
+      "translators": [],
+      "title": "Die Aetiologie der Milzbrand-Krankheit, begründet auf die Entwicklungsgeschichte des Bacillus Anthracis",
+      "container": "Beiträge zur Biologie der Pflanzen",
+      "volume": 2,
+      "pages": "277–311",
+      "year": 1876,
+      "url": "https://vlp-new.ur.de/records/lit22332",
+      "accessed": "2026-10-20",
+      "consulted": false
+    },
+    "lam-2010": {
+      "type": "secondary",
+      "kind": "chapter",
+      "authors": [
+        "Joseph Lam"
+      ],
+      "etAl": false,
+      "editors": [
+        "Christopher Woods"
+      ],
+      "translators": [],
+      "title": "The Invention and Development of the Alphabet",
+      "container": "Visible Language: Inventions of Writing in the Ancient Middle East and Beyond",
+      "series": "Oriental Institute Museum Publications 32",
+      "publisher": "The Oriental Institute of the University of Chicago",
+      "pages": "pp. 189–195",
+      "year": 2010,
+      "url": "https://oi-idb-static.uchicago.edu/multimedia/81/OIMP%2032%20-%20Woods,%20Chris%20-%20Visible%20Language.pdf",
+      "accessed": "2026-10-20",
+      "consulted": true
+    },
+    "sn-56-11": {
+      "type": "primary",
+      "kind": "text",
+      "authors": [],
+      "etAl": false,
+      "editors": [],
+      "translators": [
+        "Thanissaro Bhikkhu"
+      ],
+      "title": "Dhammacakkappavattana Sutta: Setting the Wheel of Dhamma in Motion",
+      "container": "Access to Insight",
+      "year": 1993,
+      "url": "https://www.accesstoinsight.org/tipitaka/sn/sn56/sn56.011.than.html",
+      "accessed": "2026-10-20",
+      "short": "SN 56.11",
+      "consulted": true
+    },
+    "vaswani-2017": {
+      "type": "primary",
+      "kind": "preprint",
+      "authors": [
+        "Ashish Vaswani",
+        "Noam Shazeer",
+        "Niki Parmar",
+        "Jakob Uszkoreit",
+        "Llion Jones",
+        "Aidan N. Gomez",
+        "Łukasz Kaiser",
+        "Illia Polosukhin"
+      ],
+      "etAl": false,
+      "editors": [],
+      "translators": [],
+      "title": "Attention Is All You Need",
+      "container": "Advances in Neural Information Processing Systems 30 (NeurIPS 2017)",
+      "year": 2017,
+      "url": "https://arxiv.org/abs/1706.03762",
+      "accessed": "2026-10-20",
+      "consulted": true
+    },
+    "violatti-2015": {
+      "type": "reference",
+      "kind": "web",
+      "authors": [
+        "Cristian Violatti"
+      ],
+      "etAl": false,
+      "editors": [],
+      "translators": [],
+      "title": "The Dates of the Buddha",
+      "container": "OpenLearn, The Open University",
+      "year": 2015,
+      "url": "https://www.open.edu/openlearn/history-the-arts/culture/religious-studies/the-dates-the-buddha",
+      "accessed": "2026-10-20",
+      "consulted": true
+    },
+    "woods-2010-intro": {
+      "type": "secondary",
+      "kind": "chapter",
+      "authors": [
+        "Christopher Woods"
+      ],
+      "etAl": false,
+      "editors": [
+        "Christopher Woods"
+      ],
+      "translators": [],
+      "title": "Introduction — Visible Language: The Earliest Writing Systems",
+      "container": "Visible Language: Inventions of Writing in the Ancient Middle East and Beyond",
+      "series": "Oriental Institute Museum Publications 32",
+      "publisher": "The Oriental Institute of the University of Chicago",
+      "pages": "pp. 15–27",
+      "year": 2010,
+      "url": "https://oi-idb-static.uchicago.edu/multimedia/81/OIMP%2032%20-%20Woods,%20Chris%20-%20Visible%20Language.pdf",
+      "accessed": "2026-10-20",
+      "short": "Woods 2010a",
+      "consulted": true
+    },
+    "woods-2010-mesopotamia": {
+      "type": "secondary",
+      "kind": "chapter",
+      "authors": [
+        "Christopher Woods"
+      ],
+      "etAl": false,
+      "editors": [
+        "Christopher Woods"
+      ],
+      "translators": [],
+      "title": "The Earliest Mesopotamian Writing",
+      "container": "Visible Language: Inventions of Writing in the Ancient Middle East and Beyond",
+      "series": "Oriental Institute Museum Publications 32",
+      "publisher": "The Oriental Institute of the University of Chicago",
+      "pages": "pp. 33–50",
+      "year": 2010,
+      "url": "https://oi-idb-static.uchicago.edu/multimedia/81/OIMP%2032%20-%20Woods,%20Chris%20-%20Visible%20Language.pdf",
+      "accessed": "2026-10-20",
+      "short": "Woods 2010b",
+      "consulted": true
+    }
+  },
+  "ideas": [
+    {
+      "id": "writing",
+      "title": "Writing",
+      "category": "technology",
+      "status": "sourced",
+      "date": {
+        "year": -3200,
+        "marks": "The earliest proto-cuneiform tablets (Uruk IV phase)",
+        "earliest": -3300,
+        "approx": true,
+        "note": "3200 BCE is a conventional date. Almost all of the earliest tablets were found in rubbish deposits that cannot be dated precisely [@woods-2010-mesopotamia, p. 34]. Writing appeared at roughly the same time in Egypt [@woods-2010-intro, p. 15]."
+      },
+      "origin": "Uruk, Mesopotamia",
+      "summary": "Administrators in Uruk, arguably the world's first city, begin recording goods and labour on clay tablets. Writing starts as a tool of bureaucracy, not literature, and is invented independently at least four times: in Mesopotamia, Egypt, China and Mesoamerica.",
+      "aliases": [],
+      "sources": [
+        "woods-2010-intro",
+        "woods-2010-mesopotamia",
+        "englund-2004"
+      ],
+      "body": "**The first city.** In the Late Uruk period (c. 3350–3100 BCE), Uruk grew to 20,000–50,000 people and became \"arguably, the world's first true city.\" The new administration needed to track production, goods and labour, and writing was invented in that setting [@woods-2010-mesopotamia, p. 34].\n\n**Precursors.** Before writing, Near Eastern administrators kept accounts with small clay tokens, some sealed inside clay envelopes (\"bullae\"). That the tokens were forerunners of the earliest tablets, first argued by Denise Schmandt-Besserat, is \"core knowledge\" among cuneiformists. Many of the numerical signs on early tablets match the tokens in form and function [@englund-2004, p. 100].\n\n**Dating.** The earliest tablets fall into two script phases: Uruk IV (c. 3200 BCE) and Uruk III (c. 3100 BCE). The German Archaeological Institute excavated about 5,000 proto-cuneiform tablets at Uruk between 1928 and 1976 [@woods-2010-mesopotamia, p. 35]. The whole proto-cuneiform corpus runs to over 6,000 tablets and fragments [@englund-2004, p. 100].\n\n**Purpose.** Nearly all the earliest texts are administrative. Literature, religious texts, historical documents and letters appear only from the mid-third millennium BCE, some 700 years after the first written evidence [@woods-2010-mesopotamia, p. 34].\n\n**Independent inventions.** There are four \"pristine\" writing systems, invented with no knowledge of writing elsewhere: Mesopotamia and Egypt at the end of the fourth millennium BCE, China at the end of the second millennium BCE, and Mesoamerica by the middle of the first millennium BCE [@woods-2010-intro, p. 15]."
+    },
+    {
+      "id": "acrophonic-principle",
+      "title": "Acrophonic principle",
+      "category": "technology",
+      "status": "candidate",
+      "date": {
+        "year": -1850,
+        "marks": "Estimated by the extractor agent: Operative in earliest Proto-Sinaitic inscriptions, dated by some to early second millennium BC.",
+        "approx": true
+      },
+      "origin": "Semitic speakers in Egypt/Sinai",
+      "summary": "A letter's name begins with the sound it represents (e.g. West Semitic kaph, 'palm/hand', gives /k/), so a pictograph of a Semitic word denotes its initial phoneme; this underlies the invention of the linear alphabet.",
+      "aliases": [
+        "acrophony"
+      ],
+      "sources": [
+        "lam-2010"
+      ],
+      "body": "> This association of the letter name (kaph) with its initial phoneme (/k/) is called the acrophonic principle (acro- “topmost” + phone “voice, sound”) [@lam-2010, p. 190]\n\nProposed by the extractor agent (run 2026-10-20-extractor-lam-2010-8cff34); not yet curated."
+    },
+    {
+      "id": "alphabet",
+      "title": "The Alphabet",
+      "category": "technology",
+      "status": "sourced",
+      "date": {
+        "year": -1850,
+        "marks": "The earliest known alphabetic inscriptions, from Egypt and Sinai",
+        "earliest": -1900,
+        "approx": true,
+        "note": "The earliest alphabetic inscriptions lack stratified archaeological contexts, so their dates are uncertain [@lam-2010, p. 189]. The 22-letter alphabet associated with the Phoenicians stabilized around 1000 BCE [@lam-2010, p. 192]."
+      },
+      "origin": "Semitic-speaking workers in Egypt and Sinai; later standardized by the Phoenicians",
+      "summary": "Semitic speakers in Egypt borrow hieroglyphic pictures but use each one for a single sound. A few dozen signs can write a whole language. Most of the world's major scripts, from Latin and Cyrillic to Arabic and Devanagari, descend from it.",
+      "aliases": [
+        "linear West Semitic alphabet",
+        "Proto-Sinaitic",
+        "Proto-Canaanite alphabet"
+      ],
+      "sources": [
+        "lam-2010",
+        "herrmann-2023"
+      ],
+      "body": "**Invention.** The earliest alphabetic inscriptions come from Serabit el-Khadem, an Egyptian mining site in Sinai, and from Wadi el-Hol near Thebes [@lam-2010, p. 189]. The two Wadi el-Hol inscriptions date to roughly 1900–1800 BCE [@herrmann-2023]. \"The alphabet was invented among Semitic speakers in the Egyptian realm, inspired iconographically by hieroglyphic writing but not bound by its modes of expression\" [@lam-2010, p. 190]. Workers at the Sinai turquoise mines, or Canaanites living in Egypt, are the likeliest inventors [@herrmann-2023].\n\n**How it worked.** Each sign took its sound from the first consonant of the West Semitic word for the thing pictured (the *acrophonic principle*): a hand, *kaph*, stood for /k/ [@lam-2010, pp. 189–190]. Alphabets need tens of signs where logographic and syllabic systems need hundreds. Most of the world's common languages, Chinese and Japanese aside, are written in scripts descended from this linear West Semitic alphabet [@lam-2010, p. 189].\n\n**Development.** Proto-Canaanite inscriptions in the Levant run from the 17th century BCE, and most date from the 13th century or later. Around 1000 BCE the script stabilized as a 22-letter alphabet written right to left, matching the sounds of Phoenician. Hebrew and Aramaic speakers adopted it, and the oldest Greek inscriptions appear in the 8th century BCE [@lam-2010, pp. 191–193].\n\n**A caution about literacy.** It is tempting to say the alphabet put literacy within everyone's reach. Lam argues against this: although it probably made scribal training easier, \"no immediate correlation can be made between alphabetic writing and broad literacy\" [@lam-2010, p. 189]."
+    },
+    {
+      "id": "place-value",
+      "title": "Positional Mathematics",
+      "category": "mathematics",
+      "status": "draft",
+      "date": {
+        "year": -1800,
+        "approx": true
+      },
+      "origin": "Babylon",
+      "summary": "A base-60 place-value system makes large calculations tractable — its echo survives in our 60-minute hours and 360° circles.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "hammurabi",
+      "title": "Written Law",
+      "category": "politics",
+      "status": "draft",
+      "date": {
+        "year": -1754,
+        "approx": true
+      },
+      "origin": "Code of Hammurabi, Babylon",
+      "summary": "Laws carved in public stone: justice as a fixed, knowable standard rather than the whim of a ruler.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "monotheism",
+      "title": "Monotheism",
+      "category": "religion",
+      "status": "draft",
+      "date": {
+        "year": -1350,
+        "approx": true
+      },
+      "origin": "Akhenaten, Egypt; later the Hebrew Bible",
+      "summary": "The radical notion of a single, universal god — briefly tried in Egypt, later the foundation of Judaism, Christianity and Islam.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "ugaritic-cuneiform-alphabet",
+      "title": "Ugaritic cuneiform alphabet",
+      "category": "technology",
+      "status": "candidate",
+      "date": {
+        "year": -1300,
+        "marks": "Estimated by the extractor agent: Ugarit texts dated ca. thirteenth century BC.",
+        "approx": true
+      },
+      "origin": "Ugarit (Ras Shamra), Syria",
+      "summary": "At Ugarit (13th c. BC) a thirty-sign alphabet written in cuneiform wedges, not based on Sumero-Akkadian syllabic cuneiform, was used for Ugaritic and occasionally other languages; probably a cuneiform adaptation of a linear alphabet.",
+      "aliases": [
+        "Ugaritic alphabet",
+        "alphabetic cuneiform"
+      ],
+      "sources": [
+        "lam-2010"
+      ],
+      "body": "> we find a fully functioning alphabetic system utilizing cuneiform signs (wedges impressed with a stylus on clay) rather than linear characters. [@lam-2010, p. 191]\n\nProposed by the extractor agent (run 2026-10-20-extractor-lam-2010-8cff34); not yet curated."
+    },
+    {
+      "id": "natural-philosophy",
+      "title": "Natural Explanation",
+      "category": "philosophy",
+      "status": "draft",
+      "date": {
+        "year": -585,
+        "approx": false
+      },
+      "origin": "Thales of Miletus",
+      "summary": "The world can be explained by natural causes rather than the will of gods — the seed of both philosophy and science.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "democracy",
+      "title": "Democracy",
+      "category": "politics",
+      "status": "draft",
+      "date": {
+        "year": -508,
+        "approx": false
+      },
+      "origin": "Cleisthenes, Athens",
+      "summary": "Citizens govern themselves directly by vote. Limited to free men, but the principle of rule by the people is born.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "confucianism",
+      "title": "Confucian Ethics",
+      "category": "philosophy",
+      "status": "draft",
+      "date": {
+        "year": -500,
+        "approx": true
+      },
+      "origin": "Confucius, China",
+      "summary": "Social harmony grows from virtue, ritual and right relationships. It would shape Chinese government for two millennia.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "buddhism",
+      "title": "Buddhism",
+      "category": "religion",
+      "status": "sourced",
+      "date": {
+        "year": -400,
+        "marks": "The death of the Buddha; his teaching career came in the decades before",
+        "earliest": -486,
+        "latest": -368,
+        "approx": true,
+        "note": "Traditional Theravada chronology puts his death in 544/543 BCE; a corrected version gives 487/486 BCE, and the Indian \"short chronology\" 370–368 BCE [@violatti-2015]. A review of the 1988 Göttingen symposium on the question favoured about 400 BCE [@cousins-1996]."
+      },
+      "origin": "Siddhartha Gautama, the Buddha; northern India",
+      "summary": "In his first sermon, near Varanasi, the Buddha sets out the Four Noble Truths: suffering arises from craving, and it ends when craving is let go.",
+      "aliases": [],
+      "sources": [
+        "sn-56-11",
+        "cousins-1996",
+        "violatti-2015"
+      ],
+      "body": "**The teaching.** The Dhammacakkappavattana Sutta, traditionally the Buddha's first sermon, delivered at Isipatana near Varanasi, identifies the origin of suffering as \"the craving that makes for further becoming\" and its cessation as \"the remainderless fading & cessation, renunciation, relinquishment, release, & letting go of that very craving\" [@sn-56-11].\n\n**The dating problem.** The Theravada tradition dates the Buddha's death to 544/543 BCE. Checking it against the reign of the emperor Ashoka produced a corrected date of 487/486 BCE, while Indian sources point to 370–368 BCE. At a 1988 symposium on the question in Göttingen, experts proposed dates ranging from 486 to 261 BCE [@violatti-2015]. Reviewing the published volumes, Cousins concluded that \"the evidence seems to favour some kind of median chronology and we should no doubt speak of a date for the Buddha's Mahaparinibbana of c.400 B.C.\" [@cousins-1996]."
+    },
+    {
+      "id": "socratic",
+      "title": "The Examined Life",
+      "category": "philosophy",
+      "status": "draft",
+      "date": {
+        "year": -399,
+        "approx": false
+      },
+      "origin": "Socrates, Athens",
+      "summary": "Truth is pursued by relentless questioning. Executed for it, Socrates makes intellectual inquiry a moral act.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "logic",
+      "title": "Formal Logic",
+      "category": "philosophy",
+      "status": "draft",
+      "date": {
+        "year": -350,
+        "approx": true
+      },
+      "origin": "Aristotle",
+      "summary": "The syllogism codifies valid reasoning itself. Aristotle's system would dominate Western and Islamic thought for 2,000 years.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "euclid",
+      "title": "Axiomatic Proof",
+      "category": "mathematics",
+      "status": "draft",
+      "date": {
+        "year": -300,
+        "approx": true
+      },
+      "origin": "Euclid's Elements, Alexandria",
+      "summary": "From a handful of axioms, all of geometry follows by proof. The template for rigorous knowledge ever since.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "christianity",
+      "title": "Christianity",
+      "category": "religion",
+      "status": "draft",
+      "date": {
+        "year": 30,
+        "approx": true
+      },
+      "origin": "Jesus of Nazareth, Judea",
+      "summary": "A message of universal love and salvation that would become the faith of the Roman Empire and reshape the West.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "paper",
+      "title": "Paper",
+      "category": "technology",
+      "status": "draft",
+      "date": {
+        "year": 105,
+        "approx": false
+      },
+      "origin": "Cai Lun, Han China",
+      "summary": "A cheap, light writing surface from plant fibre. It travels the Silk Road and makes books abundant.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "ptolemy",
+      "title": "Mathematical Astronomy",
+      "category": "science",
+      "status": "draft",
+      "date": {
+        "year": 150,
+        "approx": true
+      },
+      "origin": "Ptolemy's Almagest",
+      "summary": "An Earth-centred cosmos described with geometric precision — wrong, but predictive enough to reign for 1,400 years.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "islam",
+      "title": "Islam",
+      "category": "religion",
+      "status": "draft",
+      "date": {
+        "year": 610,
+        "approx": false
+      },
+      "origin": "Muhammad, Arabia",
+      "summary": "A unifying faith and legal tradition that, within a century, spans from Spain to Central Asia.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "zero",
+      "title": "Zero as a Number",
+      "category": "mathematics",
+      "status": "draft",
+      "date": {
+        "year": 628,
+        "approx": false
+      },
+      "origin": "Brahmagupta, India",
+      "summary": "Zero gets rules of arithmetic of its own. With Hindu–Arabic numerals, calculation becomes something anyone can do.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "algebra",
+      "title": "Algebra",
+      "category": "mathematics",
+      "status": "draft",
+      "date": {
+        "year": 820,
+        "approx": true
+      },
+      "origin": "al-Khwarizmi, Baghdad",
+      "summary": "Systematic methods for solving equations. His name gives us the word algorithm.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "university",
+      "title": "The University",
+      "category": "philosophy",
+      "status": "draft",
+      "date": {
+        "year": 1088,
+        "approx": false
+      },
+      "origin": "Bologna",
+      "summary": "A self-governing community of scholars. Learning gains an institution independent of monastery and court.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "magna-carta",
+      "title": "Rule of Law",
+      "category": "politics",
+      "status": "draft",
+      "date": {
+        "year": 1215,
+        "approx": false
+      },
+      "origin": "Magna Carta, England",
+      "summary": "Even the king is bound by law. A narrow baronial deal becomes a lasting symbol of limits on power.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "printing",
+      "title": "The Printing Press",
+      "category": "technology",
+      "status": "draft",
+      "date": {
+        "year": 1440,
+        "approx": true
+      },
+      "origin": "Johannes Gutenberg, Mainz",
+      "summary": "Movable metal type makes books cheap and identical. Within fifty years, millions are in circulation.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "machiavelli",
+      "title": "Political Realism",
+      "category": "politics",
+      "status": "draft",
+      "date": {
+        "year": 1513,
+        "approx": false
+      },
+      "origin": "Machiavelli, The Prince",
+      "summary": "Politics described as it is, not as it ought to be. Power is analysed on its own terms.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "reformation",
+      "title": "The Reformation",
+      "category": "religion",
+      "status": "draft",
+      "date": {
+        "year": 1517,
+        "approx": false
+      },
+      "origin": "Martin Luther, Wittenberg",
+      "summary": "Individual conscience and scripture over Church authority. Printing spreads the challenge across Europe in weeks.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "heliocentrism",
+      "title": "Heliocentrism",
+      "category": "science",
+      "status": "draft",
+      "date": {
+        "year": 1543,
+        "approx": false
+      },
+      "origin": "Copernicus",
+      "summary": "The Earth moves around the Sun. Humanity is displaced from the centre of the cosmos.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "scientific-method",
+      "title": "The Scientific Method",
+      "category": "science",
+      "status": "draft",
+      "date": {
+        "year": 1620,
+        "approx": false
+      },
+      "origin": "Francis Bacon, Novum Organum",
+      "summary": "Knowledge built from systematic observation and experiment rather than inherited authority.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "newton",
+      "title": "Universal Laws of Nature",
+      "category": "science",
+      "status": "draft",
+      "date": {
+        "year": 1687,
+        "approx": false
+      },
+      "origin": "Isaac Newton, Principia",
+      "summary": "The same mathematical laws govern a falling apple and orbiting planets. The universe becomes a knowable machine.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "social-contract",
+      "title": "Natural Rights",
+      "category": "politics",
+      "status": "draft",
+      "date": {
+        "year": 1689,
+        "approx": false
+      },
+      "origin": "John Locke, Two Treatises",
+      "summary": "People are born with rights to life, liberty and property; government is legitimate only by their consent.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "separation-of-powers",
+      "title": "Separation of Powers",
+      "category": "politics",
+      "status": "draft",
+      "date": {
+        "year": 1748,
+        "approx": false
+      },
+      "origin": "Montesquieu, The Spirit of the Laws",
+      "summary": "Liberty is safest when legislative, executive and judicial power check one another.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "free-markets",
+      "title": "The Market Economy",
+      "category": "economics",
+      "status": "draft",
+      "date": {
+        "year": 1776,
+        "approx": false
+      },
+      "origin": "Adam Smith, The Wealth of Nations",
+      "summary": "Self-interest, coordinated by markets and the division of labour, produces collective prosperity.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "rights-of-man",
+      "title": "Universal Rights",
+      "category": "politics",
+      "status": "draft",
+      "date": {
+        "year": 1789,
+        "approx": false
+      },
+      "origin": "Declaration of the Rights of Man, France",
+      "summary": "Rights belong to all people by nature. Revolutions in America and France put Enlightenment ideas into practice.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "wollstonecraft",
+      "title": "Women's Rights",
+      "category": "politics",
+      "status": "draft",
+      "date": {
+        "year": 1792,
+        "approx": false
+      },
+      "origin": "Mary Wollstonecraft",
+      "summary": "If rights are universal, they belong to women too. An argument that would take centuries to win.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "communism",
+      "title": "Historical Materialism",
+      "category": "economics",
+      "status": "draft",
+      "date": {
+        "year": 1848,
+        "approx": false
+      },
+      "origin": "Marx & Engels, The Communist Manifesto",
+      "summary": "History is a struggle between classes; capitalism will give way to collective ownership. It would move nations.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "evolution",
+      "title": "Evolution by Natural Selection",
+      "category": "science",
+      "status": "draft",
+      "date": {
+        "year": 1859,
+        "approx": false
+      },
+      "origin": "Charles Darwin, On the Origin of Species",
+      "summary": "All life descends from common ancestors, shaped by selection over immense time. Humanity joins the animal kingdom.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "liberty",
+      "title": "Individual Liberty",
+      "category": "philosophy",
+      "status": "draft",
+      "date": {
+        "year": 1859,
+        "approx": false
+      },
+      "origin": "John Stuart Mill, On Liberty",
+      "summary": "The only justification for restricting a person's freedom is to prevent harm to others.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "germ-theory",
+      "title": "Germ Theory",
+      "category": "science",
+      "status": "sourced",
+      "date": {
+        "year": 1861,
+        "marks": "Pasteur's campaign against spontaneous generation begins",
+        "approx": true,
+        "note": "Germ theory took shape over several decades rather than at one moment. Key work runs from Semmelweis (1847) to Koch's anthrax paper (1876) and beyond [@cavaillon-2022; @blevins-2010]."
+      },
+      "origin": "Semmelweis, Pasteur, Davaine, Lister, Koch and others",
+      "summary": "Specific diseases are caused by specific living microorganisms. Built up over decades of experiments by many researchers, the idea made antiseptic surgery possible and launched medical bacteriology.",
+      "aliases": [],
+      "sources": [
+        "cavaillon-2022",
+        "blevins-2010",
+        "koch-1876"
+      ],
+      "body": "**Many hands.** Precursors of germ theory go back at least to Girolamo Fracastoro (1546), who thought diseases spread through \"seminaria,\" or seeds [@cavaillon-2022]. The theory's 19th-century foundations were laid by several people:\n\n- **Semmelweis (1847)** showed that medical students' hands, after autopsies, carried infection to women giving birth [@cavaillon-2022].\n- **Pasteur (from 1860–61)** took up the Academy of Sciences' challenge to settle the question of spontaneous generation. The decisive swan-neck flask experiments, which showed that the air carries germs, were conceived by his colleague Antoine Balard [@cavaillon-2022].\n- **Davaine (1863)** found bacteria in the blood of animals with anthrax and showed that the disease spread through infected blood. Historians credit him with the first demonstration that a bacterium causes disease [@cavaillon-2022].\n- **Lister (1865)** learned of Pasteur's theory and applied it to surgery, using phenol as an antiseptic [@cavaillon-2022].\n- **Koch (1876)** published his study of the anthrax bacillus [@koch-1876]. This work \"launched the field of medical bacteriology\" [@blevins-2010].\n\n**Myth and reality.** Cavaillon and Legout write explicitly to separate Pasteur's real achievements from \"the legend built by his hagiographers,\" in part a legend he cultivated himself [@cavaillon-2022]. Crediting the theory to one or two famous names misrepresents how it was built."
+    },
+    {
+      "id": "unconscious",
+      "title": "The Unconscious Mind",
+      "category": "philosophy",
+      "status": "draft",
+      "date": {
+        "year": 1900,
+        "approx": false
+      },
+      "origin": "Sigmund Freud, The Interpretation of Dreams",
+      "summary": "Much of what drives us is hidden from ourselves. The self is no longer fully transparent to reason.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "relativity",
+      "title": "Relativity",
+      "category": "science",
+      "status": "draft",
+      "date": {
+        "year": 1905,
+        "approx": false
+      },
+      "origin": "Albert Einstein",
+      "summary": "Space and time are not absolute but bend with motion and gravity. Mass and energy are interchangeable.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "quantum",
+      "title": "Quantum Mechanics",
+      "category": "science",
+      "status": "draft",
+      "date": {
+        "year": 1925,
+        "approx": false
+      },
+      "origin": "Heisenberg, Schrödinger, Bohr",
+      "summary": "At the smallest scales, nature is probabilistic. The clockwork universe gives way to uncertainty.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "computation",
+      "title": "Universal Computation",
+      "category": "mathematics",
+      "status": "draft",
+      "date": {
+        "year": 1936,
+        "approx": false
+      },
+      "origin": "Alan Turing",
+      "summary": "A single abstract machine can perform any computation. The theoretical blueprint for every computer.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "human-rights",
+      "title": "Universal Human Rights",
+      "category": "politics",
+      "status": "draft",
+      "date": {
+        "year": 1948,
+        "approx": false
+      },
+      "origin": "United Nations",
+      "summary": "After world war and genocide, the nations of the world affirm rights belonging to every human being.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "information-theory",
+      "title": "Information Theory",
+      "category": "mathematics",
+      "status": "draft",
+      "date": {
+        "year": 1948,
+        "approx": false
+      },
+      "origin": "Claude Shannon",
+      "summary": "Information can be measured in bits and transmitted reliably through noise. The foundation of digital communication.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "dna",
+      "title": "The Double Helix",
+      "category": "science",
+      "status": "draft",
+      "date": {
+        "year": 1953,
+        "approx": false
+      },
+      "origin": "Franklin, Watson & Crick",
+      "summary": "Heredity is written in a molecular code. Life itself becomes legible as information.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "paradigms",
+      "title": "Paradigm Shifts",
+      "category": "philosophy",
+      "status": "draft",
+      "date": {
+        "year": 1962,
+        "approx": false
+      },
+      "origin": "Thomas Kuhn",
+      "summary": "Science advances not steadily but through revolutions that overturn whole frameworks of thought.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "internet",
+      "title": "Packet-Switched Networks",
+      "category": "technology",
+      "status": "draft",
+      "date": {
+        "year": 1969,
+        "approx": false
+      },
+      "origin": "ARPANET",
+      "summary": "Computers talk to each other by breaking messages into packets. The seed of the internet.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "web",
+      "title": "The World Wide Web",
+      "category": "technology",
+      "status": "draft",
+      "date": {
+        "year": 1989,
+        "approx": false
+      },
+      "origin": "Tim Berners-Lee, CERN",
+      "summary": "Hyperlinked documents open to anyone. Publishing becomes nearly free, as printing once made copying cheap.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "deep-learning",
+      "title": "Deep Learning",
+      "category": "technology",
+      "status": "draft",
+      "date": {
+        "year": 2012,
+        "approx": false
+      },
+      "origin": "AlexNet, University of Toronto",
+      "summary": "Neural networks trained on vast data surpass hand-built systems. Machines learn from examples, not rules.",
+      "aliases": [],
+      "sources": [],
+      "body": ""
+    },
+    {
+      "id": "transformer",
+      "title": "The Transformer",
+      "category": "technology",
+      "status": "sourced",
+      "date": {
+        "year": 2017,
+        "marks": "Publication of \"Attention Is All You Need\"",
+        "approx": false
+      },
+      "origin": "Vaswani et al., \"Attention Is All You Need\"",
+      "summary": "A neural network architecture built on attention alone, without recurrence, so it can be trained efficiently in parallel. It became the basis of language models such as BERT (2018) and GPT-3 (2020).",
+      "aliases": [],
+      "sources": [
+        "vaswani-2017",
+        "bahdanau-2014",
+        "devlin-2018",
+        "brown-2020"
+      ],
+      "body": "**The idea.** The paper proposed \"a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely.\" The authors reported that it was \"more parallelizable\" and required \"significantly less time to train\" than the recurrent and convolutional models it replaced [@vaswani-2017, abstract].\n\n**What was new.** Attention itself was older. It had already been added to recurrent translation models, letting a model \"(soft-)search for parts of a source sentence that are relevant to predicting a target word\" [@bahdanau-2014, abstract]. The Transformer's step was to make attention the whole architecture.\n\n**What followed.** BERT, short for \"Bidirectional Encoder Representations from Transformers\" [@devlin-2018, abstract], was built on it. So was GPT-3, which uses \"the same model and architecture as GPT-2\" with sparse attention patterns \"in the layers of the transformer\" [@brown-2020, §2.1]."
+    }
+  ],
+  "links": [
+    {
+      "from": "algebra",
+      "to": "euclid",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "algebra",
+      "to": "zero",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "alphabet",
+      "to": "writing",
+      "type": "BUILDS_ON",
+      "why": "The alphabet was invented by Semitic speakers in Egypt who adapted the iconography of Egyptian hieroglyphic writing, itself part of the earlier writing tradition, to a new sound-based principle.",
+      "origin": "linker",
+      "status": "proposed",
+      "evidence": "the alphabet was invented among Semitic speakers in the Egyptian realm, inspired iconographically by hieroglyphic writing but not bound by its modes of expression",
+      "evidenceUrl": "https://oi-idb-static.uchicago.edu/multimedia/81/OIMP%2032%20-%20Woods,%20Chris%20-%20Visible%20Language.pdf",
+      "sourceKey": "lam-2010",
+      "locator": "p. 190",
+      "confidence": "medium",
+      "runId": "2026-10-20-linker-alphabet-32e2e1",
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "from": "christianity",
+      "to": "monotheism",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "communism",
+      "to": "free-markets",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "computation",
+      "to": "algebra",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "computation",
+      "to": "logic",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "deep-learning",
+      "to": "computation",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "deep-learning",
+      "to": "web",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "democracy",
+      "to": "hammurabi",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "dna",
+      "to": "evolution",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "euclid",
+      "to": "logic",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "euclid",
+      "to": "place-value",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "evolution",
+      "to": "scientific-method",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "hammurabi",
+      "to": "writing",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "heliocentrism",
+      "to": "ptolemy",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "human-rights",
+      "to": "rights-of-man",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "information-theory",
+      "to": "computation",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "internet",
+      "to": "information-theory",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "islam",
+      "to": "monotheism",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "liberty",
+      "to": "social-contract",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "logic",
+      "to": "socratic",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "magna-carta",
+      "to": "hammurabi",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "newton",
+      "to": "algebra",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "newton",
+      "to": "heliocentrism",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "newton",
+      "to": "scientific-method",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "paper",
+      "to": "writing",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "paradigms",
+      "to": "scientific-method",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "place-value",
+      "to": "writing",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "printing",
+      "to": "alphabet",
+      "type": "BUILDS_ON",
+      "why": "The small character set of the Latin alphabet (descended from the West Semitic alphabet) is suggested as a reason movable type worked so well in Europe.",
+      "origin": "linker",
+      "status": "proposed",
+      "evidence": "Moveable type was initially more popular in Europe than Asia, perhaps because of the complexities of Asian writing systems compared with the relatively few characters of the Latin alphabet.",
+      "evidenceUrl": "https://www.ebsco.com/research-starters/communication-and-mass-media/printing-press/",
+      "locator": "Printing Press research starter",
+      "confidence": "low",
+      "runId": "2026-10-20-linker-printing-d3546c",
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "from": "printing",
+      "to": "paper",
+      "type": "BUILDS_ON",
+      "why": "Printing depended on paper as the cheap, ink-absorbent surface that made printed books viable, and Europe had adopted paper from the Islamic world before Gutenberg.",
+      "origin": "linker",
+      "status": "proposed",
+      "evidence": "paper was essential to the invention of printing because it was strong enough to withstand the printing process while still being soft and absorbent enough to take the ink.",
+      "evidenceUrl": "https://blogs.loc.gov/international-collections/2021/06/the-history-of-printing-in-asia-according-to-library-of-congress-asian-collections-part-1/",
+      "locator": "blog post body, paragraph on paper",
+      "confidence": "medium",
+      "runId": "2026-10-20-linker-printing-d3546c",
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "from": "ptolemy",
+      "to": "euclid",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "quantum",
+      "to": "newton",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "reformation",
+      "to": "christianity",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "reformation",
+      "to": "printing",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "relativity",
+      "to": "newton",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "rights-of-man",
+      "to": "separation-of-powers",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "rights-of-man",
+      "to": "social-contract",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "scientific-method",
+      "to": "heliocentrism",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "scientific-method",
+      "to": "natural-philosophy",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "separation-of-powers",
+      "to": "social-contract",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "social-contract",
+      "to": "magna-carta",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "socratic",
+      "to": "democracy",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "socratic",
+      "to": "natural-philosophy",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "transformer",
+      "to": "deep-learning",
+      "type": "BUILDS_ON",
+      "why": "The Transformer is a deep neural network that replaced the recurrent and convolutional networks then dominant in sequence modelling.",
+      "origin": "seed",
+      "status": "proposed",
+      "sourceKey": "vaswani-2017"
+    },
+    {
+      "from": "web",
+      "to": "internet",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "web",
+      "to": "printing",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "wollstonecraft",
+      "to": "rights-of-man",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    },
+    {
+      "from": "zero",
+      "to": "place-value",
+      "type": "BUILDS_ON",
+      "origin": "seed",
+      "status": "proposed"
+    }
+  ],
+  "entities": [
+    {
+      "id": "phoenicians",
+      "name": "Phoenicians",
+      "kind": "group",
+      "description": "Levantine people whose 22-letter script stabilized direction and orientation in the early first millennium BC.",
+      "aliases": []
+    },
+    {
+      "id": "proto-canaanite-inscriptions",
+      "name": "Proto-Canaanite inscriptions",
+      "kind": "work",
+      "description": "Diverse fragmentary alphabetic texts from Palestine, many of the thirteenth century BC and later.",
+      "aliases": [
+        "Proto-Canaanite"
+      ]
+    },
+    {
+      "id": "proto-sinaitic-inscriptions",
+      "name": "Proto-Sinaitic inscriptions",
+      "kind": "work",
+      "description": "Linear pictographic inscriptions from Serabit el-Khadem in the Sinai, first found by Petrie in 1905.",
+      "aliases": [
+        "Proto-Sinaitic"
+      ]
+    },
+    {
+      "id": "serabit-el-khadem",
+      "name": "Serabit el-Khadem",
+      "kind": "place",
+      "description": "Ancient Egyptian mining site in the Sinai Peninsula.",
+      "aliases": []
+    },
+    {
+      "id": "ugarit",
+      "name": "Ugarit",
+      "kind": "place",
+      "description": "Ancient city at Ras Shamra on the Syrian Mediterranean coast.",
+      "aliases": [
+        "Ras Shamra"
+      ]
+    },
+    {
+      "id": "ugaritic-language",
+      "name": "Ugaritic language",
+      "kind": "tradition",
+      "description": "Local West Semitic language of Ugarit.",
+      "aliases": [
+        "Ugaritic"
+      ]
+    },
+    {
+      "id": "wadi-el-hol",
+      "name": "Wadi el-Hol",
+      "kind": "place",
+      "description": "Desert site near Thebes in Upper Egypt where early alphabetic inscriptions were found in 1994–95.",
+      "aliases": []
+    }
+  ],
+  "involves": [
+    {
+      "idea": "alphabet",
+      "entity": "phoenicians",
+      "role": "associated with stabilization of the 22-letter alphabet",
+      "runId": "2026-10-20-extractor-lam-2010-8cff34"
+    },
+    {
+      "idea": "alphabet",
+      "entity": "proto-canaanite-inscriptions",
+      "role": "later stage of early alphabet",
+      "runId": "2026-10-20-extractor-lam-2010-8cff34"
+    },
+    {
+      "idea": "alphabet",
+      "entity": "proto-sinaitic-inscriptions",
+      "role": "earliest evidence for alphabetic writing",
+      "runId": "2026-10-20-extractor-lam-2010-8cff34"
+    },
+    {
+      "idea": "alphabet",
+      "entity": "serabit-el-khadem",
+      "role": "site of Proto-Sinaitic inscriptions",
+      "runId": "2026-10-20-extractor-lam-2010-8cff34"
+    },
+    {
+      "idea": "alphabet",
+      "entity": "wadi-el-hol",
+      "role": "site of early alphabetic rock inscriptions",
+      "runId": "2026-10-20-extractor-lam-2010-8cff34"
+    },
+    {
+      "idea": "ugaritic-cuneiform-alphabet",
+      "entity": "ugarit",
+      "role": "place of origin",
+      "runId": "2026-10-20-extractor-lam-2010-8cff34"
+    },
+    {
+      "idea": "ugaritic-cuneiform-alphabet",
+      "entity": "ugaritic-language",
+      "role": "language written in the script",
+      "runId": "2026-10-20-extractor-lam-2010-8cff34"
+    }
+  ],
+  "discusses": [
+    {
+      "source": "lam-2010",
+      "idea": "acrophonic-principle",
+      "evidence": "This association of the letter name (kaph) with its initial phoneme (/k/) is called the acrophonic principle (acro- “topmost” + phone “voice, sound”)",
+      "locator": "p. 190",
+      "runId": "2026-10-20-extractor-lam-2010-8cff34"
+    },
+    {
+      "source": "lam-2010",
+      "idea": "alphabet",
+      "evidence": "what we can assert with reasonable confidence is that the alphabet was invented among Semitic speakers in the Egyptian realm, inspired iconographically by hieroglyphic writing but not bound by its modes of expression.",
+      "locator": "p. 190",
+      "runId": "2026-10-20-extractor-lam-2010-8cff34"
+    },
+    {
+      "source": "lam-2010",
+      "idea": "ugaritic-cuneiform-alphabet",
+      "evidence": "we find a fully functioning alphabetic system utilizing cuneiform signs (wedges impressed with a stylus on clay) rather than linear characters.",
+      "locator": "p. 191",
+      "runId": "2026-10-20-extractor-lam-2010-8cff34"
+    }
+  ],
+  "reviews": [
+    {
+      "runId": "writing@f30bce1cc0fe5067",
+      "ideaId": "writing",
+      "verdict": "fail",
+      "by": "fact-checker",
+      "date": "2026-10-20",
+      "hash": "f30bce1cc0fe5067",
+      "report": "---\nidea: writing\nverdict: fail\nreviewer: fact-checker\ndate: 2026-10-20\nhash: f30bce1cc0fe5067\n---\n\n# Review: Writing\n\n## Verdict\nFAIL. Most claims check out against Woods 2010 and Englund 2004. Four problems block a pass. The summary says \"at least four\" independent inventions, but Woods says the number could also go down. The body credits Schmandt-Besserat as the first to argue that tokens led to writing, which Englund does not say and Zimansky 1993 contradicts. The body widens Englund's \"simple tokens\" to all tokens. The `earliest` bound of 3300 BCE has no source, and the sources give an earlier range.\n\n## Sources\n| Key | Accessed how | Bibliographic details | Notes |\n|---|---|---|---|\n| woods-2010-intro | Downloaded the full OIMP 32 PDF from the cited URL and read it with `npm run pdftext`. PDF page numbers match the printed ones. | Correct. The TOC confirms the title and p. 15 start, and the chapter runs to p. 27. | |\n| woods-2010-mesopotamia | Same PDF. | Correct. The chapter is pp. 33–50; the catalog starts at p. 51. | |\n| englund-2004 | Downloaded the full chapter PDF from cdli.earth (50 pp., printed pp. 100–149). | Mostly correct, but `pages` is missing. It should be pp. 100–149 (ch. 5 in Houston, ed., *The First Writing*). | Not blocking. Add `pages`. |\n| (independent) Zimansky 1993 | Review of Schmandt-Besserat, *Before Writing*, *Journal of Field Archaeology* 20. PDF at urkesh.org/attach/Zimansky1993.pdf, read with pdftext. | n/a | Used only for the disagreement check. |\n\n## Claims\n| # | Claim | Where | Source, locator | Evidence (≤30 words) | Verdict |\n|---|---|---|---|---|---|\n| 1 | Writing is placed c. 3200 BCE, marking the earliest proto-cuneiform tablets (Uruk IV) | date.year/marks | woods-2010-mesopotamia, p. 35 | \"the script and tablets of the earlier phase are labeled Uruk IV (ca. 3200 bc)\" | Supported |\n| 2 | Earliest possible date is 3300 BCE | date.earliest | none | No cited source gives 3300 BCE. Woods p. 34 gives a radiocarbon date of \"around 3500–3390 bc\" (with caution) and p. 33 says \"second half of the fourth millennium\". | Unsupported |\n| 3 | 3200 BCE is a conventional date | date.note | woods-2010-mesopotamia, p. 34 | \"The date traditionally given … is 3200 bc, but this is more or less conventional.\" | Supported |\n| 4 | Almost all the earliest tablets come from rubbish deposits that cannot be dated precisely | date.note | woods-2010-mesopotamia, p. 34 | \"virtually all the tablets were discovered in secondary archaeological contexts, specifically, in rubbish heaps that defy accurate stratigraphic analysis\" | Supported |\n| 5 | Writing appeared at roughly the same time in Egypt | date.note | woods-2010-intro, p. 15 | \"In Mesopotamia and Egypt this took place toward the end of the fourth millennium bc.\" | Supported |\n| 6 | Origin: Uruk, Mesopotamia | origin | woods-2010-mesopotamia, p. 33 | \"there is good reason to believe that this was the birthplace of writing in Mesopotamia\" | Supported, for Mesopotamian writing (see entry-level checks) |\n| 7 | Uruk was arguably the world's first city | summary | woods-2010-mesopotamia, p. 34 | \"to become, arguably, the world's first true city\" | Supported |\n| 8 | Administrators in Uruk began recording goods and labour on clay tablets | summary | woods-2010-mesopotamia, pp. 33–34 | \"a need to maintain records of production, goods, and labor and the corresponding rise of a complex administration. Writing was invented in this context.\" | Supported |\n| 9 | Writing began as a tool of bureaucracy, not literature | summary | woods-2010-mesopotamia, p. 34 | \"writing facilitated complex bureaucracy … literature plays no role in the origins of writing in Mesopotamia\" | Supported |\n| 10 | Writing was invented independently \"at least four times\" | summary | woods-2010-intro, p. 15 | \"Future research may, of course, force us to augment, or even decrease, this number … best candidates for the independent inventions\" | Overstated |\n| 11 | The Late Uruk period was c. 3350–3100 BCE | body ¶1 | woods-2010-mesopotamia, p. 34 | \"During the Late Uruk period (ca. 3350–3100 bc)\" | Supported |\n| 12 | Uruk grew to 20,000–50,000 people | body ¶1 | woods-2010-mesopotamia, p. 34 | \"swelling to a population of 20,000 to 50,000 individuals\" | Supported |\n| 13 | Quote: \"arguably, the world's first true city.\" | body ¶1 | woods-2010-mesopotamia, p. 34 | Verbatim: \"to become, arguably, the world's first true city.\" | Supported |\n| 14 | The administration needed to track production, goods and labour, and writing was invented in that setting | body ¶1 | woods-2010-mesopotamia, p. 34 | \"a need to maintain records of production, goods, and labor … Writing was invented in this context.\" | Supported |\n| 15 | Before writing, Near Eastern administrators kept accounts with small clay tokens | body ¶2 | englund-2004, p. 100 | \"a means of accountancy employed in the ancient Near East … markers in an ancient system of bookkeeping\" | Supported (see non-blocking note on \"administrators\") |\n| 16 | Some tokens were sealed inside clay envelopes (\"bullae\") | body ¶2 | englund-2004, p. 100 | \"Simple, geometrically formed tokens were found encased within clay balls (usually called 'bullae')\" | Supported |\n| 17 | The tokens were forerunners of the earliest tablets | body ¶2 | englund-2004, p. 100 | \"the forerunner role of the simple tokens in the development of writing\" | Overstated. Englund limits this to simple tokens. The role of complex tokens is disputed (Zimansky 1993). |\n| 18 | Schmandt-Besserat was the first to argue this | body ¶2 | englund-2004, p. 100; contrary: Zimansky 1993 | Englund says only that she \"has published and discussed\" the tokens. Zimansky: \"Her theory … germinated in suggestions of Pierre Amiet (1966) and Maurice Lambert (1966)\" | Contradicted |\n| 19 | The forerunner role is \"core knowledge\" among cuneiformists | body ¶2 | englund-2004, p. 100 | \"the forerunner role of the simple tokens … [belongs] to the 'core knowledge' of modern cuneiformists\" | Overstated. The quoted words are verbatim, but Englund applies them only to the simple tokens' role. |\n| 20 | Many numerical signs on early tablets match the tokens in form and function | body ¶2 | englund-2004, p. 100 | \"impressed signs of an array of numerical systems … represented, in both form and function, many of the archaic tokens\" | Supported |\n| 21 | The earliest tablets fall into two script phases, Uruk IV (c. 3200) and Uruk III (c. 3100) | body ¶3 | woods-2010-mesopotamia, p. 35 | \"labeled Uruk IV (ca. 3200 bc) … labeled Uruk III (also known as the Jemdet Nasr period, ca. 3100 bc)\" | Supported |\n| 22 | The German Archaeological Institute excavated about 5,000 proto-cuneiform tablets at Uruk, 1928–1976 | body ¶3 | woods-2010-mesopotamia, p. 35 | \"Approximately five thousand proto-cuneiform tablets were unearthed at Uruk by the German Archaeological Institute between 1928 and 1976\" | Supported |\n| 23 | The corpus runs to over 6,000 tablets and fragments | body ¶3 | englund-2004, p. 100 | \"increased the size of the proto-cuneiform corpus to over 6,000 tablets and fragments\" | Supported |\n| 24 | Nearly all the earliest texts are administrative | body ¶4 | woods-2010-mesopotamia, p. 34 | \"the vast majority of the earliest texts are administrative in nature\" | Supported |\n| 25 | Literature, religious texts, historical documents and letters appear only from the mid-third millennium, some 700 years after the first writing | body ¶4 | woods-2010-mesopotamia, p. 34 | \"these text genres arise relatively late, beginning in the middle of the third millennium, some seven hundred or more years after the first written evidence\" | Supported (see non-blocking note) |\n| 26 | There are four \"pristine\" writing systems, invented with no knowledge of writing elsewhere | body ¶5 | woods-2010-intro, p. 15 | \"comprise the four 'pristine' writing systems … invented ex nihilo … with no previous exposure to, or knowledge of, writing\" | Supported |\n| 27 | Mesopotamia and Egypt at the end of the 4th millennium BCE, China at the end of the 2nd, Mesoamerica by the middle of the 1st | body ¶5 | woods-2010-intro, p. 15 | \"Mesopotamia and Egypt … toward the end of the fourth millennium bc … China at the end of the second millennium bc, and in Mesoamerica by the middle of the first millennium bc\" | Supported |\n\nAll `[@key, locator]` locators point to the right pages.\n\n## Entry-level checks\n- **Summary:** \"Invented independently at least four times\" goes beyond the source. Woods (p. 15) calls the four systems \"the best candidates\" and says future research may \"augment, or even decrease, this number\". Change \"at least four\" to \"four\" with a hedge, e.g. \"probably invented independently four times\". Everything else on the card is supported.\n- **Date:** The year (-3200) and `marks` are fine. `earliest: -3300` has no source. The cited sources allow an earlier date: Woods p. 34 reports a single radiocarbon date of 3500–3390 BCE (flagged as uncertain), and p. 33 says \"second half of the fourth millennium\". Woods p. 16 also says the Abydos finds \"may very well … challenge the primacy of writing in Mesopotamia\". `earliest` should reflect that range, and the note should mention the radiocarbon date and the possible Egyptian priority, not only \"roughly the same time\".\n- **Attribution and framing:** Saying Schmandt-Besserat \"first argued\" the token theory gives one person credit that is shared. Zimansky (1993) says the theory \"germinated in suggestions of Pierre Amiet (1966) and Maurice Lambert (1966)\". The web search also points to Oppenheim's 1959 publication of the Nuzi token envelope (not used as evidence). Non-Western inventions (China, Mesoamerica) are covered.\n- **Disagreement searches:** (1) Searched for token-theory precursors (Amiet, Oppenheim, Nuzi bullae) and read Zimansky's 1993 review. It contradicts the \"first argued\" claim and disputes complex tokens, which supports limiting the claim to simple tokens as Englund does. (2) Searched for the dating of the Abydos tomb U-j labels against Uruk IV. Dates for the labels range from c. 3320 to 3150 BCE and there is no direct synchronism with Uruk. Whether Mesopotamia or Egypt came first is open. Woods p. 16 says so too, so the entry should mention it (blocking issue 4).\n- **Links:** `buildsOn` is empty, so there is nothing to check.\n- No fetched content contained instructions.\n\n## Blocking issues\n1. **Summary overstates the count.** Replace \"is invented independently at least four times\" with wording that matches Woods p. 15, e.g. \"was probably invented independently four times\". Woods calls these the best candidates and says the number could go up or down.\n2. **\"First argued by Denise Schmandt-Besserat\" is contradicted.** Englund p. 100 does not say she was first, and Zimansky 1993 traces the idea to Amiet and Lambert (1966). Write e.g. \"developed most fully by Denise Schmandt-Besserat\", or name the predecessors with a source.\n3. **The token claim is wider than the source.** Englund calls the forerunner role of the *simple* tokens \"core knowledge\". Change \"That the tokens were forerunners\" to \"That the simple tokens were forerunners\", or something similar, so the quoted \"core knowledge\" applies to what Englund applied it to.\n4. **`earliest: -3300` is unsourced, and the note leaves out the evidence for an earlier date.** Set `earliest` to fit the cited range (e.g. -3500, given Woods p. 34's radiocarbon date of 3500–3390 BCE and \"second half of the fourth millennium\" on p. 33), or cite a source for -3300. Add to the note that Woods (p. 16) says the Abydos finds may challenge Mesopotamian priority.\n\n## Non-blocking suggestions\n- Add `pages: pp. 100–149` to `englund-2004` in `content/sources.yaml`.\n- Body ¶2: \"Near Eastern administrators\" suggests institutions, but Englund only says the tokens were used for bookkeeping, and many come from pre-urban strata. Consider \"people in the Near East kept accounts…\".\n- Body ¶4: Woods says \"seven hundred or more years\". Consider \"700 years or more\". Woods p. 35 also says letters came \"nearly a millennium after the first texts\".\n- Body ¶5: Consider adding Woods's hedge (\"the best candidates\") to the body as well as the summary.\n",
+      "createdAt": "2026-10-20T12:00:00Z"
+    },
+    {
+      "runId": "2026-10-20-buddhism-dd9b6d",
+      "ideaId": "buddhism",
+      "verdict": "fail",
+      "by": "fact-checker",
+      "date": "2026-10-20",
+      "hash": "d6c5f40ad298c6f5",
+      "report": "---\nidea: buddhism\nverdict: fail\nreviewer: fact-checker\ndate: 2026-10-20\nhash: d6c5f40ad298c6f5\nrun_id: 2026-10-20-buddhism-dd9b6d\nmodel: claude-opus-5-5\nserved_by:\n  - claude-opus-5-5\nturns: 20\nest_cost_usd: 0.65\n---\n\n# Review: Buddhism\n\n## Verdict\n\n**FAIL**. The dating material checks out against Violatti and Cousins. I read Cousins in Wujastyk's 1997 HTML reproduction and in Choong's quotation of it. The entry still fails for three reasons. The summary states as fact that the Buddha set out the Four Noble Truths in his first sermon, but the body says only \"traditionally\", and the cited translation's own note reports scholars who argue the four truths are a later addition. No cited source calls this sutta the \"first sermon\". And the origin line (\"Siddhartha Gautama\", \"northern India\") and the date mark's \"teaching career in the decades before\" have no source.\n\n## Sources\n\n| Key | Read the work | How | Bibliographic details correct | Notes |\n|---|---|---|---|---|\n| sn-56-11 | yes | read_source on the cited Access to Insight URL | yes | Thanissaro Bhikkhu translation, © 1993, last revised for ATI on 30 Nov 2013. It translates dukkha as 'stress', not 'suffering'. The text does not call itself the 'first sermon'. Note 1 reports scholars who argue that 'noble truth', and possibly the content of the four truths, are later additions. |\n| cousins-1996 | yes | Crossref metadata via lookup_doi. Text read in Dominik Wujastyk's HTML reproduction on the UCL INDOLOGY site (Wayback snapshots of node1.html and node6.html, dated 25 Oct 1997), and in the quotation in Choong Mun-keat's paper (NTU library full text). The ahandfulofleaves PDF is an image scan with no text layer. | yes | JRAS ser. 3, 6.1 (1996): 57–63, DOI correct. The bibliography note calls the 1997 web copy 'the author's own post to the INDOLOGY list'. In fact it is an HTML reproduction prepared by Dominik Wujastyk on the INDOLOGY website, not a list post by Cousins. The reproduction reads 'c.400 B.C -', and Choong quotes it as 'c. 400 B.C.'. That difference is trivial punctuation. |\n| violatti-2015 | yes | read_source on the cited OpenLearn URL | yes | First published 24 July 2015, originally on Ancient.eu (Ancient History Encyclopedia) under CC BY-NC-SA; page updated 11 Feb 2020. A reference source, acceptable here because it reports the standard chronologies rather than arguing a contested position. |\n\n## Documents read\n\nRecorded by the harness: every document fetched during the review, with a hash of the text the reviewer saw.\n\n| Document | Type | Fetched | SHA-256 |\n|---|---|---|---|\n| [The Dating of the Historical Buddha: A Review Article](https://doi.org/10.1017/S1356186300014760) | crossref | 2026-10-20 15:25 | `dd152e88f005` |\n| [Dhammacakkappavattana Sutta: Setting the Wheel of Dhamma in Motion](https://accesstoinsight.org/tipitaka/sn/sn56/sn56.011.than.html) | html | 2026-10-20 15:25 | `28cb4627e4df` |\n| [The Dates of the Buddha \\| OpenLearn - Open University](https://www.open.edu/openlearn/history-the-arts/culture/religious-studies/the-dates-the-buddha) | html | 2026-10-20 15:25 | `ce6838c8fbb0` |\n| https://www.ahandfulofleaves.org/documents/Articles/The%20Dating%20of%20the%20Historical%20Buddha_A%20review%20article_JRAS_Cousins_1996.pdf | pdf | 2026-10-20 15:26 | `b3df8abe77aa` |\n| [Theravāda Buddhism Web Directory - Academic - The Dating of the Historical Buddha: A Review Article by L.S. Cousins](https://www.dhamma.ru/sadhu/767-the-dating-of-the-historical-buddha-a-review-article-by-ls-cousins) | html | 2026-10-20 15:26 | `0c6d30c64c43` |\n| [INDOLOGY – Resources for Indological Scholarship](http://web.archive.org/web/20210413104729/https://indology.info/papers/cousins/) | html | 2026-10-20 15:26 | `ccdc50917636` |\n| [The Dating of the Historical Buddha: AReview Article* \\| Journal of the Royal Asiatic Society \\| Cambridge Core](https://www.cambridge.org/core/journals/journal-of-the-royal-asiatic-society/article/abs/dating-of-the-historical-buddha-areview-article/DB9652059E084F835EF52BA16A0DBC03) | html | 2026-10-20 15:26 | `af579f17c0fb` |\n| [A Discussion on the Determination of the Date of the Historical Buddha](https://dlbs.liberal.ntu.edu.tw/FULLTEXT/JR-MISC/misc115791.htm) | html | 2026-10-20 15:26 | `f5fa635c4188` |\n| [The Dating of the Historical Buddha: A Review Article](http://web.archive.org/web/20070101054125/http://www.ucl.ac.uk:80/%7Eucgadkw/position/buddha/buddha.html) | html | 2026-10-20 15:27 | `4e0faecf4723` |\n| [In conclusion](http://web.archive.org/web/20061231055210/http://www.ucl.ac.uk:80/%7Eucgadkw/position/buddha/node6.html) | html | 2026-10-20 15:27 | `a4b323616862` |\n| [Bechert's arguments](http://web.archive.org/web/20070101053951/http://www.ucl.ac.uk:80/%7Eucgadkw/position/buddha/node5.html) | html | 2026-10-20 15:27 | `b5384b0d5f23` |\n| [Contents](http://web.archive.org/web/20070101171625/http://www.ucl.ac.uk:80/%7Eucgadkw/position/buddha/node1.html) | html | 2026-10-20 15:28 | `533e70233604` |\n\n## Claims\n\n**Excerpt verified** means the harness found the excerpt verbatim in a document listed above.\n\n| # | Claim | Where | Source, locator | Evidence | Excerpt verified | Verdict | Note |\n|---|---|---|---|---|---|---|---|\n| 1 | Title: Buddhism | title | violatti-2015, para. 1 | Buddhism is one of the most influential traditions of the Eastern world, with about two and a half thousand years of development. | yes (www.open.edu) | supported | The title is a neutral label. |\n| 2 | Origin: Siddhartha Gautama, the Buddha | origin | — | — | — | unsupported | Violatti calls 'the Buddha' the founder of Buddhism, but no cited source gives the name Siddhartha Gautama. Add a source that names him. |\n| 3 | Origin: northern India | origin | sn-56-11, opening line | — | — | unsupported | The sutta places the sermon at Varanasi, and Violatti discusses Indian chronology. Neither says 'northern India' or locates the Buddha's life or the religion's origin regionally. This is uncontroversial, but it needs a source that says it. |\n| 4 | Summary: In his first sermon, near Varanasi, the Buddha sets out the Four Noble Truths | summary | sn-56-11, opening; note 1 | some scholars have argued that the expression \"noble truth\" is a later addition to the texts. Others have argued even further that the content of the four truths is also a later addition. | **no** | overstated | The body correctly says 'traditionally'. The summary turns the canonical tradition into historical fact, although the cited translation itself reports scholarly doubt that the four truths belonged to the earliest teaching. No cited source says 'first sermon' either. The summary should attribute this to tradition or the canonical account. |\n| 5 | Summary: suffering arises from craving, and it ends when craving is let go | summary | sn-56-11, paras. 4–6 | the noble truth of the cessation of stress: the remainderless fading & cessation, renunciation, relinquishment, release, & letting go of that very craving. | yes (accesstoinsight.org) | supported | An accurate paraphrase of the text's content. The translation says 'stress' for dukkha; 'suffering' is a common alternative rendering. |\n| 6 | Date year -400 (approx.), marking the death of the Buddha | date | cousins-1996, 'In conclusion' (p. 63 in print) | we should no doubt speak of a date for the Buddha's Mahaparinibbana of c.400 B.C - I choose the round number deliberately to indicate that the margins are rather loose. | yes (web.archive.org) | supported | A reasonable placement year that follows Cousins. |\n| 7 | Marks: his teaching career came in the decades before [his death] | date | violatti-2015, Conclusion | — | — | unsupported | Violatti says only that the Buddha died at about eighty. No cited source gives the length or timing of his teaching career. Add a source, or drop the clause. |\n| 8 | Earliest -486, latest -368 | date | violatti-2015, summary list | Corrected long chronology: 487-486 BCE | yes (www.open.edu) | supported | The bounds match the corrected long and short chronologies. They exclude the symposium's lower bound of 261 BCE, which the body itself cites (see suggestions). |\n| 9 | Traditional Theravada chronology puts his death in 544/543 BCE | date | violatti-2015, para. on Theravada tradition | The Theravada tradition claims that the death of the Buddha occurred in 544 or 543 BCE: this calculation is based on the long chronology (Ceylonese). | yes (www.open.edu) | supported | Same claim as in the body. |\n| 10 | a corrected version gives 487/486 BCE | date | violatti-2015, para. on Theravada tradition | most Western Indian scholars moved the date of the Buddha's death to 487 or 486 BCE. | yes (www.open.edu) | supported |  |\n| 11 | the Indian 'short chronology' 370–368 BCE | date | violatti-2015, para. on short chronology | This is based on the short chronology (Indian) and it suggests the Buddha died on 370-368 BCE. | yes (www.open.edu) | supported |  |\n| 12 | A review of the 1988 Göttingen symposium on the question favoured about 400 BCE | date | cousins-1996, opening; 'In conclusion' | The volumes reviewed here stem from a conference held near Göttingen in 1988 under the auspices of Heinz Bechert. | yes (web.archive.org) | supported | Cousins reviewed vols. 1–2 of Bechert's published proceedings and concluded c. 400 B.C. |\n| 13 | The Dhammacakkappavattana Sutta, traditionally the Buddha's first sermon | body | sn-56-11, whole text | — | — | unsupported | The cited text describes the setting of the Wheel of Dhamma in motion before the group of five monks, but never calls it the first sermon. Neither do the other cited sources. The claim is uncontroversial, but it needs a source that says it. |\n| 14 | delivered at Isipatana near Varanasi | body | sn-56-11, opening line | on one occasion the Blessed One was staying at Varanasi in the Game Refuge at Isipatana | yes (accesstoinsight.org) | supported |  |\n| 15 | identifies the origin of suffering as \"the craving that makes for further becoming\" | body | sn-56-11, para. 4 | the noble truth of the origination of stress: the craving that makes for further becoming | yes (accesstoinsight.org) | supported | The quotation is verbatim. The translation says 'stress' where the entry says 'suffering'. |\n| 16 | its cessation as \"the remainderless fading & cessation, renunciation, relinquishment, release, & letting go of that very craving\" | body | sn-56-11, para. 5 | the remainderless fading & cessation, renunciation, relinquishment, release, & letting go of that very craving. | yes (accesstoinsight.org) | supported | Verbatim. |\n| 17 | The Theravada tradition dates the Buddha's death to 544/543 BCE. | body | violatti-2015, para. on Theravada tradition | The Theravada tradition claims that the death of the Buddha occurred in 544 or 543 BCE | yes (www.open.edu) | supported |  |\n| 18 | Checking it against the reign of the emperor Ashoka produced a corrected date of 487/486 BCE | body | violatti-2015, para. on Theravada tradition | When scholars came to know the exact dates for Emperor Ashoka, it turned out to be obvious that this chronology had some errors | yes (www.open.edu) | supported | The next sentences give 487 or 486 BCE. |\n| 19 | while Indian sources point to 370–368 BCE | body | violatti-2015, para. on short chronology | Early Buddhist texts from mainland India, as well as references in the earliest historiographic work of the Theravada tradition date the death of the Buddha a hundred years before the reign of Emperor Ashoka. | yes (www.open.edu) | supported |  |\n| 20 | At a 1988 symposium on the question in Göttingen, experts proposed dates ranging from 486 to 261 BCE | body | violatti-2015, 'The Controversy on Dates of the Buddha' | In 1988 CE a symposium named “The Dating of the Historical Buddha” took place in Gottingen, Germany. The dates proposed by a group of experts who attended goes from 486 BCE to 261 BCE | yes (www.open.edu) | supported |  |\n| 21 | Reviewing the published volumes, Cousins concluded that \"the evidence seems to favour some kind of median chronology and we should no doubt speak of a date for the Buddha's Mahaparinibbana of c.400 B.C.\" | body | cousins-1996, 'In conclusion' (p. 63 in print) | From the point of view of reasonable probability the evidence seems to favour some kind of median chronology and we should no doubt speak of a date for the Buddha's Mahaparinibbana of c.400 B.C | yes (web.archive.org) | supported | Verbatim apart from trailing punctuation: the web copy reads 'B.C -', and Choong's quotation reads 'c. 400 B.C.'. |\n\n## Entry-level checks\n\n- **Summary and title:** The title is fine. The summary states as historical fact that the Buddha taught the Four Noble Truths in his first sermon. The body hedges this ('traditionally'), no cited source says 'first sermon', and the cited translation's note 1 reports scholars who argue the four truths are a later addition. The card overstates the body and the sources.\n- **Date:** A year of -400 is well grounded in Cousins. Earliest -486 and latest -368 span the corrected long and short chronologies, but leave out the symposium's 261 BCE lower bound, which the body cites. Violatti's own conclusion is 410–370 BCE. The marks clause about the teaching career has no source. The note is accurate.\n- **Attribution and framing:** Treating the Buddha as founder is standard. The main framing problem is presenting the canonical account of the first sermon and its content as history. The entry should say this is how the tradition and the sutta present it, and acknowledge the debate about whether the four-truths formula is early.\n- **Links:** No buildsOn links. Arguably the entry should link to earlier Indian śramaṇa or Upaniṣadic ideas, but that is a suggestion, not a requirement.\n- **Searches for disagreement:**\n  - \"four noble truths later addition first sermon Norman Schmithausen Bronkhorst\": The cited translation's own note 1 states that some scholars consider 'noble truth', and even the content of the four truths, later additions. Search leads point to Schmithausen, Bronkhorst, Norman and Anderson (1999) as proponents. The summary ignores this debate.\n  - \"Lumbini excavation Coningham 6th century BCE Buddha date Antiquity 2013\": Coningham et al. (Antiquity 2013) argued from a timber structure at Lumbini for a sixth-century BCE Buddha. The interpretation is contested, and the entry does not mention it. Non-blocking, since the entry already presents the range of chronologies, but worth a sentence.\n  - \"Cousins \"median chronology\" Buddha \"c.400 B.C.\"\": Confirmed Cousins's wording through Choong (Journal of Indian History) and Wujastyk's INDOLOGY reproduction. Choong lists other scholarly proposals: Bechert 448–368, Gombrich 502/479–422/399, Bareau 500/460–420/380. These agree broadly with a 5th–4th-century death.\n\n## Blocking issues\n\n1. Summary: reword so the first-sermon setting and the Four Noble Truths are attributed to the tradition or the canonical account (e.g. 'In what tradition holds was his first sermon…'), not stated as historical fact. The cited translation's note 1 reports scholars who argue the four truths are a later addition.\n2. Body: 'traditionally the Buddha's first sermon' needs a source that actually says so. SN 56.11 does not call itself the first sermon, and neither Violatti nor Cousins says it.\n3. Origin: 'Siddhartha Gautama' and 'northern India' appear in no cited source. Add a reference that gives the name and region, or drop them.\n4. Date marks: 'his teaching career came in the decades before' has no source. Add one (e.g. for the traditional ~45-year teaching career or the death at about eighty, with the inference made explicit), or delete the clause.\n\n## Non-blocking suggestions\n\n- Fix the cousins-1996 note: the 1997 web text is Dominik Wujastyk's HTML reproduction on the INDOLOGY website (ucl.ac.uk/~ucgadkw/position/buddha/), not 'the author's own post to the INDOLOGY list'. Consider citing that URL directly so readers can check the passage.\n- Consider widening 'latest' or explaining it in the note: the Göttingen proposals reached 261 BCE, and Violatti concludes 410–370 BCE.\n- Mention that Thanissaro translates dukkha as 'stress', since the entry puts 'suffering' next to quotations that, in the original, define 'stress'.\n- Consider one sentence on the 2013 Lumbini excavation claim (Coningham et al., Antiquity) for a sixth-century BCE Buddha, and noting that it is contested.\n- Note that Violatti's piece was first published on Ancient.eu (Ancient History Encyclopedia) in 2015 and republished on OpenLearn.\n\n## Run\n\n- Model: claude-opus-5-5\n- Turns: 20; estimated model cost: $0.65 (excludes web search fees)\n- Full transcript: `.runs/2026-10-20-buddhism-dd9b6d.jsonl` (local)\n",
+      "createdAt": "2026-10-20T18:00:00Z"
+    }
+  ],
+  "agentRuns": [
+    {
+      "createdAt": "2026-10-20T16:03:40.085Z",
+      "date": "2026-10-20",
+      "summary": "1 matched, 2 new candidate(s), 7 new entit(ies)",
+      "agent": "extractor",
+      "costUsd": 0.0777,
+      "model": "claude-sonnet-5-5",
+      "runId": "2026-10-20-extractor-lam-2010-8cff34",
+      "outcome": "saved",
+      "servedBy": [
+        "claude-sonnet-5-5"
+      ],
+      "turns": 5
+    },
+    {
+      "createdAt": "2026-10-20T16:04:52.831Z",
+      "date": "2026-10-20",
+      "summary": "1 link(s); 0 candidate(s) considered without a link; 0 unverified seed link(s) removed",
+      "agent": "linker",
+      "costUsd": 0.0453,
+      "model": "claude-sonnet-5-5",
+      "runId": "2026-10-20-linker-alphabet-32e2e1",
+      "outcome": "saved",
+      "servedBy": [
+        "claude-sonnet-5-5"
+      ],
+      "turns": 3
+    },
+    {
+      "createdAt": "2026-10-20T16:05:56.054Z",
+      "date": "2026-10-20",
+      "summary": "3 link(s); 9 candidate(s) considered without a link; 0 unverified seed link(s) removed",
+      "agent": "linker",
+      "costUsd": 0.0776,
+      "model": "claude-sonnet-5-5",
+      "runId": "2026-10-20-linker-printing-9d6cbb",
+      "outcome": "saved",
+      "servedBy": [
+        "claude-sonnet-5-5"
+      ],
+      "turns": 5
+    },
+    {
+      "createdAt": "2026-10-20T16:09:13.792Z",
+      "date": "2026-10-20",
+      "summary": "2 link(s); 10 candidate(s) considered without a link; 0 unverified seed link(s) removed",
+      "agent": "linker",
+      "costUsd": 0.19,
+      "model": "claude-sonnet-5-5",
+      "runId": "2026-10-20-linker-printing-d3546c",
+      "outcome": "saved",
+      "servedBy": [
+        "claude-sonnet-5-5"
+      ],
+      "turns": 8
+    }
+  ]
+}

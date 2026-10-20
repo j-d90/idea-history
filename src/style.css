@@ -427,6 +427,10 @@ a { color: inherit; text-decoration: none; }
   transition: color 0.15s, border-color 0.15s;
 }
 .chip:hover { color: var(--fg); border-color: var(--border-strong); }
+.chip-seed { border-style: dashed; color: var(--fg-faint); }
+.chip-linker { border-style: dashed; }
+.chip-reviewed { border-color: color-mix(in srgb, var(--cat-science) 45%, var(--border)); }
+.idea-links + .idea-links { margin-top: 6px; padding-top: 0; border-top: 0; }
 
 .idea-details {
   margin-top: 12px;
