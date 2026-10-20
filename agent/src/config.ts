@@ -6,7 +6,11 @@ import { z } from "zod";
  * fast with a readable message instead of midway through a paid run.
  */
 const EnvSchema = z.object({
-  ANTHROPIC_API_KEY: z.string().min(1, "is required (see .env.example)"),
+  ANTHROPIC_API_KEY: z
+    .string()
+    .min(1, "is required (see .env.example)")
+    .refine((k) => !k.includes("="), "contains '=': the value should be the key alone, not ANTHROPIC_API_KEY=… pasted again")
+    .refine((k) => k.trim() === k, "has leading or trailing whitespace"),
 
   FACT_CHECKER_MODEL: z.string().default("claude-opus-5-5"),
   FACT_CHECKER_EFFORT: z.enum(["low", "medium", "high", "xhigh", "max"]).default("high"),
