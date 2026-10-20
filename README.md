@@ -22,7 +22,9 @@ Requires Node 23.6+ (scripts run TypeScript directly via Node's type stripping) 
 | `npm run validate` | Check all content in the graph |
 | `npm run kg -- <command>` | Read and write the graph ([kg/README.md](kg/README.md)) |
 | `npm run kg:up` / `kg:down` / `kg:migrate` | Start or stop Neo4j; apply the schema |
-| `npm run gather -- events --from <y> --to <y>` | Gatherer agent: a period's events, from sources it reads ([agents/README.md](agents/README.md)) |
+| `npm run find -- --from <y> --to <y>` | Finder agent: documents listing many dated events for a period ([agents/README.md](agents/README.md)) |
+| `npm run harvest` | Harvester: every dated event from the found documents (`--batch` for half price) |
+| `npm run gather -- events --from <y> --to <y>` | Older agent gatherer (thorough, about 100× the cost per event) |
 | `npm run interpret -- --from <y> --to <y>` | Interpreter agent: the ideas a period's events show emerging |
 | `npm run author -- <id>` | Author agent: curate, source or revise an idea or event |
 | `npm run link -- <idea>` | Linker agent: typed, evidenced links to earlier ideas |

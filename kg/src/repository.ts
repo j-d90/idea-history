@@ -17,7 +17,7 @@ import {
   type ReviewRecord,
   type Source,
 } from "../../src/content/schema.ts";
-import { compact, entryToProps, propsToEvent, propsToIdea, propsToSource, sourceToProps, type Contributor } from "./mapping.ts";
+import { compact, entryToProps, HARVEST_PROPS, propsToEvent, propsToIdea, propsToSource, sourceToProps, type Contributor } from "./mapping.ts";
 
 // The knowledge graph is the content store. Every read and write of ideas,
 // events, sources, links, entities and reviews goes through this module.
@@ -204,12 +204,13 @@ export async function putEntry(tx: Tx, incoming: Entry): Promise<PutResult> {
 export const putIdea = (tx: Tx, idea: Idea) => putEntry(tx, idea);
 export const putEvent = (tx: Tx, event: HistoricalEvent) => putEntry(tx, event);
 
-/** Create or update a source and its contributors. */
+/** Create or update a source and its contributors. Its harvest bookkeeping is kept. */
 export async function putSource(tx: Tx, key: string, source: Source): Promise<void> {
   const { props, people } = sourceToProps(source);
   await tx.run(
     `MERGE (s:Source {key: $key})
-     SET s = $props, s.key = $key
+     WITH s, s {${HARVEST_PROPS.map((p) => `.${p}`).join(", ")}} AS keep
+     SET s = $props, s.key = $key, s += keep
      WITH s
      OPTIONAL MATCH (s)<-[old:CONTRIBUTED]-() DELETE old
      WITH DISTINCT s
@@ -312,6 +313,52 @@ export async function addDiscusses(tx: Tx, sourceKey: string, ideaId: string, d:
      SET r.evidence = $evidence, r.locator = $locator, r.runId = $runId`,
     { sourceKey, ideaId, evidence: d.evidence, locator: d.locator ?? null, runId: d.runId },
   );
+}
+
+// ---------- Harvesting sources ----------
+
+export type HarvestStatus = "pending" | "done" | "failed";
+
+export interface HarvestState {
+  status: HarvestStatus;
+  events?: number;
+  note?: string;
+  foundBy?: string;
+  foundFor?: string;
+}
+
+export async function setHarvest(tx: Tx, key: string, h: HarvestState): Promise<void> {
+  await tx.run(
+    `MATCH (s:Source {key: $key})
+     SET s.harvestStatus = $status, s.harvestEvents = $events, s.harvestNote = $note,
+         s.harvestedAt = CASE WHEN $status = "pending" THEN null ELSE datetime() END,
+         s.foundBy = coalesce($foundBy, s.foundBy), s.foundFor = coalesce($foundFor, s.foundFor)`,
+    { key, status: h.status, events: h.events ?? null, note: h.note ?? null, foundBy: h.foundBy ?? null, foundFor: h.foundFor ?? null },
+  );
+}
+
+/** Sources waiting to be harvested, oldest first. */
+export async function pendingHarvests(tx: Tx, limit?: number): Promise<string[]> {
+  const res = await tx.run(
+    `MATCH (s:Source {harvestStatus: "pending"}) RETURN s.key AS key ORDER BY coalesce(s.foundFor, ""), s.key` + (limit ? ` LIMIT $limit` : ""),
+    { limit: neo4j.int(limit ?? 0) },
+  );
+  return res.records.map((r) => r.get("key"));
+}
+
+/** Harvest bookkeeping for every source that has any. */
+export async function harvestStates(tx: Tx): Promise<Record<string, HarvestState & { harvestedAt?: string }>> {
+  const res = await tx.run(
+    `MATCH (s:Source) WHERE s.harvestStatus IS NOT NULL
+     RETURN s.key AS key, s {status: s.harvestStatus, events: s.harvestEvents, note: s.harvestNote, foundBy: s.foundBy, foundFor: s.foundFor, harvestedAt: toString(s.harvestedAt)} AS h`,
+  );
+  return Object.fromEntries(res.records.map((r) => [r.get("key"), compact(r.get("h")) as unknown as HarvestState]));
+}
+
+/** Every source URL in the graph, so finders don't propose a document twice. */
+export async function sourceUrls(tx: Tx): Promise<Map<string, string>> {
+  const res = await tx.run(`MATCH (s:Source) WHERE s.url IS NOT NULL RETURN s.url AS url, s.key AS key`);
+  return new Map(res.records.map((r) => [r.get("url") as string, r.get("key") as string]));
 }
 
 // ---------- Embeddings and similarity ----------

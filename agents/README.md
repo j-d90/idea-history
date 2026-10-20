@@ -12,7 +12,9 @@ gatherer ─► events ─► interpreter ─► ideas (candidates) ─► autho
 
 | Agent | Command | Job | Writes |
 |---|---|---|---|
-| **Gatherer** | `npm run gather -- events --from <year> --to <year>` | Collect observations of one type (events, for now) for a period, from sources it reads and quotes | `sourced` events, the new sources they cite, entities |
+| **Finder** | `npm run find -- --from <year> --to <year>` | A short agent run (Sonnet, low effort; Europe PMC first, a few web searches, no reading) finds documents that list many dated events for a period. The harness fetches each one, keeps the readable, allowed, new ones | `Source` nodes marked for harvesting (`harvestStatus: pending`) |
+| **Harvester** | `npm run harvest [-- --batch]` | Not an agent: the harness fetches each pending source, and one structured-output call per chunk (Haiku, low effort) extracts every dated event with verbatim excerpts. The harness verifies each excerpt, merges duplicates of existing events by vector similarity, and writes the rest. `--batch` uses the Batch API at half price. About $0.001 per event | `sourced` events; the source marked harvested |
+| **Gatherer** | `npm run gather -- events --from <year> --to <year>` | The older, agent-driven way in: collects observations of one type for a period, reading and quoting as it goes. Thorough but about 100× the cost per event of find + harvest; the pipeline runs it only with `--only gather` | `sourced` events, the new sources they cite, entities |
 | **Interpreter** | `npm run interpret -- --from <year> --to <year>` | Decide which of a period's events show an idea emerging (earliest evidence, articulation, institutionalization, spread), with evidence; match ideas by vector search | `EMERGES_IN` links, aliases, new `candidate` ideas |
 | **Author** | `npm run author -- <idea-id \| event:id>` | Curate candidates (write or decline), source drafts, revise entries that failed review; every citation backed by a quote from that source, appended to the entry so it can be batch-checked. `--light` revises after a failed check without research, within the existing excerpts (about 2 cents) | The entry, now `sourced`; its new sources |
 | **Linker** | `npm run link -- <idea-id>` | Find similar earlier ideas by vector search and decide whether a link exists, and of what type (`BUILDS_ON`, `REACTS_AGAINST`, `PARALLELS`), with evidence | `linker` links, replacing the idea's unverified `seed` links |
@@ -29,12 +31,12 @@ Years are negative for BCE, or written like `2500bce`. Exit codes: 0 success, 1 
 ## The pipeline
 
 `npm run pipeline` works out from the graph what each item needs next, and prints the plan with cost estimates. Planning is free; it runs nothing. By default it handles only events, on the cheap path:
-1. Gather.
+1. Find documents for each window, then harvest them (`--batch` for half-price harvesting).
 2. Batch check.
 3. On a fail, a light revision, then check again. After two failed light revisions it escalates to a full revision.
 4. A full review for a stable 5% sample of checked events (`--sample`), to measure what the batch check misses.
 
-That's about $0.10 per event. `--ideas` adds the idea stages (interpret, author, link) and idea reviews.
+With find + harvest, that's well under a cent per event. `--ideas` adds the idea stages (interpret, author, link) and idea reviews.
 
 ```bash
 npm run pipeline                                   # plan for everything already in the graph
@@ -53,7 +55,9 @@ npm run pipeline -- --from 2500bce --to 2001bce --run --budget 10   # run it, sp
   | link | Sourced ideas not linked since they changed |
   | author | Candidates and drafts |
   | interpret | Gathered periods whose events changed since they were last interpreted |
-  | gather | Requested windows not yet gathered |
+  | harvest | Sources the finder stored that aren't harvested yet, 25 per task |
+  | find | Requested windows no finder run has covered |
+  | gather | (only with `--only gather`) requested windows the agent gatherer hasn't covered |
 
   An entry the author already declined, or tried and failed to fix, isn't retried until something changes.
 - **Order:** downstream work goes first (the order of the table), so the budget finishes entries before starting new ones.

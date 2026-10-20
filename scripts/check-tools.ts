@@ -17,6 +17,9 @@ import { events } from "../agents/gatherer/observations/events.ts";
 import { createSubmitTool as createSubmitObservationsTool } from "../agents/gatherer/schema.ts";
 import { createSubmitInterpretationTool } from "../agents/interpreter/schema.ts";
 import { createSubmitLinksTool } from "../agents/linker/schema.ts";
+import { createSubmitSourcesTool } from "../agents/finder/schema.ts";
+import { searchEuropePmc } from "../agents/core/tools/scholarly.ts";
+import { harvestJsonSchema } from "../agents/harvester/schema.ts";
 
 const evidence = new EvidenceLedger();
 const none = () => false;
@@ -35,10 +38,11 @@ const agents: Record<string, AgentTool[]> = {
   extractor: [...shared, findSimilarIdeas, findSimilarEntities, getIdea, createSubmitExtractionTool({ evidence, ideaExists: none, entityExists: none }, noop, noop)] as AgentTool[],
   linker: [...shared, findSimilarIdeas, getIdea,
     createSubmitLinksTool({ ideaId: "x", ideaYear: 0, evidence, mustConsider: [], lookup: () => undefined, sourceExists: none }, noop, noop)] as AgentTool[],
+  finder: [searchEuropePmc, createSubmitSourcesTool(async () => ({ message: "", done: true }))] as AgentTool[],
   "fact-checker": [...shared, createSubmitReviewTool({ label: "Idea", entry: idea, sources: {}, hash: "0".repeat(16) }, evidence, noop)] as AgentTool[],
 };
 
-const { model } = loadConfig();
+const { model, harvestModel } = loadConfig();
 const client = new Anthropic();
 let failed = false;
 for (const [name, tools] of Object.entries(agents)) {
@@ -54,5 +58,18 @@ for (const [name, tools] of Object.entries(agents)) {
     failed = true;
     console.log(`✗ ${name}: ${(e as Error).message}`);
   }
+}
+// The harvester uses structured output, not tools.
+try {
+  await client.messages.create({
+    model: harvestModel,
+    max_tokens: 2000,
+    output_config: { effort: "low", format: { type: "json_schema", schema: harvestJsonSchema() } },
+    messages: [{ role: "user", content: "Return an empty list of events." }],
+  });
+  console.log(`✓ harvester (${harvestModel})`);
+} catch (e) {
+  failed = true;
+  console.log(`✗ harvester: ${(e as Error).message}`);
 }
 process.exit(failed ? 1 : 0);

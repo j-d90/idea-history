@@ -11,16 +11,22 @@ import { CHECK_BATCH, checkable } from "../fact-checker/check.ts";
 // statuses, content hashes, review records and AgentRun history. The plan is
 // recomputed after every task, so each stage's output feeds the next.
 //
-// Events take the cheap path: gather → batch check (about half a cent each) →
-// on a fail, a light revision within their excerpts (about 2 cents) → check
-// again. A deterministic sample of checked events also gets a full review, to
-// measure what the batch check misses. Ideas (with --ideas) take the full path.
+// Events take the cheap path: find documents for a period → harvest every dated
+// event from them (about a tenth of a cent each) → batch check (about half a
+// cent each) → on a fail, a light revision within their excerpts (about 2 cents)
+// → check again. A deterministic sample of checked events also gets a full
+// review, to measure what the batch check misses. Ideas (with --ideas) take the
+// full path. The older agent gatherer runs only when asked for (--only gather).
 
-export const STAGES = ["review", "revise", "check", "link", "author", "interpret", "gather"] as const;
+export const STAGES = ["review", "revise", "check", "link", "author", "interpret", "harvest", "find", "gather"] as const;
 export type Stage = (typeof STAGES)[number];
 
 /** Stages that only concern ideas; the pipeline skips them unless asked to include ideas. */
 export const IDEA_STAGES: Stage[] = ["link", "author", "interpret"];
+/** Stages that run only when named in --only. */
+export const ON_REQUEST: Stage[] = ["gather"];
+/** Sources per harvest task (one Batch API job with --batch). */
+const HARVEST_TASK = 25;
 
 /** Share of checked events that also get a full review. */
 export const DEFAULT_SAMPLE = 0.05;
@@ -28,7 +34,8 @@ export const DEFAULT_SAMPLE = 0.05;
 const LIGHT_ATTEMPTS = 2;
 
 export type Task =
-  | { stage: "gather"; period: Period }
+  | { stage: "gather" | "find"; period: Period }
+  | { stage: "harvest"; keys: string[] }
   | { stage: "interpret"; period: Period }
   | { stage: "check"; ids: string[] }
   | { stage: "author"; label: EntryLabel; id: string; why: string }
@@ -39,6 +46,7 @@ export type Task =
 export function taskKey(t: Task): string {
   if ("period" in t) return `${t.stage}:${t.period.from}:${t.period.to}`;
   if ("ids" in t) return `${t.stage}:${t.ids.join(",")}`;
+  if ("keys" in t) return `${t.stage}:${t.keys.join(",")}`;
   return `${t.stage}:${"label" in t ? t.label : "Idea"}:${t.id}`;
 }
 
@@ -96,7 +104,7 @@ export interface Plan {
 }
 
 // Rough per-task costs used until there's history to average.
-const DEFAULT_COST = { review: 0.6, revise: 0.8, light: 0.02, check: 0.03, link: 0.15, author: 0.8, interpret: 0.8, gather: 0.5 };
+const DEFAULT_COST = { review: 0.6, revise: 0.8, light: 0.02, check: 0.03, link: 0.15, author: 0.8, interpret: 0.8, gather: 1.2, find: 0.08, harvest: 0.01 };
 
 export async function planWork(driver: Driver, opts: { periods: Period[]; stages?: Stage[]; ideas?: boolean; sample?: number }): Promise<Plan> {
   const content = await loadContent(driver);
@@ -160,17 +168,23 @@ export async function planWork(driver: Driver, opts: { periods: Period[]; stages
     }
   }
 
-  // gather: requested windows with no successful gatherer run covering them.
-  // interpret: gathered windows whose events changed since they were last interpreted.
-  const gathered = runs.filter((r) => r.agent === "gatherer" && r.outcome === "saved");
+  // harvest: sources the finder stored that haven't been harvested yet.
+  const pending = (await q(`MATCH (s:Source {harvestStatus: "pending"}) RETURN s.key AS key ORDER BY coalesce(s.foundFor, ""), s.key`)).map((r) => r.key as string);
+  for (let i = 0; i < pending.length; i += HARVEST_TASK) tasks.push({ stage: "harvest", keys: pending.slice(i, i + HARVEST_TASK) });
+
+  // find / gather: requested windows with no successful finder (or gatherer) run covering them.
+  // interpret: covered windows whose events changed since they were last interpreted.
+  const searched = (agent: string) => runs.filter((r) => r.agent === agent && r.outcome === "saved");
+  for (const p of opts.periods) {
+    if (!searched("finder").some((r) => covers(r, p))) tasks.push({ stage: "find", period: p });
+    if (!searched("gatherer").some((r) => covers(r, p))) tasks.push({ stage: "gather", period: p });
+  }
+  const gathered = [...searched("gatherer"), ...searched("finder")];
   const periods = [...opts.periods];
   for (const r of gathered) if (!periods.some((p) => p.from === r.from && p.to === r.to)) periods.push({ from: r.from!, to: r.to! });
   periods.sort((a, b) => a.from - b.from);
   for (const p of periods) {
-    if (!gathered.some((r) => covers(r, p))) {
-      if (opts.periods.some((x) => x.from === p.from && x.to === p.to)) tasks.push({ stage: "gather", period: p });
-      continue;
-    }
+    if (!gathered.some((r) => covers(r, p))) continue;
     if (!opts.ideas) continue;
     const events = content.events.filter((e) => e.date.year >= p.from && e.date.year <= p.to && e.status !== "candidate");
     if (!events.length) continue;
@@ -193,10 +207,12 @@ export async function planWork(driver: Driver, opts: { periods: Period[]; stages
     author: avg(runs.filter((r) => r.agent === "author" && r.light !== 1), DEFAULT_COST.author),
     interpret: avg(runs.filter((r) => r.agent === "interpreter"), DEFAULT_COST.interpret),
     gather: avg(runs.filter((r) => r.agent === "gatherer"), DEFAULT_COST.gather),
+    find: avg(runs.filter((r) => r.agent === "finder"), DEFAULT_COST.find),
+    harvest: avg(runs.filter((r) => r.agent === "harvester"), DEFAULT_COST.harvest),
   };
-  const cost = (t: Task) => (t.stage === "revise" && t.light ? est.light : est[t.stage]);
+  const cost = (t: Task) => (t.stage === "revise" && t.light ? est.light : t.stage === "harvest" ? est.harvest * t.keys.length : est[t.stage]);
 
-  const stages = new Set(opts.stages ?? STAGES);
+  const stages = new Set(opts.stages ?? STAGES.filter((s) => !ON_REQUEST.includes(s)));
   const wanted = (t: Task) => stages.has(t.stage) && (opts.ideas || !IDEA_STAGES.includes(t.stage));
   const order = (t: Task) => STAGES.indexOf(t.stage);
   return { tasks: tasks.filter(wanted).sort((a, b) => order(a) - order(b)), cost };

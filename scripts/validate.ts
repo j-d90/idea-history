@@ -12,7 +12,13 @@ try {
   const used = new Set(
     [...ideas, ...events].flatMap((e) => e.sources).concat([...links, ...emergences].flatMap((l) => (l.sourceKey ? [l.sourceKey] : []))),
   );
-  for (const key of Object.keys(bibliography)) if (!used.has(key)) console.warn(`warning: source "${key}" is not cited by any idea or link`);
+  // Sources found for harvesting aren't cited until they're harvested; warn only about the rest.
+  const harvest = await driver.executeQuery(`MATCH (s:Source) WHERE s.harvestStatus IS NOT NULL RETURN s.key AS key, s.harvestStatus AS status`);
+  const harvestStatus = new Map(harvest.records.map((r) => [r.get("key") as string, r.get("status") as string]));
+  const unused = Object.keys(bibliography).filter((k) => !used.has(k) && !harvestStatus.has(k));
+  for (const key of unused) console.warn(`warning: source "${key}" is not cited by any entry or link`);
+  const count = (s: string) => [...harvestStatus.values()].filter((x) => x === s).length;
+  if (harvestStatus.size) console.log(`  sources to harvest: ${count("pending")} pending, ${count("done")} harvested, ${count("failed")} failed`);
 
   const byStatus = (entries: { status: string }[]) => {
     const counts = Object.groupBy(entries, (e) => e.status);

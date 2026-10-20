@@ -21,6 +21,8 @@
     "extract": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agents/extractor/cli.ts",
     "link": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agents/linker/cli.ts",
     "gather": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agents/gatherer/cli.ts",
+    "find": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agents/finder/cli.ts",
+    "harvest": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agents/harvester/cli.ts",
     "interpret": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agents/interpreter/cli.ts",
     "author": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agents/author/cli.ts",
     "pipeline": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agents/pipeline/cli.ts",

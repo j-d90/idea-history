@@ -9,6 +9,7 @@
 // (downstream first, so the budget finishes entries before starting new ones).
 // --concurrency n runs n tasks at once from a plan fixed at the start (it doesn't
 // re-plan between tasks), e.g. to populate many gathering windows quickly.
+// --batch harvests through the Batch API at half price (each harvest task waits for its batch).
 // --from/--to add gathering windows for that range (years negative for BCE, or
 // like 2500bce); periods gathered before are always considered for interpretation.
 import { parseArgs } from "node:util";
@@ -19,7 +20,9 @@ import { openRuntime, type Runtime } from "../core/runtime.ts";
 import { fmtYear } from "../core/tools/graph.ts";
 import { checkEvents } from "../fact-checker/check.ts";
 import { reviewEntry } from "../fact-checker/review.ts";
+import { findSources } from "../finder/find.ts";
 import { gather } from "../gatherer/gather.ts";
+import { harvestSources } from "../harvester/harvest.ts";
 import { events } from "../gatherer/observations/events.ts";
 import { interpretPeriod } from "../interpreter/interpret.ts";
 import { linkIdea } from "../linker/link.ts";
@@ -27,7 +30,7 @@ import { planWork, STAGES, taskKey, windows, type Stage, type Task } from "./pla
 
 const USAGE = `usage:
   npm run pipeline -- [--from <year> --to <year> [--step <years>]] [--only <stages>] [--ideas] [--sample <0-1>]
-  npm run pipeline -- ... --run --budget <usd> [--limit <tasks>] [--concurrency <n>]`;
+  npm run pipeline -- ... --run --budget <usd> [--limit <tasks>] [--concurrency <n>] [--batch]`;
 const { values } = parseArgs({
   args: joinNegativeValues(process.argv.slice(2), ["--from", "--to"]),
   options: {
@@ -41,6 +44,7 @@ const { values } = parseArgs({
     ideas: { type: "boolean", default: false },
     sample: { type: "string" },
     concurrency: { type: "string" },
+    batch: { type: "boolean", default: false },
   },
 });
 
@@ -67,8 +71,11 @@ function fail(message: string): never {
 const describe = (t: Task): string => {
   switch (t.stage) {
     case "gather":
+    case "find":
     case "interpret":
       return `${fmtYear(t.period.from)} to ${fmtYear(t.period.to)}`;
+    case "harvest":
+      return `${t.keys.length} source(s): ${t.keys.slice(0, 3).join(", ")}${t.keys.length > 3 ? ", …" : ""}`;
     case "link":
       return t.id;
     case "check":
@@ -86,6 +93,15 @@ async function runTask(t: Task, rt: Runtime): Promise<{ costUsd: number; outcome
     case "gather": {
       const r = await gather(events, t.period, rt);
       return { costUsd: r.costUsd, outcome: r.status === "incomplete" ? `incomplete: ${r.reason}` : `${r.created.length} new event(s), ${r.sources.length} new source(s)` };
+    }
+    case "find": {
+      const r = await findSources(t.period, rt);
+      return { costUsd: r.costUsd, outcome: r.status === "incomplete" ? `incomplete: ${r.reason}` : `${r.kept.length} source(s) to harvest, ${r.dropped.length} dropped` };
+    }
+    case "harvest": {
+      const rs = await harvestSources(t.keys, rt, { batch: values.batch });
+      const sum = (f: (r: (typeof rs)[number]) => number) => rs.reduce((n, r) => n + f(r), 0);
+      return { costUsd: sum((r) => r.costUsd), outcome: `${sum((r) => r.created)} new event(s), ${sum((r) => r.merged)} merged, ${rs.filter((r) => r.status === "failed").length} source(s) failed` };
     }
     case "interpret":
       return out(await interpretPeriod(t.period, rt));

@@ -11,7 +11,8 @@ Everything here, including the site, needs Neo4j running (`npm run kg:up`).
 - `npm run typecheck`, `npm test`
 - `npm run kg -- <command>`: read and write the graph: `ideas`, `idea get|put`, `events`, `event get|put`, `source get|put`, `links`, `emergences`, `embed`, `export`, `restore` (see `kg/README.md`)
 - The agents (see `agents/README.md`); each costs API credits, so ask the user before running them:
-  - `npm run gather -- events --from <year> --to <year>`
+  - `npm run find -- --from <year> --to <year>` then `npm run harvest` (the cheap way to add events: about $0.001 each)
+  - `npm run gather -- events --from <year> --to <year>` (the older agent gatherer, about 100× the cost)
   - `npm run interpret -- --from <year> --to <year>`
   - `npm run author -- <id>`
   - `npm run link -- <idea-id>`
@@ -35,7 +36,7 @@ Everything here, including the site, needs Neo4j running (`npm run kg:up`).
 
 Statuses, for ideas and events alike: `candidate` (proposed by an agent) → `draft` → `sourced` → `checked` or `reviewed` (fact-checker only). `checked` means the claims match the entry's quoted excerpts, re-verified against the sources; `reviewed` means every claim was independently re-researched.
 
-1. **Gather:** `npm run gather -- events --from <year> --to <year>` records a period's events, each quoting the sources it rests on (registered as it goes). Gathered events are `sourced`.
+1. **Find and harvest:** `npm run find -- --from <year> --to <year>` stores documents that list many dated events as sources to harvest; `npm run harvest` extracts every dated event from them, each quoting its source verbatim. Harvested events are `sourced`.
 2. **Interpret:** `npm run interpret -- --from <year> --to <year>` decides which events show an idea emerging (`EMERGES_IN`, with a stage and evidence), matching existing ideas or proposing `candidate` ideas. Candidates are hidden from the site.
 3. **Author:** `npm run author -- <id>` curates a candidate (writes or declines it), sources a draft, or revises an entry after a failed review. To edit by hand instead: `npm run kg -- idea get <id> > /tmp/x.md` (or `event get`), edit, then `idea put` / `event put`. Cite with `[@key, locator]` and set `status: sourced` once every claim is cited. The format is in `README.md`; the schema is `src/content/schema.ts`.
 4. **Link:** `npm run link -- <id>` proposes typed links to earlier ideas, each with verified evidence, and replaces the idea's unverified seed links.

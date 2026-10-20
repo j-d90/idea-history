@@ -68,8 +68,16 @@ export function sourceToProps(s: Source): { props: Props; people: Contributor[] 
   return { props: compact(rest), people };
 }
 
+/**
+ * Harvest bookkeeping kept on Source nodes alongside the bibliographic fields:
+ * whether the harvester has extracted events from the document yet. Not part of
+ * the bibliography entry, so it doesn't affect content hashes.
+ */
+export const HARVEST_PROPS = ["harvestStatus", "harvestedAt", "harvestEvents", "harvestNote", "foundBy", "foundFor"] as const;
+
 export function propsToSource(p: Record<string, unknown>, people: Contributor[]): Source {
-  const { key: _key, ...rest } = p;
+  const { key: _key, ...all } = p;
+  const rest = Object.fromEntries(Object.entries(all).filter(([k]) => !(HARVEST_PROPS as readonly string[]).includes(k)));
   const byRole = (role: Role) => people.filter((x) => x.role === role).sort((a, b) => a.order - b.order).map((x) => x.name);
   return sourceSchema.parse({ ...rest, authors: byRole("author"), editors: byRole("editor"), translators: byRole("translator") });
 }

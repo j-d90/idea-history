@@ -209,3 +209,40 @@ test("check: the full-review sample is stable and about the requested size", () 
   assert.equal(sampled("event-17", 0.05), sampled("event-17", 0.05));
   assert.equal(ids.filter((id) => sampled(id, 0)).length, 0);
 });
+
+// ---------- Harvester ----------
+
+import { chunkDocument } from "../harvester/harvest.ts";
+import { checkHarvested, type HarvestedEvent } from "../harvester/schema.ts";
+
+const harvested = (over: Partial<HarvestedEvent> = {}): HarvestedEvent => ({
+  title: "Victory recorded at Girsu", kind: "military", place: "Girsu", summary: "Eannatum's victory over Umma is recorded.",
+  year: -2450, earliest: -2450, latest: -2425, approx: true, date_marks: "about 2450 BCE", date_note: null,
+  excerpts: [{ text: QUOTE, locator: "notice" }], ...over,
+});
+
+test("harvester: verbatim, well-dated events pass; anything else is dropped", () => {
+  assert.deepEqual(checkHarvested(harvested(), URL, ledger()), []);
+  const p = [
+    ...checkHarvested(harvested({ excerpts: [{ text: "Eannatum founded the city", locator: null }] }), URL, ledger()),
+    ...checkHarvested(harvested({ excerpts: [] }), URL, ledger()),
+    ...checkHarvested(harvested({ year: 0, earliest: null, latest: null }), URL, ledger()),
+    ...checkHarvested(harvested({ year: -5_000_000, earliest: null, latest: null }), URL, ledger()),
+    ...checkHarvested(harvested({ earliest: -2400 }), URL, ledger()),
+    ...checkHarvested(harvested({ summary: "x".repeat(321) }), URL, ledger()),
+    ...checkHarvested(harvested({ excerpts: [{ text: QUOTE, locator: null }] }), "https://other.example", ledger()),
+  ];
+  for (const e of ["excerpt not verbatim", "no excerpts", "not 0, within range", "earliest after year", "summary over 320"]) {
+    assert.ok(p.some((x) => x.includes(e)), `${e}\n${p.join("\n")}`);
+  }
+  assert.equal(p.filter((x) => x.includes("excerpt not verbatim")).length, 2, "an excerpt must be in this document, not another one read in the run");
+});
+
+test("harvester: documents are chunked on page boundaries", () => {
+  const page = "x".repeat(90_000);
+  const doc = { url: "u", finalUrl: "u", fetchedAt: "", kind: "pdf", text: "", pages: [page, page, page, page, page], sha256: "", bytes: 0 };
+  const chunks = chunkDocument(doc);
+  assert.equal(chunks.length, 3);
+  assert.ok(chunks[0].startsWith("=== PDF p. 1 ===") && chunks[1].startsWith("=== PDF p. 3 ==="));
+  assert.ok(chunks.every((c) => c.length <= 200_100));
+});
