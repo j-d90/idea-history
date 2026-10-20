@@ -41,7 +41,8 @@ export class ContentError extends Error {
 
 /** Parse the inside of a [@...] group. Returns null if malformed. */
 export function parseCitation(inner: string): Citation[] | null {
-  const parts = inner.split(";").map((p) => CITE_PART.exec(p.trim()));
+  // Split only where the next citation starts, so a locator may contain ";" (or "&amp;" once rendered).
+  const parts = inner.split(/;\s*(?=@)/).map((p) => CITE_PART.exec(p.trim()));
   if (parts.some((m) => !m)) return null;
   return parts.map((m) => ({ key: m![1], locator: m![2]?.trim() }));
 }

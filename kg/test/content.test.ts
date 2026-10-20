@@ -124,3 +124,11 @@ test("graph mapping round-trips ideas and sources with identical hashes", () => 
   assert.deepEqual(back, original);
   assert.equal(contentHash(back, { "lam-2010": source }), contentHash(original, bib));
 });
+
+import { parseCitation } from "../../src/content/rules.ts";
+
+test("citation locators may contain semicolons and ampersands", () => {
+  assert.deepEqual(parseCitation("@a, Tables 1 &amp; 2; @b, p. 3"), [{ key: "a", locator: "Tables 1 &amp; 2" }, { key: "b", locator: "p. 3" }]);
+  assert.deepEqual(parseCitation("@a, sections 2; 4"), [{ key: "a", locator: "sections 2; 4" }]);
+  assert.equal(parseCitation("@a; not a citation"), null);
+});
