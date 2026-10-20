@@ -1,0 +1,24 @@
+import type { Category } from "./types";
+
+export function formatYear(year: number, approx = false): string {
+  const prefix = approx ? "c. " : "";
+  if (year < 0) return `${prefix}${Math.abs(year).toLocaleString("en-US")} BCE`;
+  if (year < 1000) return `${prefix}${year} CE`;
+  return `${prefix}${year}`;
+}
+
+export function formatRange(start: number, end: number): string {
+  const now = new Date().getFullYear();
+  const endLabel = end > now ? "Present" : formatYear(end);
+  return `${formatYear(start)} — ${endLabel}`;
+}
+
+export const categoryLabels: Record<Category, string> = {
+  technology: "Technology",
+  philosophy: "Philosophy",
+  religion: "Religion",
+  politics: "Politics & Law",
+  science: "Science",
+  mathematics: "Mathematics",
+  economics: "Economics",
+};
