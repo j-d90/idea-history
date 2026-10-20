@@ -8,10 +8,15 @@
     "build": "npm run validate && tsc && vite build",
     "preview": "vite preview",
     "validate": "node --disable-warning=ExperimentalWarning scripts/validate.ts",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "review-hash": "node --disable-warning=ExperimentalWarning scripts/review-hash.ts",
+    "pdftext": "node --disable-warning=ExperimentalWarning scripts/pdftext.ts"
   },
   "devDependencies": {
+    "@types/markdown-it": "^14.2.0",
     "@types/node": "^22.20.5",
+    "markdown-it": "^14.3.3",
+    "pdfjs-dist": "^4.10.38",
     "typescript": "^5.6.3",
     "vite": "^5.4.10",
     "yaml": "^2.9.1",

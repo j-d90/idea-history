@@ -1,7 +1,8 @@
-import { ContentError, loadIdeas } from "./content.ts";
+import { ContentError, loadContent } from "./content.ts";
 
 try {
-  const ideas = loadIdeas();
+  const { ideas, warnings } = loadContent();
+  for (const w of warnings) console.warn(`warning: ${w}`);
   const counts = Object.groupBy(ideas, (i) => i.status);
   const summary = (["draft", "sourced", "reviewed"] as const)
     .map((s) => `${counts[s]?.length ?? 0} ${s}`)

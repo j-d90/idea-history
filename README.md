@@ -9,13 +9,15 @@ npm install
 npm run dev        # http://localhost:5173
 ```
 
-| Script              | What it does                                    |
-| ------------------- | ----------------------------------------------- |
-| `npm run dev`       | Start the Vite dev server                       |
-| `npm run validate`  | Check all content against the schema and rules  |
-| `npm run build`     | Validate, type-check and build to `dist/`       |
-| `npm run preview`   | Serve the production build                      |
-| `npm run typecheck` | Run the TypeScript compiler only                |
+| Script                       | What it does                                      |
+| ---------------------------- | ------------------------------------------------- |
+| `npm run dev`                | Start the Vite dev server                         |
+| `npm run validate`           | Check all content against the schema and rules    |
+| `npm run build`              | Validate, type-check and build to `dist/`         |
+| `npm run preview`            | Serve the production build                        |
+| `npm run typecheck`          | Run the TypeScript compiler only                  |
+| `npm run review-hash -- <id>` | Print the content hash a review must record      |
+| `npm run pdftext -- <src>`   | Print a PDF's text page by page, for checking sources |
 
 Requires Node 23.6+ (scripts run TypeScript directly via Node's type stripping).
 
@@ -26,66 +28,81 @@ Vite + TypeScript, no framework. Plain CSS with design tokens and automatic ligh
 ## Layout
 
 ```
-content/ideas/*.md            # one file per idea; filename = id
-src/content/schema.ts         # zod schema: the source of truth for content and its types
-scripts/content.ts            # loads, parses and validates content
-scripts/validate.ts           # `npm run validate`
-scripts/vite-plugin-content.ts# exposes content to the app as `virtual:ideas`
-src/data/eras.ts              # era boundaries and descriptions
-src/timeline.ts               # rendering, scroll reveal, current-year tracking
-src/format.ts                 # year/source formatting, labels, HTML escaping
-src/main.ts                   # page shell and filters
-src/style.css
+content/ideas/*.md              # one file per idea; filename = id
+content/sources.yaml            # shared bibliography
+content/reviews/*.md            # fact-checker review reports
+src/content/schema.ts           # zod schema: the source of truth for content and its types
+scripts/content.ts              # loads and validates content; citations; review hashes
+scripts/render.ts               # build-time Markdown, citation and reference rendering
+scripts/vite-plugin-content.ts  # exposes rendered content to the app as `virtual:ideas`
+scripts/validate.ts, review-hash.ts, pdftext.ts
+src/data/eras.ts                # era boundaries and descriptions
+src/timeline.ts, main.ts, format.ts, style.css
+.claude/agents/fact-checker.md  # the review agent
 ```
 
 ## Content format
 
-Each idea is a file in `content/ideas/`, named with its id in kebab-case (e.g. `printing.md`):
+An idea is a Markdown file in `content/ideas/`, named with its id in kebab-case:
 
 ```markdown
 ---
-title: The Printing Press
+title: The Alphabet
 category: technology        # technology | philosophy | religion | politics | science | mathematics | economics
 status: sourced             # draft | sourced | reviewed
 date:
-  year: 1440                # placement on the timeline; negative = BCE
-  earliest: 1439            # optional bounds of scholarly estimates
-  latest: 1450
+  year: -1850               # placement on the timeline; negative = BCE
+  marks: The earliest known alphabetic inscriptions   # what the year marks (required once sourced)
+  earliest: -1900           # optional bounds of scholarly estimates
   approx: true              # shows "c."
-  note: Gutenberg's first experiments are undated; the 42-line Bible was finished by 1455.
-origin: Johannes Gutenberg, Mainz
-summary: One or two sentences, max 320 characters.
+  note: Dates are uncertain [@lam-2010, p. 189].       # may cite
+origin: Semitic-speaking workers in Egypt and Sinai
+summary: One or two sentences for the card. Max 320 characters, no citations.
 buildsOn:
-  - id: paper
-    why: Cheap paper made mass printing economical.
-    sources: [eisenstein-1979]
-sources:
-  - key: eisenstein-1979
-    type: secondary         # primary | secondary | reference
-    author: Elizabeth L. Eisenstein
-    title: The Printing Press as an Agent of Change
-    publisher: Cambridge University Press
-    year: 1979
-    locator: vol. 1         # optional page/chapter
-    url: https://...        # optional; a source needs a url or a publisher
-    accessed: 2026-10-20    # optional; when the url was last checked
+  - id: writing
+    why: The earliest alphabetic signs were adapted from Egyptian hieroglyphs.
+    sources: [lam-2010]
+sources: [lam-2010, herrmann-2023]   # keys into content/sources.yaml
 ---
 
-Optional longer notes in Markdown (not yet shown on the page).
+The body is Markdown, shown under "Notes & sources". Cite as [@lam-2010, p. 190],
+or several at once as [@lam-2010, p. 189; @herrmann-2023].
 ```
 
-### Status
+Sources live in `content/sources.yaml`, keyed by a short id:
 
-- **draft**: unverified. May have no sources. Shown with an "Unverified" badge.
-- **sourced**: every claim is backed by a cited source. Requires at least one source, and every `buildsOn` link needs a `why` and at least one source key.
-- **reviewed**: sourced, and checked by a human. Has the same requirements as `sourced`.
+```yaml
+lam-2010:
+  type: secondary            # primary | secondary | reference
+  kind: chapter              # book | chapter | article | preprint | web | text
+  authors: [Joseph Lam]
+  title: The Invention and Development of the Alphabet
+  container: "Visible Language: Inventions of Writing in the Ancient Middle East and Beyond"
+  editors: [Christopher Woods]
+  publisher: The Oriental Institute of the University of Chicago
+  year: 2010
+  pages: pp. 189–195
+  url: https://...            # and/or doi: 10.xxxx/...
+  accessed: 2026-10-20
+  # optional: translators, series, volume, issue, etAl, short (in-text label),
+  #           consulted: false (metadata only), note
+```
+
+### Status and review
+
+- **draft**: unverified, shown with an "Unverified" badge. May have no sources.
+- **sourced**: the author has cited every claim. Requires `date.marks`, a body with citations, a `why` and sources for every link, and every listed source cited somewhere.
+- **reviewed**: the [fact-checker agent](.claude/agents/fact-checker.md) has independently checked every claim and passed it. Requires a `review` block whose hash matches the current content, including the cited sources, and a passing report in `content/reviews/<id>.md`. Any later edit to the idea or its sources fails the build until it is re-reviewed or set back to `sourced`.
+
+See [CLAUDE.md](CLAUDE.md) for the authoring workflow.
 
 ### Rules the validator enforces
 
 - Filenames are kebab-case; unknown fields are rejected.
 - `earliest <= year <= latest`.
 - `buildsOn` ids must exist, cannot point to the idea itself, and cannot point forward in time.
-- Source keys are unique within an idea, and `buildsOn[].sources` must reference them.
-- Source URLs must be http(s).
+- Every citation is well formed and refers to one of the idea's sources; every listed source is in the bibliography.
+- Bibliography entries have the fields their `kind` needs; DOIs are bare; URLs are http(s).
+- Review records match a passing report and the current content hash.
 
 Breaking any rule fails `npm run build`, and shows Vite's error overlay in dev.

@@ -1,0 +1,197 @@
+# Shared bibliography. Ideas list the keys they use in `sources` and cite them in
+# their body as [@key, locator]. Schema: src/content/schema.ts (sourceSchema).
+
+# ---------- Writing systems ----------
+
+woods-2010-intro:
+  type: secondary
+  kind: chapter
+  authors: [Christopher Woods]
+  title: "Introduction — Visible Language: The Earliest Writing Systems"
+  container: "Visible Language: Inventions of Writing in the Ancient Middle East and Beyond"
+  editors: [Christopher Woods]
+  series: Oriental Institute Museum Publications 32
+  publisher: The Oriental Institute of the University of Chicago
+  year: 2010
+  pages: pp. 15–27
+  url: https://oi-idb-static.uchicago.edu/multimedia/81/OIMP%2032%20-%20Woods,%20Chris%20-%20Visible%20Language.pdf
+  accessed: 2026-10-20
+  short: Woods 2010a
+
+woods-2010-mesopotamia:
+  type: secondary
+  kind: chapter
+  authors: [Christopher Woods]
+  title: The Earliest Mesopotamian Writing
+  container: "Visible Language: Inventions of Writing in the Ancient Middle East and Beyond"
+  editors: [Christopher Woods]
+  series: Oriental Institute Museum Publications 32
+  publisher: The Oriental Institute of the University of Chicago
+  year: 2010
+  pages: pp. 33–50
+  url: https://oi-idb-static.uchicago.edu/multimedia/81/OIMP%2032%20-%20Woods,%20Chris%20-%20Visible%20Language.pdf
+  accessed: 2026-10-20
+  short: Woods 2010b
+
+lam-2010:
+  type: secondary
+  kind: chapter
+  authors: [Joseph Lam]
+  title: The Invention and Development of the Alphabet
+  container: "Visible Language: Inventions of Writing in the Ancient Middle East and Beyond"
+  editors: [Christopher Woods]
+  series: Oriental Institute Museum Publications 32
+  publisher: The Oriental Institute of the University of Chicago
+  year: 2010
+  pages: pp. 189–195
+  url: https://oi-idb-static.uchicago.edu/multimedia/81/OIMP%2032%20-%20Woods,%20Chris%20-%20Visible%20Language.pdf
+  accessed: 2026-10-20
+
+englund-2004:
+  type: secondary
+  kind: chapter
+  authors: [Robert K. Englund]
+  title: The State of Decipherment of Proto-Elamite
+  container: "The First Writing: Script Invention as History and Process"
+  editors: [Stephen D. Houston]
+  publisher: Cambridge University Press
+  year: 2004
+  url: https://cdli.earth/files-up/publications/englund2004c.pdf
+  accessed: 2026-10-20
+
+herrmann-2023:
+  type: secondary
+  kind: article
+  authors: [Virginia R. Herrmann]
+  title: "The Alphabet: A Remarkable Journey from Sinai to Beijing"
+  container: Expedition Magazine
+  volume: 64
+  issue: 3
+  publisher: Penn Museum
+  year: 2023
+  url: https://www.penn.museum/sites/expedition/the-alphabet/
+  accessed: 2026-10-20
+
+# ---------- Buddhism ----------
+
+sn-56-11:
+  type: primary
+  kind: text
+  title: "Dhammacakkappavattana Sutta: Setting the Wheel of Dhamma in Motion"
+  translators: [Thanissaro Bhikkhu]
+  container: Access to Insight
+  year: 1993
+  url: https://www.accesstoinsight.org/tipitaka/sn/sn56/sn56.011.than.html
+  accessed: 2026-10-20
+  short: SN 56.11
+
+cousins-1996:
+  type: secondary
+  kind: article
+  authors: [L. S. Cousins]
+  title: "The Dating of the Historical Buddha: A Review Article"
+  container: Journal of the Royal Asiatic Society
+  volume: 6
+  issue: 1
+  pages: 57–63
+  year: 1996
+  doi: 10.1017/S1356186300014760
+  accessed: 2026-10-20
+  note: >-
+    Paywalled. The c. 400 BCE conclusion was checked against a reproduction of the passage, and the
+    citation against the author's own post to the INDOLOGY list (October 1997).
+
+violatti-2015:
+  type: reference
+  kind: web
+  authors: [Cristian Violatti]
+  title: The Dates of the Buddha
+  container: OpenLearn, The Open University
+  year: 2015
+  url: https://www.open.edu/openlearn/history-the-arts/culture/religious-studies/the-dates-the-buddha
+  accessed: 2026-10-20
+
+# ---------- Medicine ----------
+
+cavaillon-2022:
+  type: secondary
+  kind: article
+  authors: [Jean-Marc Cavaillon, Sandra Legout]
+  title: "Louis Pasteur: Between Myth and Reality"
+  container: Biomolecules
+  volume: 12
+  issue: 4
+  pages: "596"
+  year: 2022
+  doi: 10.3390/biom12040596
+  accessed: 2026-10-20
+
+blevins-2010:
+  type: secondary
+  kind: article
+  authors: [Steve M. Blevins, Michael S. Bronze]
+  title: Robert Koch and the 'golden age' of bacteriology
+  container: International Journal of Infectious Diseases
+  volume: 14
+  issue: 9
+  pages: e744–e751
+  year: 2010
+  doi: 10.1016/j.ijid.2009.12.003
+  accessed: 2026-10-20
+  note: Only the abstract was consulted.
+
+koch-1876:
+  type: primary
+  kind: article
+  authors: [Robert Koch]
+  title: Die Aetiologie der Milzbrand-Krankheit, begründet auf die Entwicklungsgeschichte des Bacillus Anthracis
+  container: Beiträge zur Biologie der Pflanzen
+  volume: 2
+  pages: 277–311
+  year: 1876
+  url: https://vlp-new.ur.de/records/lit22332
+  accessed: 2026-10-20
+  consulted: false
+
+# ---------- Machine learning ----------
+
+vaswani-2017:
+  type: primary
+  kind: preprint
+  authors: [Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Łukasz Kaiser, Illia Polosukhin]
+  title: Attention Is All You Need
+  container: Advances in Neural Information Processing Systems 30 (NeurIPS 2017)
+  year: 2017
+  url: https://arxiv.org/abs/1706.03762
+  accessed: 2026-10-20
+
+bahdanau-2014:
+  type: primary
+  kind: preprint
+  authors: [Dzmitry Bahdanau, Kyunghyun Cho, Yoshua Bengio]
+  title: Neural Machine Translation by Jointly Learning to Align and Translate
+  container: arXiv
+  year: 2014
+  url: https://arxiv.org/abs/1409.0473
+  accessed: 2026-10-20
+
+devlin-2018:
+  type: primary
+  kind: preprint
+  authors: [Jacob Devlin, Ming-Wei Chang, Kenton Lee, Kristina Toutanova]
+  title: "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding"
+  container: arXiv
+  year: 2018
+  url: https://arxiv.org/abs/1810.04805
+  accessed: 2026-10-20
+
+brown-2020:
+  type: primary
+  kind: preprint
+  authors: [Tom B. Brown]
+  etAl: true
+  title: Language Models are Few-Shot Learners
+  container: arXiv
+  year: 2020
+  url: https://arxiv.org/abs/2005.14165
+  accessed: 2026-10-20

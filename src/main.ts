@@ -6,7 +6,8 @@ import { observeReveal, renderFilters, renderTimeline, trackCurrentYear } from "
 
 const categories = [...new Set(ideas.map((i) => i.category))];
 const span = new Date().getFullYear() - Math.min(...ideas.map((i) => i.date.year));
-const verified = ideas.filter((i) => i.status !== "draft").length;
+const sourced = ideas.filter((i) => i.status !== "draft").length;
+const reviewed = ideas.filter((i) => i.status === "reviewed").length;
 
 const app = document.querySelector<HTMLDivElement>("#app")!;
 
@@ -31,8 +32,8 @@ app.innerHTML = `
       <dl class="stats">
         <div><dt>Years</dt><dd>${span.toLocaleString("en-US")}</dd></div>
         <div><dt>Ideas</dt><dd>${ideas.length}</dd></div>
-        <div><dt>Eras</dt><dd>${eras.length}</dd></div>
-        <div><dt>Sourced</dt><dd>${verified}<span class="stats-of">/${ideas.length}</span></dd></div>
+        <div><dt>Sourced</dt><dd>${sourced}<span class="stats-of">/${ideas.length}</span></dd></div>
+        <div><dt>Reviewed</dt><dd>${reviewed}<span class="stats-of">/${ideas.length}</span></dd></div>
       </dl>
     </section>
 

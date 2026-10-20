@@ -1,15 +1,33 @@
-import type { Category, Era, Idea, Link } from "./types";
-import {
-  categoryLabels,
-  describeDate,
-  escapeHtml as esc,
-  formatRange,
-  formatSource,
-  formatYear,
-  statusLabels,
-} from "./format";
+import type { Category, Era, Link, RenderedIdea as Idea } from "./types";
+import { categoryLabels, escapeHtml as esc, formatRange, formatYear, statusLabels } from "./format";
 
 const byId = (ideas: Idea[]) => new Map(ideas.map((i) => [i.id, i]));
+
+function renderDetails(idea: Idea): string {
+  if (!idea.bodyHtml && !idea.references.length) return "";
+
+  const review = idea.review
+    ? `Reviewed by the ${esc(idea.review.by)} agent on ${idea.review.date}.`
+    : idea.status === "sourced"
+      ? "Sourced, awaiting independent review."
+      : "Unverified draft.";
+
+  return `
+    <details class="idea-details">
+      <summary>Notes &amp; sources</summary>
+      <dl class="idea-facts">
+        <dt>Date</dt><dd>${esc(idea.dateText)}</dd>
+        <dt>Status</dt><dd>${review}</dd>
+      </dl>
+      ${idea.bodyHtml ? `<div class="prose">${idea.bodyHtml}</div>` : ""}
+      ${
+        idea.references.length
+          ? `<h4 class="refs-title">References</h4>
+             <ol class="refs">${idea.references.map((r) => `<li id="ref-${idea.id}-${r.key}">${r.html}</li>`).join("")}</ol>`
+          : ""
+      }
+    </details>`;
+}
 
 function renderIdea(idea: Idea, lookup: Map<string, Idea>): string {
   const links = idea.buildsOn
@@ -21,32 +39,26 @@ function renderIdea(idea: Idea, lookup: Map<string, Idea>): string {
     )
     .join("");
 
-  const sources = idea.sources.length
-    ? `<details class="idea-sources">
-        <summary>Sources (${idea.sources.length})</summary>
-        <ol>${idea.sources.map((s) => `<li>${formatSource(s)}</li>`).join("")}</ol>
-      </details>`
-    : "";
-
-  const dateNote = describeDate(idea.date);
+  const d = idea.date;
+  const dateDetail = d.marks || d.note || d.earliest !== undefined || d.latest !== undefined;
 
   return `
-    <article class="idea" id="${idea.id}" data-category="${idea.category}" data-status="${idea.status}" data-year="${idea.date.year}">
-      <div class="idea-year"${dateNote ? ` title="${esc(dateNote)}"` : ""}>
-        ${formatYear(idea.date.year, idea.date.approx)}${dateNote ? `<span class="idea-year-mark" aria-hidden="true">*</span>` : ""}
+    <article class="idea" id="${idea.id}" data-category="${idea.category}" data-status="${idea.status}" data-year="${d.year}">
+      <div class="idea-year"${dateDetail ? ` title="${esc(idea.dateText)}"` : ""}>
+        ${formatYear(d.year, d.approx)}${dateDetail ? `<span class="idea-year-mark" aria-hidden="true">*</span>` : ""}
       </div>
       <div class="idea-node" aria-hidden="true"></div>
       <div class="idea-card">
         <div class="idea-meta">
           <span class="cat-dot cat-${idea.category}"></span>
           <span>${categoryLabels[idea.category]}</span>
-          ${idea.status === "reviewed" ? "" : `<span class="status status-${idea.status}">${statusLabels[idea.status]}</span>`}
+          <span class="status status-${idea.status}">${statusLabels[idea.status]}</span>
         </div>
         <h3 class="idea-title">${esc(idea.title)}</h3>
         <p class="idea-origin">${esc(idea.origin)}</p>
         <p class="idea-summary">${esc(idea.summary)}</p>
         ${links ? `<div class="idea-links"><span class="idea-links-label">Builds on</span>${links}</div>` : ""}
-        ${sources}
+        ${renderDetails(idea)}
       </div>
     </article>`;
 }
