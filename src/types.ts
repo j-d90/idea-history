@@ -1,4 +1,17 @@
-export type { Category, Idea, IdeaDate, IdeaLink, LinkType, RenderedIdea, Review, Source, Status } from "./content/schema";
+export type {
+  Category,
+  EmergenceStage,
+  EventKind,
+  Idea,
+  IdeaDate,
+  IdeaLink,
+  LinkType,
+  RenderedEvent,
+  RenderedIdea,
+  Review,
+  Source,
+  Status,
+} from "./content/schema";
 
 export interface Era {
   id: string;

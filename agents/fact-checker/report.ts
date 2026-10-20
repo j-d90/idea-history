@@ -24,7 +24,7 @@ const yes = (b: boolean) => (b ? "yes" : "**no**");
 export function renderReport({ subject, accepted, decision, documents, run }: ReportInput): string {
   const s = accepted.submission;
   const frontmatter = stringify({
-    idea: subject.idea.id,
+    [subject.label.toLowerCase()]: subject.entry.id,
     verdict: decision.verdict,
     reviewer: REVIEWER,
     date: run.date,
@@ -36,7 +36,7 @@ export function renderReport({ subject, accepted, decision, documents, run }: Re
     est_cost_usd: Number(run.loop.costUsd.toFixed(2)),
   });
 
-  const lines: string[] = [`---\n${frontmatter}---`, "", `# Review: ${subject.idea.title}`, ""];
+  const lines: string[] = [`---\n${frontmatter}---`, "", `# Review: ${subject.entry.title}`, ""];
 
   lines.push("## Verdict", "", `**${decision.verdict.toUpperCase()}**. ${s.summary}`, "");
   if (decision.verdict === "fail" && s.verdict === "pass") {

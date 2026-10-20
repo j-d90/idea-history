@@ -12,11 +12,12 @@ export function systemPrompt(): string {
 
 /** The task: the entry under review and the bibliography entries it cites. */
 export function taskPrompt(subject: ReviewSubject, today: string): string {
-  const { id, body, status: _s, review: _r, aliases: _a, ...fields } = subject.idea;
+  const { id, body, status: _s, review: _r, aliases: _a, ...fields } = subject.entry;
+  const what = subject.label === "Event" ? "event" : "idea";
   return [
-    `Review the entry "${id}". Today is ${today}.`,
+    `Review the ${what} entry "${id}". Today is ${today}.`,
     "",
-    `<entry id="${id}">`,
+    `<entry type="${what}" id="${id}">`,
     stringify(fields, { lineWidth: 0 }).trimEnd(),
     "---",
     body,

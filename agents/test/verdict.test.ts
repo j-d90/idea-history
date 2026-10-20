@@ -19,7 +19,8 @@ const idea: Idea = {
   body: "Invented in the Egyptian realm [@lam-2010, p. 190].",
 };
 const subject: ReviewSubject = {
-  idea,
+  label: "Idea",
+  entry: idea,
   sources: { "lam-2010": { type: "secondary", kind: "web", title: "Alphabet", url: "https://x.example", year: 2010, authors: [], editors: [], translators: [], etAl: false, consulted: true } },
   hash: "0123456789abcdef",
 };
@@ -106,4 +107,14 @@ test("submit_review's schema is valid for strict tool use", () => {
     for (const [k, v] of Object.entries(n)) walk(v, `${path}.${k}`);
   };
   walk(def.input_schema, "input_schema");
+});
+
+test("an event review needs claims about its place, not an origin", () => {
+  const { origin: _o, category: _c, ...rest } = idea;
+  const eventSubject: ReviewSubject = { label: "Event", entry: { ...rest, kind: "cultural", place: "Wadi el-Hol" }, sources: subject.sources, hash: subject.hash };
+  const problems = checkSubmission(submission(), eventSubject, ledger()).problems;
+  assert.ok(problems.includes("claims: nothing listed for the place"), problems.join("\n"));
+  const fixed = submission();
+  fixed.claims[1] = { ...fixed.claims[1], location: "place" };
+  assert.deepEqual(checkSubmission(fixed, eventSubject, ledger()).problems, []);
 });

@@ -1,6 +1,6 @@
 import { writeFileSync } from "node:fs";
 import { relative } from "node:path";
-import { REVIEWER } from "../../src/content/schema.ts";
+import { REVIEWER, type EntryLabel } from "../../src/content/schema.ts";
 import { addReview, loadSubject } from "../../kg/src/repository.ts";
 import { runAgentLoop } from "../core/loop.ts";
 import { startRun, withRead, withWrite, type Runtime } from "../core/runtime.ts";
@@ -15,27 +15,27 @@ export type ReviewResult =
   | { status: "incomplete"; id: string; runId: string; reason: string; costUsd: number };
 
 /**
- * Review one idea end to end:
+ * Review one idea or event end to end:
  *   load (graph) → check eligibility → agent loop (tools + verdict)
  *   → decide (code) → render report → record (graph).
  * The agent never touches storage; it can only submit a verdict, and the
  * harness decides what is recorded.
  */
-export async function reviewIdea(id: string, rt: Runtime, opts: { dryRun?: boolean; force?: boolean } = {}): Promise<ReviewResult> {
+export async function reviewEntry(label: EntryLabel, id: string, rt: Runtime, opts: { dryRun?: boolean; force?: boolean } = {}): Promise<ReviewResult> {
   const { config } = rt;
-  const subject = await withRead(rt.driver, (tx) => loadSubject(tx, id));
-  const { idea } = subject;
+  const subject = await withRead(rt.driver, (tx) => loadSubject(tx, label, id));
+  const { entry } = subject;
 
-  if (idea.status === "candidate" || idea.status === "draft") {
-    return { status: "skipped", id, reason: `${idea.status} ideas are not reviewed; source it first` };
+  if (entry.status === "candidate" || entry.status === "draft") {
+    return { status: "skipped", id, reason: `${entry.status} entries are not reviewed; source it first` };
   }
-  if (idea.status === "reviewed" && idea.review?.hash === subject.hash && !opts.force) {
-    return { status: "skipped", id, reason: `already reviewed on ${idea.review.date} and unchanged (use --force to re-review)` };
+  if (entry.status === "reviewed" && entry.review?.hash === subject.hash && !opts.force) {
+    return { status: "skipped", id, reason: `already reviewed on ${entry.review.date} and unchanged (use --force to re-review)` };
   }
 
   const run = startRun("fact-checker", id);
   let accepted: AcceptedSubmission | undefined;
-  run.log.event("start", { idea: id, hash: subject.hash, model: config.model, effort: config.effort, dryRun: !!opts.dryRun });
+  run.log.event("start", { label, id, hash: subject.hash, model: config.model, effort: config.effort, dryRun: !!opts.dryRun });
 
   const { tools, serverTools } = buildTools({ subject, evidence: run.evidence, maxWebSearches: config.maxWebSearches, onAccept: (a) => (accepted = a) });
   const loop = await runAgentLoop({
@@ -78,9 +78,9 @@ export async function reviewIdea(id: string, rt: Runtime, opts: { dryRun?: boole
   } else {
     await withWrite(rt.driver, async (tx) => {
       // Re-read inside the write transaction: never record a review of content that changed during the run.
-      const current = await loadSubject(tx, id);
+      const current = await loadSubject(tx, label, id);
       if (current.hash !== subject.hash) throw new Error(`${id} changed during review (reviewed ${subject.hash}, now ${current.hash}); the review was not saved`);
-      await addReview(tx, { runId: run.id, ideaId: id, verdict: decision.verdict, by: REVIEWER, date: run.today, hash: subject.hash, report });
+      await addReview(tx, { runId: run.id, label, id, verdict: decision.verdict, by: REVIEWER, date: run.today, hash: subject.hash, report });
     });
   }
   run.log.event("end", { verdict: decision.verdict, costUsd: loop.costUsd, turns: loop.turns });

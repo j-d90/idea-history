@@ -3,25 +3,29 @@
 //   ideas [--status <s>]           list ideas
 //   idea get <id>                  print an idea in the editing format (Markdown + YAML)
 //   idea put <file.md>...          validate and create/update ideas from files
+//   events [<from> <to>]           list events (optionally within a year range; negative = BCE)
+//   event get <id>                 print an event in the editing format
+//   event put <file.md>...         validate and create/update events from files
 //   source get <key>               print a source as YAML
 //   source put <file.yaml>         validate and create/update sources ({key: entry, ...})
 //   links [<id>]                   list links between ideas
-//   embed                          embed ideas and entities whose text changed
+//   emergences [<idea-id>]         list the events ideas were identified from
+//   embed                          embed ideas, events and entities whose text changed
 //   export [<file>]                write a JSON snapshot (default kg/seed/snapshot.json)
 //   restore <file> [--force]       load a snapshot into the graph
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import type { ManagedTransaction } from "neo4j-driver";
 import { dirname, join } from "node:path";
 import { parse as parseYaml, stringify } from "yaml";
-import { ContentError, ideaFromMarkdown, ideaToMarkdown } from "../../src/content/rules.ts";
-import { bibliographySchema } from "../../src/content/schema.ts";
+import { ContentError, entryToMarkdown, eventFromMarkdown, ideaFromMarkdown } from "../../src/content/rules.ts";
+import { bibliographySchema, type Entry } from "../../src/content/schema.ts";
 import { connect, neo4jConfigFromEnv } from "./driver.ts";
 import { Embedder, refreshEmbeddings } from "./embeddings.ts";
-import { loadContent, loadIdea, loadLinks, loadSources, putIdea, putSource } from "./repository.ts";
+import { loadContent, loadEmergences, loadEntries, loadEntry, loadLinks, loadSources, putEntry, putSource } from "./repository.ts";
 import { exportSnapshot, restoreSnapshot } from "./snapshot.ts";
 
 const [cmd, sub, ...rest] = process.argv.slice(2);
-const USAGE = readFileSync(import.meta.filename, "utf8").split("\n").slice(1, 12).map((l) => l.replace(/^\/\/ ?/, "")).join("\n");
+const USAGE = readFileSync(import.meta.filename, "utf8").split("\n").slice(1, 16).map((l) => l.replace(/^\/\/ ?/, "")).join("\n");
 
 const driver = await connect(neo4jConfigFromEnv()).catch((e: Error) => {
   console.error(e.message);
@@ -50,8 +54,10 @@ async function write<T>(fn: (tx: ManagedTransaction) => Promise<T>): Promise<T> 
 async function embedChanged(): Promise<void> {
   if (!process.env.OPENAI_API_KEY) return console.warn("OPENAI_API_KEY not set; skipping embeddings (run `npm run kg -- embed` later)");
   const { updated } = await refreshEmbeddings(driver, new Embedder());
-  if (updated) console.log(`embedded ${updated} changed idea(s)/entit(ies)`);
+  if (updated) console.log(`embedded ${updated} changed node(s)`);
 }
+
+const fmt = (y: number) => String(y).padStart(6);
 
 try {
   switch (cmd) {
@@ -64,19 +70,31 @@ try {
       break;
     }
 
-    case "idea": {
+    case "events": {
+      const from = sub !== undefined ? Number(sub) : undefined;
+      const to = rest[0] !== undefined ? Number(rest[0]) : undefined;
+      const events = await read((tx) => loadEntries(tx, "Event", { from, to }));
+      for (const e of events) console.log(`${fmt(e.date.year)}  ${e.status.padEnd(9)}  ${e.id.padEnd(36)} ${e.title} (${e.place})`);
+      if (!events.length) console.log("no events");
+      break;
+    }
+
+    case "idea":
+    case "event": {
+      const label = cmd === "idea" ? "Idea" : "Event";
       if (sub === "get" && rest[0]) {
-        const idea = await read((tx) => loadIdea(tx, rest[0]));
-        if (!idea) throw new Error(`no such idea: ${rest[0]}`);
-        process.stdout.write(ideaToMarkdown(idea));
+        const entry = await read((tx) => loadEntry(tx, label, rest[0]));
+        if (!entry) throw new Error(`no such ${cmd}: ${rest[0]}`);
+        process.stdout.write(entryToMarkdown(entry));
       } else if (sub === "put" && rest.length) {
         for (const file of rest) {
-          const idea = ideaFromMarkdown(readFileSync(file, "utf8"));
-          const r = await write((tx) => putIdea(tx, idea));
-          console.log(`${r.created ? "created" : "updated"} ${idea.id}${r.reviewInvalidated ? " (content changed, so its review no longer applies; status is now sourced)" : ""}`);
+          const text = readFileSync(file, "utf8");
+          const entry: Entry = cmd === "idea" ? ideaFromMarkdown(text) : eventFromMarkdown(text);
+          const r = await write((tx) => putEntry(tx, entry));
+          console.log(`${r.created ? "created" : "updated"} ${entry.id}${r.reviewInvalidated ? " (content changed, so its review no longer applies; status is now sourced)" : ""}`);
         }
         await embedChanged();
-      } else throw new Error("usage: idea get <id> | idea put <file.md>...");
+      } else throw new Error(`usage: ${cmd} get <id> | ${cmd} put <file.md>...`);
       break;
     }
 
@@ -104,9 +122,16 @@ try {
       break;
     }
 
+    case "emergences": {
+      const ems = await read((tx) => loadEmergences(tx, { idea: sub }));
+      for (const e of ems) console.log(`${e.idea} -EMERGES_IN-> ${e.event}  [${e.stage}, ${e.confidence}, ${e.status}]  ${e.why}`);
+      if (!ems.length) console.log("no emergences");
+      break;
+    }
+
     case "embed": {
       const { updated, total } = await refreshEmbeddings(driver, new Embedder());
-      console.log(`✓ embedded ${updated} of ${total} ideas and entities (the rest were current)`);
+      console.log(`✓ embedded ${updated} of ${total} ideas, events and entities (the rest were current)`);
       break;
     }
 
@@ -115,7 +140,10 @@ try {
       mkdirSync(dirname(file), { recursive: true });
       const snapshot = await exportSnapshot(driver);
       writeFileSync(file, JSON.stringify(snapshot, null, 2) + "\n");
-      console.log(`✓ exported ${snapshot.ideas.length} ideas, ${Object.keys(snapshot.sources).length} sources, ${snapshot.links.length} links, ${snapshot.entities.length} entities, ${snapshot.reviews.length} reviews to ${file}`);
+      console.log(
+        `✓ exported ${snapshot.ideas.length} ideas, ${snapshot.events.length} events, ${Object.keys(snapshot.sources).length} sources, ${snapshot.links.length} links, ` +
+          `${snapshot.emergences.length} emergences, ${snapshot.entities.length} entities, ${snapshot.reviews.length} reviews to ${file}`,
+      );
       break;
     }
 

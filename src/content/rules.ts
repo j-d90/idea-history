@@ -1,8 +1,14 @@
 import { createHash } from "node:crypto";
 import { parse as parseYaml, stringify } from "yaml";
+import type { z } from "zod";
 import {
+  eventFieldsSchema,
   ideaFieldsSchema,
+  labelOf,
   type Bibliography,
+  type Emergence,
+  type Entry,
+  type HistoricalEvent,
   type Idea,
   type IdeaLink,
   type ReviewRecord,
@@ -10,7 +16,8 @@ import {
 
 // Pure content rules, independent of storage: citation syntax, the review
 // content hash, cross-record validation, and the Markdown format authors use
-// to edit ideas. Used by validation, the kg CLI, the site build and the agents.
+// to edit ideas and events. Used by validation, the kg CLI, the site build and
+// the agents.
 
 /** [@key], [@key, p. 3], [@a; @b, ch. 2] */
 export const CITATION = /\[(@[^\]]*)\]/g;
@@ -58,44 +65,51 @@ function canonical(value: unknown): string {
 }
 
 /**
- * Fingerprint of everything a review vouches for: the idea's content and the
+ * Fingerprint of everything a review vouches for: the entry's content and the
  * bibliography entries it cites. Excludes status, the review record, and aliases
  * (search metadata, not shown). Links are separate records with their own status.
  */
-export function contentHash(idea: Idea, bibliography: Bibliography): string {
-  const { status: _s, review: _r, aliases: _a, ...rest } = idea;
-  const sources = Object.fromEntries(idea.sources.map((k) => [k, bibliography[k] ?? null]));
+export function contentHash(entry: Entry, bibliography: Bibliography): string {
+  const { status: _s, review: _r, aliases: _a, ...rest } = entry;
+  const sources = Object.fromEntries(entry.sources.map((k) => [k, bibliography[k] ?? null]));
   return createHash("sha256").update(canonical({ ...rest, sources })).digest("hex").slice(0, 16);
 }
 
-const strictStatus = (s: Idea["status"]) => s === "sourced" || s === "reviewed";
+/** Key for an entry in maps that hold both ideas and events. */
+export const entryKey = (label: string, id: string) => `${label}:${id}`;
+
+const strictStatus = (s: Entry["status"]) => s === "sourced" || s === "reviewed";
 const DIRECTIONAL = new Set(["BUILDS_ON", "REACTS_AGAINST"]);
 
 /** Cross-record rules beyond what the schemas express. Returns every problem found. */
 export function checkContent(c: {
   ideas: Idea[];
+  events: HistoricalEvent[];
   bibliography: Bibliography;
   links: IdeaLink[];
-  /** The latest review record per idea. */
+  emergences: Emergence[];
+  /** The latest review record per entry, keyed by entryKey(label, id). */
   latestReviews: Map<string, ReviewRecord>;
 }): string[] {
   const problems: string[] = [];
   const byId = new Map(c.ideas.map((i) => [i.id, i]));
+  const eventsById = new Map(c.events.map((e) => [e.id, e]));
 
-  for (const idea of c.ideas) {
-    problems.push(...checkIdea(idea, c.bibliography).map((p) => `idea ${idea.id}: ${p}`));
+  for (const entry of [...c.ideas, ...c.events]) {
+    const label = labelOf(entry);
+    const at = `${label.toLowerCase()} ${entry.id}`;
+    problems.push(...checkEntry(entry, c.bibliography).map((p) => `${at}: ${p}`));
 
-    if (idea.status === "reviewed") {
-      const at = `idea ${idea.id}`;
-      if (!idea.review) problems.push(`${at}: status "reviewed" requires a review record; only the fact-checker agent may set it`);
+    if (entry.status === "reviewed") {
+      if (!entry.review) problems.push(`${at}: status "reviewed" requires a review record; only the fact-checker agent may set it`);
       else {
-        const hash = contentHash(idea, c.bibliography);
-        if (idea.review.hash !== hash) {
-          problems.push(`${at}: changed since it was reviewed (hash ${idea.review.hash}, now ${hash}); set it back to "sourced" and re-review`);
+        const hash = contentHash(entry, c.bibliography);
+        if (entry.review.hash !== hash) {
+          problems.push(`${at}: changed since it was reviewed (hash ${entry.review.hash}, now ${hash}); set it back to "sourced" and re-review`);
         }
-        const record = c.latestReviews.get(idea.id);
-        if (!record || record.verdict !== "pass" || record.hash !== idea.review.hash) {
-          problems.push(`${at}: no passing review record for hash ${idea.review.hash}`);
+        const record = c.latestReviews.get(entryKey(label, entry.id));
+        if (!record || record.verdict !== "pass" || record.hash !== entry.review.hash) {
+          problems.push(`${at}: no passing review record for hash ${entry.review.hash}`);
         }
       }
     }
@@ -120,40 +134,52 @@ export function checkContent(c: {
     if (link.sourceKey && !c.bibliography[link.sourceKey]) problems.push(`${at}: unknown source "${link.sourceKey}"`);
   }
 
+  const pairs = new Set<string>();
+  for (const em of c.emergences) {
+    const at = `emergence ${em.idea} in ${em.event}`;
+    if (pairs.has(`${em.idea}|${em.event}`)) problems.push(`${at}: listed twice`);
+    pairs.add(`${em.idea}|${em.event}`);
+    if (!byId.has(em.idea)) problems.push(`${at}: idea ${em.idea} does not exist`);
+    const event = eventsById.get(em.event);
+    if (!event) problems.push(`${at}: event ${em.event} does not exist`);
+    else if (event.status === "candidate") problems.push(`${at}: candidate events cannot carry emergences`);
+    if (em.sourceKey && !c.bibliography[em.sourceKey]) problems.push(`${at}: unknown source "${em.sourceKey}"`);
+  }
+
   return problems;
 }
 
-/** Rules for a single idea against the bibliography. */
-export function checkIdea(idea: Idea, bibliography: Bibliography): string[] {
+/** Rules for a single idea or event against the bibliography. */
+export function checkEntry(entry: Entry, bibliography: Bibliography): string[] {
   const problems: string[] = [];
-  const strict = strictStatus(idea.status);
-  const listed = new Set(idea.sources);
+  const strict = strictStatus(entry.status);
+  const listed = new Set(entry.sources);
   const cited = new Set<string>();
 
   const seen = new Set<string>();
-  for (const key of idea.sources) {
+  for (const key of entry.sources) {
     if (seen.has(key)) problems.push(`sources: "${key}" listed twice`);
     seen.add(key);
     if (!bibliography[key]) problems.push(`sources: "${key}" is not in the bibliography`);
   }
-  if (strict && idea.sources.length === 0) problems.push(`status "${idea.status}" requires at least one source`);
+  if (strict && entry.sources.length === 0) problems.push(`status "${entry.status}" requires at least one source`);
 
-  for (const [field, text] of [["body", idea.body], ["date.note", idea.date.note ?? ""]] as const) {
+  for (const [field, text] of [["body", entry.body], ["date.note", entry.date.note ?? ""]] as const) {
     const { cites, malformed } = scanCitations(text);
     for (const m of malformed) problems.push(`${field}: malformed citation ${m}`);
     for (const ct of cites) {
       cited.add(ct.key);
-      if (!listed.has(ct.key)) problems.push(`${field}: cites "${ct.key}", which is not in this idea's sources`);
+      if (!listed.has(ct.key)) problems.push(`${field}: cites "${ct.key}", which is not in this entry's sources`);
     }
   }
-  if (scanCitations(idea.summary).cites.length) problems.push("summary: citations belong in the body, not the summary");
+  if (scanCitations(entry.summary).cites.length) problems.push("summary: citations belong in the body, not the summary");
 
   if (strict) {
-    if (!idea.date.marks) problems.push(`date.marks: status "${idea.status}" requires saying what the date marks`);
-    if (!scanCitations(idea.body).cites.length) problems.push(`body: status "${idea.status}" requires at least one [@citation]`);
-    for (const key of idea.sources) if (!cited.has(key)) problems.push(`sources: "${key}" is listed but never cited`);
+    if (!entry.date.marks) problems.push(`date.marks: status "${entry.status}" requires saying what the date marks`);
+    if (!scanCitations(entry.body).cites.length) problems.push(`body: status "${entry.status}" requires at least one [@citation]`);
+    for (const key of entry.sources) if (!cited.has(key)) problems.push(`sources: "${key}" is listed but never cited`);
   }
-  if (!strict && idea.review) problems.push(`a ${idea.status} idea cannot carry a review`);
+  if (!strict && entry.review) problems.push(`a ${entry.status} entry cannot carry a review`);
   return problems;
 }
 
@@ -161,14 +187,23 @@ export function checkIdea(idea: Idea, bibliography: Bibliography): string[] {
 
 const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/;
 
-/** Render an idea for editing: YAML frontmatter plus the Markdown body. The review record is omitted. */
-export function ideaToMarkdown(idea: Idea): string {
-  const { body, review: _r, ...fields } = idea;
+/** Render an idea or event for editing: YAML frontmatter plus the Markdown body. The review record is omitted. */
+export function entryToMarkdown(entry: Entry): string {
+  const { body, review: _r, ...fields } = entry;
   return `---\n${stringify(fields, { lineWidth: 100 })}---\n\n${body}\n`;
 }
 
 /** Parse an edited idea. Throws ContentError on syntax or schema problems. */
 export function ideaFromMarkdown(text: string): Idea {
+  return parseMarkdown(text, ideaFieldsSchema);
+}
+
+/** Parse an edited event. Throws ContentError on syntax or schema problems. */
+export function eventFromMarkdown(text: string): HistoricalEvent {
+  return parseMarkdown(text, eventFieldsSchema);
+}
+
+function parseMarkdown<S extends z.ZodTypeAny>(text: string, schema: S): z.infer<S> & { body: string } {
   const match = FRONTMATTER.exec(text);
   if (!match) throw new ContentError(["missing --- frontmatter block"]);
   let data: unknown;
@@ -177,7 +212,7 @@ export function ideaFromMarkdown(text: string): Idea {
   } catch (e) {
     throw new ContentError([`invalid YAML: ${(e as Error).message}`]);
   }
-  const result = ideaFieldsSchema.safeParse(data);
+  const result = schema.safeParse(data);
   if (!result.success) throw new ContentError(result.error.issues.map((i) => `${i.path.join(".") || "(root)"}: ${i.message}`));
   return { ...result.data, body: match[2].trim() };
 }

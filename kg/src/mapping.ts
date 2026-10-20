@@ -1,7 +1,7 @@
-import { ideaFieldsSchema, sourceSchema, type Idea, type Source } from "../../src/content/schema.ts";
+import { eventFieldsSchema, ideaFieldsSchema, isIdea, sourceSchema, type Entry, type HistoricalEvent, type Idea, type Source } from "../../src/content/schema.ts";
 
 // Translation between content objects and graph properties. Neo4j properties
-// are flat (no nested maps) and can't be null, so the idea's date is flattened
+// are flat (no nested maps) and can't be null, so an entry's date is flattened
 // and absent values are omitted. Reading back goes through the same zod schemas
 // as editing, so every path produces identical objects (and content hashes).
 
@@ -19,35 +19,41 @@ export function compact(obj: Record<string, unknown>): Props {
   return Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined && v !== null)) as Props;
 }
 
-/** Idea properties, excluding its sources (CITES relationships) and embedding. */
-export function ideaToProps(idea: Idea): Props {
+/** Idea or event properties, excluding its sources (CITES relationships) and embedding. */
+export function entryToProps(entry: Entry): Props {
   return compact({
-    id: idea.id,
-    title: idea.title,
-    category: idea.category,
-    status: idea.status,
-    origin: idea.origin,
-    summary: idea.summary,
-    aliases: idea.aliases,
-    body: idea.body,
-    year: idea.date.year,
-    marks: idea.date.marks,
-    earliest: idea.date.earliest,
-    latest: idea.date.latest,
-    approx: idea.date.approx,
-    dateNote: idea.date.note,
-    reviewBy: idea.review?.by,
-    reviewDate: idea.review?.date,
-    reviewHash: idea.review?.hash,
+    id: entry.id,
+    title: entry.title,
+    ...(isIdea(entry) ? { category: entry.category, origin: entry.origin } : { kind: entry.kind, place: entry.place }),
+    status: entry.status,
+    summary: entry.summary,
+    aliases: entry.aliases,
+    body: entry.body,
+    year: entry.date.year,
+    marks: entry.date.marks,
+    earliest: entry.date.earliest,
+    latest: entry.date.latest,
+    approx: entry.date.approx,
+    dateNote: entry.date.note,
+    reviewBy: entry.review?.by,
+    reviewDate: entry.review?.date,
+    reviewHash: entry.review?.hash,
   });
 }
 
-export function propsToIdea(p: Record<string, unknown>, sources: string[]): Idea {
+function commonFields(p: Record<string, unknown>, sources: string[]) {
   const date = compact({ year: p.year, marks: p.marks, earliest: p.earliest, latest: p.latest, approx: p.approx, note: p.dateNote });
   const review = p.reviewHash ? { by: p.reviewBy, date: p.reviewDate, hash: p.reviewHash } : undefined;
-  const fields = ideaFieldsSchema.parse(
-    compact({ id: p.id, title: p.title, category: p.category, status: p.status, date, origin: p.origin, summary: p.summary, aliases: p.aliases, sources, review }),
-  );
+  return compact({ id: p.id, title: p.title, status: p.status, date, summary: p.summary, aliases: p.aliases, sources, review });
+}
+
+export function propsToIdea(p: Record<string, unknown>, sources: string[]): Idea {
+  const fields = ideaFieldsSchema.parse({ ...commonFields(p, sources), ...compact({ category: p.category, origin: p.origin }) });
+  return { ...fields, body: (p.body as string | undefined) ?? "" };
+}
+
+export function propsToEvent(p: Record<string, unknown>, sources: string[]): HistoricalEvent {
+  const fields = eventFieldsSchema.parse({ ...commonFields(p, sources), ...compact({ kind: p.kind, place: p.place }) });
   return { ...fields, body: (p.body as string | undefined) ?? "" };
 }
 

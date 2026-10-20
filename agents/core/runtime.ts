@@ -73,19 +73,34 @@ export async function withRead<T>(driver: Driver, fn: (tx: ManagedTransaction) =
   }
 }
 
-/** Record an extractor or linker run in the graph, attached to what it worked on. */
+/**
+ * Record an agent run in the graph, attached to what it worked on (`about`), or
+ * described by `props` when it worked on something that isn't a node, such as a
+ * period of time.
+ */
 export async function recordAgentRun(
   tx: ManagedTransaction,
   run: Run,
-  r: { model: string; loop: LoopResult; outcome: string; summary: string; about: { label: "Idea" | "Source"; key: string } },
+  r: {
+    model: string;
+    loop: LoopResult;
+    outcome: string;
+    summary: string;
+    about?: { label: "Idea" | "Event" | "Source"; key: string };
+    props?: Record<string, string | number>;
+  },
 ): Promise<void> {
-  const keyField = r.about.label === "Idea" ? "id" : "key";
+  const keyField = r.about?.label === "Source" ? "key" : "id";
   await tx.run(
-    `MATCH (target:${r.about.label} {${keyField}: $key})
-     CREATE (a:AgentRun {runId: $runId, agent: $agent, date: $date, model: $model, servedBy: $servedBy,
-                         turns: $turns, costUsd: $cost, outcome: $outcome, summary: $summary, createdAt: datetime()})-[:ABOUT]->(target)`,
+    `CREATE (a:AgentRun {runId: $runId, agent: $agent, date: $date, model: $model, servedBy: $servedBy,
+                         turns: $turns, costUsd: $cost, outcome: $outcome, summary: $summary, createdAt: datetime()})
+     SET a += $props
+     WITH a
+     OPTIONAL MATCH (target:${r.about?.label ?? "Idea"} {${keyField}: $key})
+     FOREACH (t IN CASE WHEN target IS NULL THEN [] ELSE [target] END | CREATE (a)-[:ABOUT]->(t))`,
     {
-      key: r.about.key,
+      key: r.about?.key ?? null,
+      props: r.props ?? {},
       runId: run.id,
       agent: run.agent,
       date: run.today,

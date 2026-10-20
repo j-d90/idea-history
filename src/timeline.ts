@@ -1,9 +1,15 @@
-import type { Category, Era, LinkType, RenderedIdea as Idea } from "./types";
-import { categoryLabels, escapeHtml as esc, formatRange, formatYear, statusLabels } from "./format";
+import type { Category, Era, LinkType, RenderedEvent as Event, RenderedIdea as Idea } from "./types";
+import { categoryLabels, escapeHtml as esc, eventKindLabels, formatRange, formatYear, stageLabels, statusLabels } from "./format";
 
-const byId = (ideas: Idea[]) => new Map(ideas.map((i) => [i.id, i]));
+interface Lookup {
+  ideas: Map<string, Idea>;
+  events: Map<string, Event>;
+}
 
-function renderDetails(idea: Idea): string {
+/** DOM id of an event (ideas use their own id; see scripts/render.ts). */
+const eventAnchor = (id: string) => `event-${id}`;
+
+function renderDetails(idea: Idea | Event, anchor: string): string {
   if (!idea.bodyHtml && !idea.references.length) return "";
 
   const review = idea.review
@@ -23,7 +29,7 @@ function renderDetails(idea: Idea): string {
       ${
         idea.references.length
           ? `<h4 class="refs-title">References</h4>
-             <ol class="refs">${idea.references.map((r) => `<li id="ref-${idea.id}-${r.key}">${r.html}</li>`).join("")}</ol>`
+             <ol class="refs">${idea.references.map((r) => `<li id="ref-${anchor}-${r.key}">${r.html}</li>`).join("")}</ol>`
           : ""
       }
     </details>`;
@@ -40,30 +46,76 @@ const LINK_STATUS: Record<string, string> = {
   linker: "Proposed by the linker agent with cited evidence; not yet reviewed",
 };
 
-function renderLinks(idea: Idea, lookup: Map<string, Idea>): string {
-  return (Object.keys(LINK_LABELS) as LinkType[])
-    .map((type) => {
-      const chips = idea.links
-        .filter((l) => l.type === type && lookup.has(l.to))
+const EMERGENCE_STATUS = "Identified by the interpreter agent with cited evidence; not yet reviewed";
+
+function chipRow(label: string, chips: string): string {
+  return chips ? `<div class="idea-links"><span class="idea-links-label">${label}</span>${chips}</div>` : "";
+}
+
+function renderLinks(idea: Idea, lookup: Lookup): string {
+  const emerged = idea.emergesIn
+    .filter((e) => lookup.events.has(e.event))
+    .map((e) => {
+      const ev = lookup.events.get(e.event)!;
+      const title = [`${stageLabels[e.stage]}: ${e.why}`, e.status === "reviewed" ? "Reviewed" : EMERGENCE_STATUS].join(" · ");
+      return `<a class="chip chip-event chip-${e.status === "reviewed" ? "reviewed" : "linker"}" href="#${eventAnchor(e.event)}" title="${esc(title)}">${esc(ev.title)}, ${formatYear(ev.date.year, ev.date.approx)}</a>`;
+    })
+    .join("");
+  const typed = (Object.keys(LINK_LABELS) as LinkType[]).map((type) =>
+    chipRow(
+      LINK_LABELS[type],
+      idea.links
+        .filter((l) => l.type === type && lookup.ideas.has(l.to))
         .map((l) => {
           const status = l.status === "reviewed" ? "Reviewed" : LINK_STATUS[l.origin];
           const title = [l.why, status].filter(Boolean).join(" · ");
-          return `<a class="chip chip-${l.status === "reviewed" ? "reviewed" : l.origin}" href="#${l.to}" title="${esc(title)}">${esc(lookup.get(l.to)!.title)}</a>`;
+          return `<a class="chip chip-${l.status === "reviewed" ? "reviewed" : l.origin}" href="#${l.to}" title="${esc(title)}">${esc(lookup.ideas.get(l.to)!.title)}</a>`;
         })
-        .join("");
-      return chips ? `<div class="idea-links"><span class="idea-links-label">${LINK_LABELS[type]}</span>${chips}</div>` : "";
-    })
-    .join("");
+        .join(""),
+    ),
+  );
+  return chipRow("Seen in", emerged) + typed.join("");
 }
 
-function renderIdea(idea: Idea, lookup: Map<string, Idea>): string {
+function renderEvent(event: Event, lookup: Lookup): string {
+  const d = event.date;
+  const dateDetail = d.marks || d.note || d.earliest !== undefined || d.latest !== undefined;
+  const ideas = event.ideas
+    .filter((e) => lookup.ideas.has(e.idea))
+    .map((e) => {
+      const title = [`${stageLabels[e.stage]}: ${e.why}`, e.status === "reviewed" ? "Reviewed" : EMERGENCE_STATUS].join(" · ");
+      return `<a class="chip chip-${e.status === "reviewed" ? "reviewed" : "linker"}" href="#${e.idea}" title="${esc(title)}">${esc(lookup.ideas.get(e.idea)!.title)}</a>`;
+    })
+    .join("");
+
+  return `
+    <article class="entry event" id="${eventAnchor(event.id)}" data-kind="${event.kind}" data-status="${event.status}" data-year="${d.year}">
+      <div class="idea-year"${dateDetail ? ` title="${esc(event.dateText)}"` : ""}>
+        ${formatYear(d.year, d.approx)}${dateDetail ? `<span class="idea-year-mark" aria-hidden="true">*</span>` : ""}
+      </div>
+      <div class="event-node" aria-hidden="true"></div>
+      <div class="event-body">
+        <div class="idea-meta">
+          <span>${eventKindLabels[event.kind]}</span>
+          <span class="event-place">${esc(event.place)}</span>
+          <span class="status status-${event.status}">${statusLabels[event.status]}</span>
+        </div>
+        <h3 class="event-title">${esc(event.title)}</h3>
+        <p class="event-summary">${esc(event.summary)}</p>
+        ${chipRow("Ideas", ideas)}
+        ${renderDetails(event, eventAnchor(event.id))}
+      </div>
+    </article>`;
+}
+
+function renderIdea(idea: Idea, lookup: Lookup): string {
   const links = renderLinks(idea, lookup);
 
   const d = idea.date;
   const dateDetail = d.marks || d.note || d.earliest !== undefined || d.latest !== undefined;
 
   return `
-    <article class="idea" id="${idea.id}" data-category="${idea.category}" data-status="${idea.status}" data-year="${d.year}">
+    <article class="entry idea" id="${idea.id}" data-category="${idea.category}" data-status="${idea.status}" data-year="${d.year}">
       <div class="idea-year"${dateDetail ? ` title="${esc(idea.dateText)}"` : ""}>
         ${formatYear(d.year, d.approx)}${dateDetail ? `<span class="idea-year-mark" aria-hidden="true">*</span>` : ""}
       </div>
@@ -78,12 +130,14 @@ function renderIdea(idea: Idea, lookup: Map<string, Idea>): string {
         <p class="idea-origin">${esc(idea.origin)}</p>
         <p class="idea-summary">${esc(idea.summary)}</p>
         ${links}
-        ${renderDetails(idea)}
+        ${renderDetails(idea, idea.id)}
       </div>
     </article>`;
 }
 
-function renderEra(era: Era, ideas: Idea[], lookup: Map<string, Idea>): string {
+type Item = { kind: "idea"; entry: Idea } | { kind: "event"; entry: Event };
+
+function renderEra(era: Era, items: Item[], lookup: Lookup): string {
   return `
     <section class="era" id="era-${era.id}" data-year="${era.start}">
       <header class="era-header">
@@ -92,27 +146,31 @@ function renderEra(era: Era, ideas: Idea[], lookup: Map<string, Idea>): string {
         <p class="era-blurb">${era.blurb}</p>
       </header>
       <div class="era-ideas">
-        ${ideas.map((i) => renderIdea(i, lookup)).join("")}
+        ${items.map((i) => (i.kind === "idea" ? renderIdea(i.entry, lookup) : renderEvent(i.entry, lookup))).join("")}
       </div>
     </section>`;
 }
 
-export function renderTimeline(eras: Era[], ideas: Idea[]): string {
-  const sorted = [...ideas].sort((a, b) => a.date.year - b.date.year);
-  const lookup = byId(sorted);
+/** Ideas and events on one spine, by year; at the same year, events come first. */
+export function renderTimeline(eras: Era[], ideas: Idea[], events: Event[]): string {
+  const items: Item[] = [
+    ...events.map((entry) => ({ kind: "event" as const, entry })),
+    ...ideas.map((entry) => ({ kind: "idea" as const, entry })),
+  ].sort((a, b) => a.entry.date.year - b.entry.date.year || (a.kind === b.kind ? 0 : a.kind === "event" ? -1 : 1));
+  const lookup: Lookup = { ideas: new Map(ideas.map((i) => [i.id, i])), events: new Map(events.map((e) => [e.id, e])) };
   return eras
     .map((era) =>
       renderEra(
         era,
-        sorted.filter((i) => i.date.year >= era.start && i.date.year < era.end),
+        items.filter((i) => i.entry.date.year >= era.start && i.entry.date.year < era.end),
         lookup,
       ),
     )
     .join("");
 }
 
-export function renderFilters(categories: Category[]): string {
-  const all = `<button class="filter is-active" data-filter="all">All</button>`;
+export function renderFilters(categories: Category[], hasEvents: boolean): string {
+  const all = `<button class="filter is-active" data-filter="all">All</button>` + (hasEvents ? `<button class="filter" data-filter="events"><span class="event-dot"></span>Events</button>` : "");
   const rest = categories
     .map(
       (c) =>
@@ -135,7 +193,7 @@ export function observeReveal(root: HTMLElement): void {
     },
     { rootMargin: "0px 0px -10% 0px" },
   );
-  root.querySelectorAll(".idea, .era-header").forEach((el) => io.observe(el));
+  root.querySelectorAll(".entry, .era-header").forEach((el) => io.observe(el));
 }
 
 /** Keep the header's year readout in sync with whatever is at the top of the viewport. */

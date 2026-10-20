@@ -8,14 +8,19 @@ const driver = await connect(neo4jConfigFromEnv()).catch((e: Error) => {
   process.exit(1);
 });
 try {
-  const { ideas, links, bibliography } = await loadContent(driver, { validate: true });
-  const used = new Set(ideas.flatMap((i) => i.sources).concat(links.flatMap((l) => (l.sourceKey ? [l.sourceKey] : []))));
+  const { ideas, events, links, emergences, bibliography } = await loadContent(driver, { validate: true });
+  const used = new Set(
+    [...ideas, ...events].flatMap((e) => e.sources).concat([...links, ...emergences].flatMap((l) => (l.sourceKey ? [l.sourceKey] : []))),
+  );
   for (const key of Object.keys(bibliography)) if (!used.has(key)) console.warn(`warning: source "${key}" is not cited by any idea or link`);
 
-  const counts = Object.groupBy(ideas, (i) => i.status);
-  const summary = (["candidate", "draft", "sourced", "reviewed"] as const).map((s) => `${counts[s]?.length ?? 0} ${s}`).join(", ");
+  const byStatus = (entries: { status: string }[]) => {
+    const counts = Object.groupBy(entries, (e) => e.status);
+    return (["candidate", "draft", "sourced", "reviewed"] as const).map((s) => `${counts[s]?.length ?? 0} ${s}`).join(", ");
+  };
   const linkSummary = Object.entries(Object.groupBy(links, (l) => `${l.origin}/${l.status}`)).map(([k, v]) => `${v!.length} ${k}`).join(", ");
-  console.log(`✓ ${ideas.length} ideas valid (${summary}); ${links.length} links (${linkSummary || "none"})`);
+  console.log(`✓ valid: ${events.length} events (${byStatus(events)}); ${ideas.length} ideas (${byStatus(ideas)})`);
+  console.log(`  ${links.length} links between ideas (${linkSummary || "none"}); ${emergences.length} emergences`);
 } catch (e) {
   if (!(e instanceof ContentError)) throw e;
   console.error(e.message);

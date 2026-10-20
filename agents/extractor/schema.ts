@@ -1,5 +1,6 @@
 import { z } from "zod/v4";
-import { categories, entityKinds } from "../../src/content/schema.ts";
+import { categories } from "../../src/content/schema.ts";
+import { checkEntityRefs, EntityRef } from "../core/entities.ts";
 import type { EvidenceLedger } from "../core/evidence.ts";
 import { disallowedEvidence } from "../core/policy.ts";
 import { defineTool, ToolError } from "../core/tools/types.ts";
@@ -7,15 +8,6 @@ import { defineTool, ToolError } from "../core/tools/types.ts";
 // The extractor's structured output and the harness checks applied to it.
 // Strict tool schema: every field required (nullable instead of optional), no
 // length or numeric constraints (those are checked here instead).
-
-const EntityRef = z.strictObject({
-  existing_id: z.string().nullable().describe("Id of the matching entity from find_similar_entities, or null if new"),
-  name: z.string(),
-  kind: z.enum(entityKinds),
-  role: z.string().describe("How it relates to the idea, e.g. originator, place of origin, key text, tradition"),
-  description: z.string().describe("One short neutral sentence"),
-  aliases: z.array(z.string()),
-});
 
 const ExtractedIdea = z.strictObject({
   existing_id: z.string().nullable().describe("Id of the same idea already in the graph (under any name), or null if new"),
@@ -73,9 +65,7 @@ export function checkExtraction(x: Extraction, ctx: ExtractionContext): string[]
     const doc = ctx.evidence.locate(idea.evidence, idea.evidence_url);
     if (!doc) problems.push(`${at}: the excerpt was not found in any document read during this run; quote exactly (use search_source to confirm)`);
     else if (disallowedEvidence(doc.finalUrl)) problems.push(`${at}: ${disallowedEvidence(doc.finalUrl)}`);
-    for (const e of idea.entities) {
-      if (e.existing_id && !ctx.entityExists(e.existing_id)) problems.push(`${at}: no entity with id "${e.existing_id}"`);
-    }
+    problems.push(...checkEntityRefs(at, idea.entities, ctx.entityExists));
   });
   return problems;
 }

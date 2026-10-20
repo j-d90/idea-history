@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { stringify } from "yaml";
 import type { Idea, IdeaLink } from "../../src/content/schema.ts";
-import { ideaEmbedding, loadIdea, loadLinks, loadSources, replaceLinks, similarIdeas } from "../../kg/src/repository.ts";
+import { loadIdea, nodeEmbedding, loadLinks, loadSources, replaceLinks, similarIdeas } from "../../kg/src/repository.ts";
 import { runAgentLoop } from "../core/loop.ts";
 import { SOURCE_POLICY } from "../core/policy.ts";
 import { recordAgentRun, startRun, withRead, withWrite, type Runtime } from "../core/runtime.ts";
@@ -34,7 +34,7 @@ export async function linkIdea(id: string, rt: Runtime, opts: { dryRun?: boolean
   const setup = await withRead(rt.driver, async (tx) => {
     const idea = await loadIdea(tx, id);
     if (!idea) throw new Error(`no idea with id "${id}"`);
-    const vector = await ideaEmbedding(tx, id);
+    const vector = await nodeEmbedding(tx, "Idea", id);
     if (!vector) throw new Error(`${id} has no embedding yet (run npm run kg -- embed)`);
     const similar = await similarIdeas(tx, vector, { k: CANDIDATES, maxYear: idea.date.year, exclude: [id] });
     const existing = await loadLinks(tx, id);

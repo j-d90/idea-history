@@ -11,7 +11,7 @@ export const categories = [
 ] as const;
 
 /**
- * candidate: proposed by the extractor agent from a source; not curated, not shown on the site.
+ * candidate: proposed by an agent (extractor, interpreter); not curated, not shown on the site.
  * draft: written but not sourced. sourced: every claim cited. reviewed: passed the fact-checker.
  */
 export const statuses = ["candidate", "draft", "sourced", "reviewed"] as const;
@@ -29,6 +29,7 @@ const httpUrl = z
 const slug = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "use lowercase letters, digits and hyphens");
 export const sourceKey = slug;
 export const ideaId = slug;
+export const eventId = slug;
 
 // ---------- Sources (bibliography) ----------
 
@@ -113,23 +114,37 @@ export const reviewSchema = z
   })
   .strict();
 
+// Ideas and events are both "entries": dated, sourced records with the same
+// status workflow, citation rules and review. They differ only in their
+// classification (an idea's category and origin, an event's kind and place).
+
+const entryFields = {
+  title: z.string().min(1),
+  status: z.enum(statuses),
+  date: dateSchema,
+  /** Shown on the card. No citations; the body carries them. */
+  summary: z.string().min(1).max(320),
+  /** Other names; used for search and matching, not shown or reviewed. */
+  aliases: z.array(z.string()).default([]),
+  /** Keys of the sources the entry cites. */
+  sources: z.array(sourceKey).default([]),
+  review: reviewSchema.optional(),
+};
+
 /** An idea as authors edit it (`npm run kg -- idea get|put`), minus the body. */
 export const ideaFieldsSchema = z
   .object({
     id: ideaId,
-    title: z.string().min(1),
+    title: entryFields.title,
     category: z.enum(categories),
-    status: z.enum(statuses),
-    date: dateSchema,
+    status: entryFields.status,
+    date: entryFields.date,
     /** Who / where, shown as a short byline. */
     origin: z.string().min(1),
-    /** Shown on the card. No citations; the body carries them. */
-    summary: z.string().min(1).max(320),
-    /** Other names for the idea; used for search and matching, not shown or reviewed. */
-    aliases: z.array(z.string()).default([]),
-    /** Keys of the sources the idea cites. */
-    sources: z.array(sourceKey).default([]),
-    review: reviewSchema.optional(),
+    summary: entryFields.summary,
+    aliases: entryFields.aliases,
+    sources: entryFields.sources,
+    review: entryFields.review,
   })
   .strict();
 
@@ -137,6 +152,54 @@ export type Idea = z.infer<typeof ideaFieldsSchema> & {
   /** Markdown body with [@key, locator] citations. */
   body: string;
 };
+
+// ---------- Events ----------
+
+/**
+ * Events are the raw observations of history: things that happened at a time and
+ * place, as recorded by sources. Ideas are identified from them (see emergences).
+ */
+export const eventKinds = [
+  "political",
+  "military",
+  "legal",
+  "religious",
+  "cultural",
+  "economic",
+  "technological",
+  "scientific",
+  "construction",
+  "migration",
+  "environmental",
+] as const;
+
+/** An event as authors edit it (`npm run kg -- event get|put`), minus the body. */
+export const eventFieldsSchema = z
+  .object({
+    id: eventId,
+    title: entryFields.title,
+    kind: z.enum(eventKinds),
+    status: entryFields.status,
+    date: entryFields.date,
+    /** Where it happened, shown as a short byline. */
+    place: z.string().min(1),
+    summary: entryFields.summary,
+    aliases: entryFields.aliases,
+    sources: entryFields.sources,
+    review: entryFields.review,
+  })
+  .strict();
+
+export type HistoricalEvent = z.infer<typeof eventFieldsSchema> & {
+  /** Markdown body with [@key, locator] citations. */
+  body: string;
+};
+
+export type Entry = Idea | HistoricalEvent;
+export type EntryLabel = "Idea" | "Event";
+
+export const isIdea = (e: Entry): e is Idea => "category" in e;
+export const labelOf = (e: Entry): EntryLabel => (isIdea(e) ? "Idea" : "Event");
 
 // ---------- Links between ideas ----------
 
@@ -178,6 +241,38 @@ export const ideaLinkSchema = z
 export type LinkType = (typeof linkTypes)[number];
 export type IdeaLink = z.infer<typeof ideaLinkSchema>;
 
+// ---------- Emergences: ideas identified from events ----------
+
+/**
+ * How an event shows an idea emerging:
+ * earliest-evidence: among the earliest surviving evidence of the idea.
+ * articulation: the idea is explicitly stated or formulated.
+ * institutionalization: the idea is adopted, codified or enforced by an institution.
+ * spread: the idea reaches a new region, people or domain.
+ */
+export const emergenceStages = ["earliest-evidence", "articulation", "institutionalization", "spread"] as const;
+
+export const emergenceSchema = z
+  .object({
+    idea: ideaId,
+    event: eventId,
+    stage: z.enum(emergenceStages),
+    why: z.string().min(1),
+    status: z.enum(linkStatuses),
+    /** Verbatim excerpt connecting the event to the idea, from the document at evidenceUrl. */
+    evidence: z.string().min(1),
+    evidenceUrl: z.string().min(1),
+    sourceKey: sourceKey.optional(),
+    locator: z.string().optional(),
+    confidence: z.enum(["low", "medium", "high"]),
+    runId: z.string().optional(),
+    model: z.string().optional(),
+  })
+  .strict();
+
+export type EmergenceStage = (typeof emergenceStages)[number];
+export type Emergence = z.infer<typeof emergenceSchema>;
+
 // ---------- Entities ----------
 
 export const entityKinds = ["person", "group", "place", "work", "institution", "tradition", "language", "concept", "period"] as const;
@@ -199,12 +294,15 @@ export type Entity = z.infer<typeof entitySchema>;
 
 export interface ReviewRecord {
   runId: string;
-  ideaId: string;
+  label: EntryLabel;
+  /** The reviewed idea or event. */
+  id: string;
   verdict: "pass" | "fail";
   by: string;
   date: string;
   hash: string;
   report: string;
+  createdAt?: string;
 }
 
 export type Category = (typeof categories)[number];
@@ -214,12 +312,26 @@ export type Bibliography = Record<string, Source>;
 export type IdeaDate = z.infer<typeof dateSchema>;
 export type Review = z.infer<typeof reviewSchema>;
 
+export type EventKind = (typeof eventKinds)[number];
+
 /** What the browser receives: content pre-rendered at build time. */
-export type RenderedIdea = Omit<Idea, "body" | "sources" | "aliases"> & {
+interface Rendered {
   bodyHtml: string;
   /** Plain-text description of the date, citations resolved. */
   dateText: string;
   references: { key: string; html: string }[];
-  /** Links to earlier ideas. */
-  links: Pick<IdeaLink, "to" | "type" | "why" | "origin" | "status">[];
-};
+}
+
+export type RenderedIdea = Omit<Idea, "body" | "sources" | "aliases"> &
+  Rendered & {
+    /** Links to earlier ideas. */
+    links: Pick<IdeaLink, "to" | "type" | "why" | "origin" | "status">[];
+    /** Events that show the idea emerging. */
+    emergesIn: Pick<Emergence, "event" | "stage" | "why" | "status">[];
+  };
+
+export type RenderedEvent = Omit<HistoricalEvent, "body" | "sources" | "aliases"> &
+  Rendered & {
+    /** Ideas this event shows emerging. */
+    ideas: Pick<Emergence, "idea" | "stage" | "why" | "status">[];
+  };

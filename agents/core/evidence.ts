@@ -65,26 +65,39 @@ export class EvidenceLedger {
    * appear in order. Searches `preferUrl` first, then every document.
    */
   locate(excerpt: string, preferUrl?: string | null): SourceDocument | undefined {
-    const pieces = normalize(excerpt)
-      .split(/\s*(?:…|\.\.\.)\s*/)
-      .filter((p) => p.length > 0);
+    const pieces = excerptPieces(excerpt);
     if (!pieces.length) return undefined;
 
     const candidates = this.all();
     const preferred = preferUrl ? this.docs.get(preferUrl) : undefined;
     if (preferred) candidates.unshift(preferred);
 
-    return candidates.find((doc) => {
-      const hay = normalize(doc.text);
-      let from = 0;
-      for (const piece of pieces) {
-        const at = hay.indexOf(piece, from);
-        if (at < 0) return false;
-        from = at + piece.length;
-      }
-      return true;
-    });
+    return candidates.find((doc) => contains(doc, pieces));
   }
+
+  /** The document read at `url`, if it contains the excerpt. */
+  locateIn(excerpt: string, url: string): SourceDocument | undefined {
+    const doc = this.docs.get(url);
+    const pieces = excerptPieces(excerpt);
+    return doc && pieces.length && contains(doc, pieces) ? doc : undefined;
+  }
+}
+
+function excerptPieces(excerpt: string): string[] {
+  return normalize(excerpt)
+    .split(/\s*(?:…|\.\.\.)\s*/)
+    .filter((p) => p.length > 0);
+}
+
+function contains(doc: SourceDocument, pieces: string[]): boolean {
+  const hay = normalize(doc.text);
+  let from = 0;
+  for (const piece of pieces) {
+    const at = hay.indexOf(piece, from);
+    if (at < 0) return false;
+    from = at + piece.length;
+  }
+  return true;
 }
 
 /**

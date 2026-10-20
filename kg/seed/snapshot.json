@@ -1,7 +1,23 @@
 {
-  "version": 1,
-  "exportedAt": "2026-10-20T16:09:42.343Z",
+  "version": 2,
+  "exportedAt": "2026-10-20T18:35:17.131Z",
   "sources": {
+    "archaeology-sun-kings-2020": {
+      "type": "secondary",
+      "kind": "web",
+      "authors": [],
+      "etAl": false,
+      "editors": [],
+      "translators": [],
+      "title": "In the Reign of the Sun Kings",
+      "container": "Archaeology Magazine, November/December 2020",
+      "publisher": "Archaeological Institute of America",
+      "year": 2020,
+      "url": "https://archaeology.org/issues/november-december-2020/features/egypt-abusir-sun-kings/",
+      "accessed": "2026-10-20",
+      "short": "Archaeology, Sun Kings",
+      "consulted": true
+    },
     "bahdanau-2014": {
       "type": "primary",
       "kind": "preprint",
@@ -18,6 +34,22 @@
       "year": 2014,
       "url": "https://arxiv.org/abs/1409.0473",
       "accessed": "2026-10-20",
+      "consulted": true
+    },
+    "bas-uncovering-abusir-2002": {
+      "type": "secondary",
+      "kind": "web",
+      "authors": [],
+      "etAl": false,
+      "editors": [],
+      "translators": [],
+      "title": "Uncovering Abusir: The Czech Institute of Egyptology (sidebar to 'The Shaft Tombs of Abusir')",
+      "container": "Archaeology Odyssey, BAS Library",
+      "publisher": "Biblical Archaeology Society",
+      "year": 2002,
+      "url": "https://library.biblicalarchaeology.org/sidebar/uncovering-abusir-the-czech-institute-of-egyptology/",
+      "accessed": "2026-10-20",
+      "short": "Archaeology Odyssey 2002",
       "consulted": true
     },
     "blevins-2010": {
@@ -116,6 +148,23 @@
       "accessed": "2026-10-20",
       "consulted": true
     },
+    "english-heritage-stonehenge-history": {
+      "type": "secondary",
+      "kind": "web",
+      "authors": [
+        "Susan Greaney"
+      ],
+      "etAl": false,
+      "editors": [],
+      "translators": [],
+      "title": "History of Stonehenge",
+      "container": "English Heritage",
+      "publisher": "English Heritage",
+      "year": 2024,
+      "url": "https://www.english-heritage.org.uk/visit/places/stonehenge/history-and-stories/history/",
+      "accessed": "2026-10-20",
+      "consulted": true
+    },
     "englund-2004": {
       "type": "secondary",
       "kind": "chapter",
@@ -132,6 +181,25 @@
       "publisher": "Cambridge University Press",
       "year": 2004,
       "url": "https://cdli.earth/files-up/publications/englund2004c.pdf",
+      "accessed": "2026-10-20",
+      "consulted": true
+    },
+    "hafford-2018": {
+      "type": "secondary",
+      "kind": "article",
+      "authors": [
+        "William B. Hafford"
+      ],
+      "etAl": false,
+      "editors": [],
+      "translators": [],
+      "title": "A Spectacular Discovery: Burials Simple and Splendid",
+      "container": "Expedition Magazine (Penn Museum)",
+      "publisher": "Penn Museum",
+      "volume": "60",
+      "issue": "1",
+      "year": 2018,
+      "url": "https://www.penn.museum/sites/expedition/a-spectacular-discovery/",
       "accessed": "2026-10-20",
       "consulted": true
     },
@@ -193,6 +261,55 @@
       "accessed": "2026-10-20",
       "consulted": true
     },
+    "louvre-relief-perfore-ur-nanshe": {
+      "type": "reference",
+      "kind": "web",
+      "authors": [],
+      "etAl": false,
+      "editors": [],
+      "translators": [],
+      "title": "Relief perforé d'Ur-Nanshe (AO 2345), collection record",
+      "container": "Louvre site des collections",
+      "publisher": "Musée du Louvre",
+      "year": 2026,
+      "url": "https://collections.louvre.fr/en/ark:/53355/cl010121763",
+      "accessed": "2026-10-20",
+      "short": "Louvre, AO 2345",
+      "consulted": true
+    },
+    "louvre-stele-vautours": {
+      "type": "reference",
+      "kind": "web",
+      "authors": [],
+      "etAl": false,
+      "editors": [],
+      "translators": [],
+      "title": "Stèle des vautours (AO 50 etc.), collection record",
+      "container": "Louvre site des collections",
+      "publisher": "Musée du Louvre",
+      "year": 2026,
+      "url": "https://collections.louvre.fr/en/ark:/53355/cl010121794",
+      "accessed": "2026-10-20",
+      "short": "Louvre, AO 50",
+      "consulted": true
+    },
+    "magli-2009": {
+      "type": "secondary",
+      "kind": "preprint",
+      "authors": [
+        "Giulio Magli"
+      ],
+      "etAl": false,
+      "editors": [],
+      "translators": [],
+      "title": "Topography, astronomy and dynastic history in the alignments of the pyramid fields of the Old Kingdom",
+      "container": "arXiv",
+      "publisher": "arXiv",
+      "year": 2009,
+      "url": "https://arxiv.org/pdf/0903.1416",
+      "accessed": "2026-10-20",
+      "consulted": true
+    },
     "sn-56-11": {
       "type": "primary",
       "kind": "text",
@@ -208,6 +325,22 @@
       "url": "https://www.accesstoinsight.org/tipitaka/sn/sn56/sn56.011.than.html",
       "accessed": "2026-10-20",
       "short": "SN 56.11",
+      "consulted": true
+    },
+    "ucl-digital-egypt-userkaf": {
+      "type": "reference",
+      "kind": "web",
+      "authors": [],
+      "etAl": false,
+      "editors": [],
+      "translators": [],
+      "title": "Userkaf",
+      "container": "Digital Egypt for Universities",
+      "publisher": "University College London",
+      "year": 2000,
+      "url": "https://www.ucl.ac.uk/museums-static/digitalegypt//chronology/kinguserkaf.html",
+      "accessed": "2026-10-20",
+      "short": "Digital Egypt, Userkaf",
       "consulted": true
     },
     "vaswani-2017": {
@@ -316,6 +449,71 @@
         "englund-2004"
       ],
       "body": "**The first city.** In the Late Uruk period (c. 3350–3100 BCE), Uruk grew to 20,000–50,000 people and became \"arguably, the world's first true city.\" The new administration needed to track production, goods and labour, and writing was invented in that setting [@woods-2010-mesopotamia, p. 34].\n\n**Precursors.** Before writing, Near Eastern administrators kept accounts with small clay tokens, some sealed inside clay envelopes (\"bullae\"). That the tokens were forerunners of the earliest tablets, first argued by Denise Schmandt-Besserat, is \"core knowledge\" among cuneiformists. Many of the numerical signs on early tablets match the tokens in form and function [@englund-2004, p. 100].\n\n**Dating.** The earliest tablets fall into two script phases: Uruk IV (c. 3200 BCE) and Uruk III (c. 3100 BCE). The German Archaeological Institute excavated about 5,000 proto-cuneiform tablets at Uruk between 1928 and 1976 [@woods-2010-mesopotamia, p. 35]. The whole proto-cuneiform corpus runs to over 6,000 tablets and fragments [@englund-2004, p. 100].\n\n**Purpose.** Nearly all the earliest texts are administrative. Literature, religious texts, historical documents and letters appear only from the mid-third millennium BCE, some 700 years after the first written evidence [@woods-2010-mesopotamia, p. 34].\n\n**Independent inventions.** There are four \"pristine\" writing systems, invented with no knowledge of writing elsewhere: Mesopotamia and Egypt at the end of the fourth millennium BCE, China at the end of the second millennium BCE, and Mesoamerica by the middle of the first millennium BCE [@woods-2010-intro, p. 15]."
+    },
+    {
+      "id": "royal-sun-temple-for-the-kings-eternal-cult",
+      "title": "Royal sun temples of the Fifth Dynasty",
+      "category": "religion",
+      "status": "sourced",
+      "date": {
+        "year": -2465,
+        "marks": "Approximate start of Userkaf's reign, the first king credited with building a sun temple; the temple's construction date itself is not fixed.",
+        "earliest": -2465,
+        "latest": -2450,
+        "approx": true,
+        "note": "Old Kingdom absolute dates vary by chronology. Magli and Bárta (via Archaeology magazine) give Userkaf's reign as about 2465–2458 BCE [@magli-2009, PDF p. 6; @archaeology-sun-kings-2020, founder paragraph], while UCL's Digital Egypt dates the dynasty to 2450–2300 BCE [@ucl-digital-egypt-userkaf, entry text]."
+      },
+      "origin": "Userkaf, Fifth Dynasty Egypt (Abu Ghurab, near Abusir)",
+      "summary": "Userkaf, founder of Egypt's Fifth Dynasty, is credited as the first king to build a sun temple to Ra, at Abu Ghurab, in addition to his pyramid. How many later kings did the same is debated.",
+      "aliases": [
+        "Sun temple of Userkaf",
+        "Nekhen-Re",
+        "Solar temple"
+      ],
+      "sources": [
+        "ucl-digital-egypt-userkaf",
+        "magli-2009",
+        "archaeology-sun-kings-2020"
+      ],
+      "body": "Userkaf, first king of the Fifth Dynasty, is described by UCL's Digital Egypt as \"the first king who built a sun temple to support his eternal cult\". His temple at Abu Ghurab, called Nekhen-Re, is known from excavation reports by Ricke and Edel [@ucl-digital-egypt-userkaf, entry text]. Besides it, he was buried in a pyramid at Saqqara [@ucl-digital-egypt-userkaf, entry text]. The idea is therefore a second royal monument, devoted to the sun god, built beside the pyramid. Magli also calls Userkaf's the first sun temple in the Abu Gorab zone. He describes a lower building and an access ramp leading up to a monumental area, where a stone base carried a high, non-monolithic obelisk. He suggests the plan was probably a copy of the temple at Heliopolis [@magli-2009, PDF p. 6].\n\nScholars read the purpose in different ways. Miroslav Bárta, in a magazine interview, says the Fifth Dynasty temples were dedicated to Ra and linked the pharaoh's authority to the sun god's supremacy [@archaeology-sun-kings-2020, founder paragraph]. He adds that offerings for royal mortuary complexes were first taken to the temples to be exposed to the sun before going on to the mortuary temples [@archaeology-sun-kings-2020, six-temples paragraph]. Magli proposes instead that such temples signalled the king's link with the sun god when his pyramid's location did not already show it [@magli-2009, PDF p. 11]. This second reading is a hypothesis and not a settled view.\n\nThe number of temples is disputed. Bárta's account gives six sun temples in the dynasty [@archaeology-sun-kings-2020, six-temples paragraph]. Magli notes that texts of the period suggest Sahure, Neferefre, Neferirkare and Menkauhor also built them, but these temples have never been found. Some scholars (citing Verner 2002 and Nuzzolo 2007) hold that those texts refer to renewals of Userkaf's temple, so that Niuserre's was the only other temple actually built. Magli himself argues that the missing temples never existed [@magli-2009, PDF pp. 10–11]. The firm archaeological evidence is therefore for two temples, Userkaf's and Niuserre's. Dates for both are approximate."
+    },
+    {
+      "id": "commemorative-victory-monument-with-historical-narrative",
+      "title": "Commemorative victory monument with historical narrative",
+      "category": "politics",
+      "status": "candidate",
+      "date": {
+        "year": -2450,
+        "marks": "Estimated by the interpreter agent: Louvre date for the Stele of the Vultures (2450-2425 BCE); this is the dated surviving monument, not the earliest possible",
+        "approx": true
+      },
+      "origin": "Eannatum of Lagash, Early Dynastic Sumer",
+      "summary": "Rulers set up inscribed and pictorial stelae recording military victories as lasting public records. The Stele of the Vultures pairs a Sumerian historical text with narrative relief.",
+      "aliases": [
+        "Stele of the Vultures",
+        "Victory stele"
+      ],
+      "sources": [],
+      "body": "Identified by the interpreter agent (run 2026-10-20-interpreter-2500bce-2400bce-472df3) from `eannatum-of-lagashs-victory-over-umma-recorded-on-the-stele`; not yet curated or sourced."
+    },
+    {
+      "id": "royal-burial-with-sacrificed-retainers",
+      "title": "Royal burial with sacrificed retainers",
+      "category": "religion",
+      "status": "candidate",
+      "date": {
+        "year": -2450,
+        "marks": "Estimated by the interpreter agent: Approximate date of the royal burials, including Queen Puabi's, per the Penn Museum",
+        "approx": true
+      },
+      "origin": "Royal Cemetery of Ur, Early Dynastic Sumer",
+      "summary": "Elaborate royal graves at Ur contained attendants buried with the ruler, interpreted by excavators as human sacrifice so the dead could continue to be served in the afterlife.",
+      "aliases": [
+        "Royal Cemetery of Ur death pits",
+        "Retainer sacrifice"
+      ],
+      "sources": [],
+      "body": "Identified by the interpreter agent (run 2026-10-20-interpreter-2500bce-2400bce-472df3) from `queen-puabi-buried-in-the-royal-cemetery-of-ur`; not yet curated or sourced."
     },
     {
       "id": "acrophonic-principle",
@@ -1079,6 +1277,165 @@
       "body": "**The idea.** The paper proposed \"a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely.\" The authors reported that it was \"more parallelizable\" and required \"significantly less time to train\" than the recurrent and convolutional models it replaced [@vaswani-2017, abstract].\n\n**What was new.** Attention itself was older. It had already been added to recurrent translation models, letting a model \"(soft-)search for parts of a source sentence that are relevant to predicting a target word\" [@bahdanau-2014, abstract]. The Transformer's step was to make attention the whole architecture.\n\n**What followed.** BERT, short for \"Bidirectional Encoder Representations from Transformers\" [@devlin-2018, abstract], was built on it. So was GPT-3, which uses \"the same model and architecture as GPT-2\" with sparse attention patterns \"in the layers of the transformer\" [@brown-2020, §2.1]."
     }
   ],
+  "events": [
+    {
+      "id": "central-stone-settings-of-stonehenge-erected",
+      "title": "Central stone settings of Stonehenge erected",
+      "kind": "construction",
+      "status": "sourced",
+      "date": {
+        "year": -2500,
+        "marks": "English Heritage's stated approximate date ('about 2500 BC') for the setting up of the central stones; a conventional round date, not a precise radiocarbon estimate.",
+        "approx": true,
+        "note": "The source gives only a round date. The earlier bank-and-ditch henge is dated by it to about 3000 BC, and rearrangement of the bluestones 200–300 years later."
+      },
+      "place": "Stonehenge, Salisbury Plain, Wiltshire, England",
+      "summary": "The sarsen and bluestone settings at the centre of Stonehenge were set up, together with the sarsens near the entrance and the four Station Stones, forming the monument's distinctive stone circle.",
+      "aliases": [
+        "Stonehenge sarsen circle"
+      ],
+      "sources": [
+        "english-heritage-stonehenge-history"
+      ],
+      "body": "> In about 2500 BC the stones were set up in the centre of the monument. [@english-heritage-stonehenge-history, 'The Stone Settings']"
+    },
+    {
+      "id": "ur-nanshe-of-lagash-commemorates-temple-construction",
+      "title": "Ur-Nanshe of Lagash commemorates temple construction on a perforated relief",
+      "kind": "cultural",
+      "status": "sourced",
+      "date": {
+        "year": -2480,
+        "marks": "Midpoint of the Louvre's date range (-2495 to -2465) assigned to the reign of Ur-Nanshe, Early Dynastic IIIB; it dates the object, not an exactly known building event.",
+        "earliest": -2495,
+        "latest": -2465,
+        "approx": true,
+        "note": "The Louvre record also gives a looser 'about 2550-2500 BC' alongside the narrower -2495/-2465 range, so the placement is approximate."
+      },
+      "place": "Girsu (modern Tello, southern Iraq), city-state of Lagash",
+      "summary": "A limestone perforated plaque with a cuneiform inscription shows Ur-Nanshe, king of Lagash, with a servant and sons, commemorating the building of a temple; it is dated by the Louvre to Early Dynastic IIIB.",
+      "aliases": [
+        "Perforated relief of Ur-Nanshe"
+      ],
+      "sources": [
+        "louvre-relief-perfore-ur-nanshe"
+      ],
+      "body": "> Relief votif d'Ur-Nanshe, roi de Lagash. Plaque perforée commémorant la construction d'un temple. [@louvre-relief-perfore-ur-nanshe, Notice AO 2345, 'Précision sur l'objet']\n\n> Dynastique archaïque IIIB : Ur-Nanshe (Vers 2550-2500 av. J. - C.) (-2495 - -2465) [@louvre-relief-perfore-ur-nanshe, Notice AO 2345, 'Date']"
+    },
+    {
+      "id": "fifth-dynasty-of-egypt-begins-with-userkaf",
+      "title": "Fifth Dynasty of Egypt begins with Userkaf",
+      "kind": "political",
+      "status": "sourced",
+      "date": {
+        "year": -2465,
+        "marks": "Start of the Fifth Dynasty as dated by the Czech Institute of Egyptology/BAS source (2465 BC); the UCL source gives 2450 BC for the dynasty's start.",
+        "earliest": -2465,
+        "latest": -2450,
+        "approx": true,
+        "note": "Old Kingdom absolute dates differ by decades between chronologies; the two cited sources give 2465 and 2450 BCE. Radiocarbon dates from Old Kingdom monuments scatter widely, as AERA notes."
+      },
+      "place": "Egypt (Memphite region; Userkaf's pyramid at Saqqara, sun temple at Abu Ghurab)",
+      "summary": "Userkaf is recorded as the first king of Egypt's Fifth Dynasty; he built a sun temple at Abu Ghurab and was buried in a pyramid at Saqqara. Sources date the dynasty's start to about 2465 or 2450 BCE.",
+      "aliases": [
+        "Accession of Userkaf"
+      ],
+      "sources": [
+        "bas-uncovering-abusir-2002",
+        "ucl-digital-egypt-userkaf"
+      ],
+      "body": "> 5th Dynasty (2465–2323 B.C.) [@bas-uncovering-abusir-2002, sidebar, last paragraph]\n\n> First king of the Fifth Dynasty (2450-2300 BC) and the first king who built a sun temple to support his eternal cult. [@ucl-digital-egypt-userkaf, entry text]"
+    },
+    {
+      "id": "eannatum-of-lagashs-victory-over-umma-recorded-on-the-stele",
+      "title": "Eannatum of Lagash's victory over Umma recorded on the Stele of the Vultures",
+      "kind": "military",
+      "status": "sourced",
+      "date": {
+        "year": -2450,
+        "marks": "Louvre date range (-2450 to -2425) for the stele and the reign of Eannatum; it dates the monument, and the war itself is placed within or before it.",
+        "earliest": -2450,
+        "latest": -2425,
+        "approx": true,
+        "note": "The stele is dated by museum attribution to Early Dynastic IIIB; absolute dates for Early Dynastic Lagash rest on conventional Mesopotamian chronology."
+      },
+      "place": "Girsu (modern Tello, southern Iraq); stele now in the Louvre",
+      "summary": "A limestone victory stele with a Sumerian cuneiform text records Eannatum, king of Lagash, defeating the neighbouring city of Umma. The Louvre dates it to Early Dynastic IIIB, about 2450–2425 BCE.",
+      "aliases": [
+        "Stèle des vautours",
+        "Stele of the Vultures"
+      ],
+      "sources": [
+        "louvre-stele-vautours"
+      ],
+      "body": "> Texte rapportant la victoire d'Eannatum sur la ville voisine d'Umma [@louvre-stele-vautours, Notice AO 50, 'Inscription']\n\n> Dynastique archaïque IIIB : Eannatum (Vers 2450 av. J. - C.) (-2450 - -2425) [@louvre-stele-vautours, Notice AO 50, 'Date']"
+    },
+    {
+      "id": "mastaba-of-the-vizier-ptahshepses-built-at-abusir",
+      "title": "Mastaba of the vizier Ptahshepses built at Abusir",
+      "kind": "construction",
+      "status": "sourced",
+      "date": {
+        "year": -2450,
+        "marks": "Approximate date ('c. 2450 B.C.') given by the source for the mastaba, on the Czech Institute/BAS chronology.",
+        "approx": true,
+        "note": "Fifth Dynasty absolute dates vary by decades between chronologies."
+      },
+      "place": "Abusir, Egypt (west bank of the Nile, south-west of Cairo)",
+      "summary": "The Fifth Dynasty mastaba of the vizier Ptahshepses at Abusir, dated to about 2450 BCE, is described as the largest non-royal tomb of Egypt's Old Kingdom; it was excavated by Czech archaeologists in 1960–1974.",
+      "aliases": [
+        "Tomb of Ptahshepses"
+      ],
+      "sources": [
+        "bas-uncovering-abusir-2002"
+      ],
+      "body": "> the 5th Dynasty mastaba of vizier Ptahshepses (c. 2450 B.C.), the largest non-royal tomb of Egypt’s Old Kingdom (2920–2134 B.C.) [@bas-uncovering-abusir-2002, sidebar, first paragraph]"
+    },
+    {
+      "id": "queen-puabi-buried-in-the-royal-cemetery-of-ur",
+      "title": "Queen Puabi buried in the Royal Cemetery of Ur",
+      "kind": "cultural",
+      "status": "sourced",
+      "date": {
+        "year": -2450,
+        "marks": "Approximate date ('around 2450 BCE') given by the Penn Museum for the Early Dynastic IIIa royal burials at Ur.",
+        "approx": true,
+        "note": "The source notes the cemetery was in use for about 1,000 years and the royal graves belong to no historically identified dynasty."
+      },
+      "place": "Ur (modern Tell al-Muqayyar, southern Iraq)",
+      "summary": "Queen Puabi was buried in grave PG 800 with gold and lapis jewellery and attendants; her cylinder seal bears the title eresh (queen). The Penn Museum places her in Early Dynastic IIIa, around 2450 BCE.",
+      "aliases": [
+        "Puabi (Shub-ad) tomb PG 800"
+      ],
+      "sources": [
+        "hafford-2018"
+      ],
+      "body": "> Queen Puabi was certainly an important and powerful figure in the Early Dynastic IIIa world around 2450 BCE. [@hafford-2018, 'Queen Puabi and the Death Pits' section]\n\n> a few royal personages were apparently entombed here, in one period around 2450 BCE at least [@hafford-2018, 'Simple and Royal Graves at Ur']"
+    },
+    {
+      "id": "raneferefs-unfinished-pyramid-complex-at-abusir",
+      "title": "Raneferef's unfinished pyramid complex at Abusir",
+      "kind": "construction",
+      "status": "sourced",
+      "date": {
+        "year": -2418,
+        "marks": "Approximate reign dates (c. 2419–2416 B.C.) given by the Czech Institute/BAS source; placed at the middle of the range.",
+        "earliest": -2419,
+        "latest": -2416,
+        "approx": true,
+        "note": "Fifth Dynasty absolute dates vary by decades between chronologies."
+      },
+      "place": "Abusir, Egypt",
+      "summary": "King Raneferef of the Fifth Dynasty, dated to about 2419–2416 BCE, left an unfinished pyramid complex at Abusir; Czech excavators found royal statuary fragments and a papyrus archive there.",
+      "aliases": [
+        "Pyramid of Neferefre"
+      ],
+      "sources": [
+        "bas-uncovering-abusir-2002"
+      ],
+      "body": "> the unfinished pyramid complex of the 5th Dynasty king Raneferef (c. 2419–2416 B.C.), also at Abusir [@bas-uncovering-abusir-2002, sidebar, second paragraph]"
+    }
+  ],
   "links": [
     {
       "from": "algebra",
@@ -1448,7 +1805,97 @@
       "status": "proposed"
     }
   ],
+  "emergences": [
+    {
+      "idea": "royal-sun-temple-for-the-kings-eternal-cult",
+      "event": "fifth-dynasty-of-egypt-begins-with-userkaf",
+      "stage": "earliest-evidence",
+      "why": "The source calls Userkaf the first king to build a sun temple to support his eternal cult, at Abu Ghurab.",
+      "status": "proposed",
+      "evidence": "First king of the Fifth Dynasty (2450-2300 BC) and the first king who built a sun temple to support his eternal cult.",
+      "evidenceUrl": "https://www.ucl.ac.uk/museums-static/digitalegypt//chronology/kinguserkaf.html",
+      "sourceKey": "ucl-digital-egypt-userkaf",
+      "locator": "entry text",
+      "confidence": "medium",
+      "runId": "2026-10-20-interpreter-2500bce-2400bce-472df3",
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "idea": "commemorative-victory-monument-with-historical-narrative",
+      "event": "eannatum-of-lagashs-victory-over-umma-recorded-on-the-stele",
+      "stage": "earliest-evidence",
+      "why": "The stele combines a commemorative historical text of Eannatum's victory with narrative imagery. A cited study by Winter links it to the beginning of historical narrative in the Near East.",
+      "status": "proposed",
+      "evidence": "After the Battle is Over: The ‘Stele of the Vultures’ and the beginning of Historical Narrative in the Ancient Near East",
+      "evidenceUrl": "https://collections.louvre.fr/en/ark:/53355/cl010121794",
+      "sourceKey": "louvre-stele-vautours",
+      "locator": "Bibliography (Winter 1985)",
+      "confidence": "medium",
+      "runId": "2026-10-20-interpreter-2500bce-2400bce-472df3",
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "idea": "royal-burial-with-sacrificed-retainers",
+      "event": "queen-puabi-buried-in-the-royal-cemetery-of-ur",
+      "stage": "earliest-evidence",
+      "why": "Puabi's grave held attendants, read by Woolley as evidence of royal funerary human sacrifice, though the source says whether they died willingly is not known.",
+      "status": "proposed",
+      "evidence": "Such evidence of human sacrifice was fundamental to Woolley’s interpretation of a royal funerary ceremony.",
+      "evidenceUrl": "https://www.penn.museum/sites/expedition/a-spectacular-discovery/",
+      "sourceKey": "hafford-2018",
+      "locator": "'Queen Puabi and the Death Pits'",
+      "confidence": "low",
+      "runId": "2026-10-20-interpreter-2500bce-2400bce-472df3",
+      "model": "claude-sonnet-5-5"
+    }
+  ],
   "entities": [
+    {
+      "id": "abu-ghurab-sun-temple-nekhen-re",
+      "name": "Abu Ghurab sun temple (Nekhen-Re)",
+      "kind": "place",
+      "description": "Sun temple of Userkaf at Abu Ghurab.",
+      "aliases": [
+        "Nekhen-Re"
+      ]
+    },
+    {
+      "id": "abusir",
+      "name": "Abusir",
+      "kind": "place",
+      "description": "Old Kingdom royal and elite necropolis near Cairo.",
+      "aliases": []
+    },
+    {
+      "id": "eannatum",
+      "name": "Eannatum",
+      "kind": "person",
+      "description": "Ruler of Lagash commemorated on the Stele of the Vultures.",
+      "aliases": []
+    },
+    {
+      "id": "fifth-dynasty-of-egypt",
+      "name": "Fifth Dynasty of Egypt",
+      "kind": "period",
+      "description": "Dynasty of the Egyptian Old Kingdom, dated by sources to about 2465/2450–2323/2300 BCE.",
+      "aliases": []
+    },
+    {
+      "id": "girsu-tello",
+      "name": "Girsu (Tello)",
+      "kind": "place",
+      "description": "Ancient Sumerian city, modern Tello, southern Iraq.",
+      "aliases": [
+        "Tello"
+      ]
+    },
+    {
+      "id": "lagash",
+      "name": "Lagash",
+      "kind": "place",
+      "description": "Sumerian city-state in southern Mesopotamia, with its centre at Girsu (modern Tello).",
+      "aliases": []
+    },
     {
       "id": "phoenicians",
       "name": "Phoenicians",
@@ -1475,10 +1922,58 @@
       ]
     },
     {
+      "id": "ptahshepses",
+      "name": "Ptahshepses",
+      "kind": "person",
+      "description": "Fifth Dynasty vizier buried at Abusir.",
+      "aliases": []
+    },
+    {
+      "id": "puabi",
+      "name": "Puabi",
+      "kind": "person",
+      "description": "Woman titled eresh (queen) on her seal, buried in the Royal Cemetery at Ur.",
+      "aliases": [
+        "Shub-ad"
+      ]
+    },
+    {
+      "id": "raneferef",
+      "name": "Raneferef",
+      "kind": "person",
+      "description": "Fifth Dynasty king whose unfinished pyramid complex lies at Abusir.",
+      "aliases": [
+        "Neferefre"
+      ]
+    },
+    {
+      "id": "royal-cemetery-of-ur",
+      "name": "Royal Cemetery of Ur",
+      "kind": "place",
+      "description": "Cemetery at Ur excavated by Leonard Woolley, in use for about 1,000 years.",
+      "aliases": []
+    },
+    {
       "id": "serabit-el-khadem",
       "name": "Serabit el-Khadem",
       "kind": "place",
       "description": "Ancient Egyptian mining site in the Sinai Peninsula.",
+      "aliases": []
+    },
+    {
+      "id": "stele-of-the-vultures",
+      "name": "Stele of the Vultures",
+      "kind": "work",
+      "description": "Limestone victory stele of Eannatum, found at Girsu, in the Louvre.",
+      "aliases": [
+        "Stèle des vautours"
+      ]
+    },
+    {
+      "id": "stonehenge",
+      "name": "Stonehenge",
+      "kind": "place",
+      "description": "Late Neolithic and early Bronze Age stone monument on Salisbury Plain, southern England.",
       "aliases": []
     },
     {
@@ -1500,6 +1995,36 @@
       ]
     },
     {
+      "id": "umma",
+      "name": "Umma",
+      "kind": "place",
+      "description": "Sumerian city, neighbour and rival of Lagash.",
+      "aliases": []
+    },
+    {
+      "id": "ur",
+      "name": "Ur",
+      "kind": "place",
+      "description": "Sumerian city in southern Mesopotamia.",
+      "aliases": []
+    },
+    {
+      "id": "ur-nanshe",
+      "name": "Ur-Nanshe",
+      "kind": "person",
+      "description": "King of Lagash, shown on votive reliefs from Tello.",
+      "aliases": [
+        "Ur-Nina"
+      ]
+    },
+    {
+      "id": "userkaf",
+      "name": "Userkaf",
+      "kind": "person",
+      "description": "First king of the Fifth Dynasty of Egypt.",
+      "aliases": []
+    },
+    {
       "id": "wadi-el-hol",
       "name": "Wadi el-Hol",
       "kind": "place",
@@ -1509,43 +2034,176 @@
   ],
   "involves": [
     {
-      "idea": "alphabet",
+      "label": "Event",
+      "id": "central-stone-settings-of-stonehenge-erected",
+      "entity": "stonehenge",
+      "role": "place",
+      "runId": "2026-10-20-gatherer-events-2500bce-2400bce-acb79c"
+    },
+    {
+      "label": "Event",
+      "id": "eannatum-of-lagashs-victory-over-umma-recorded-on-the-stele",
+      "entity": "eannatum",
+      "role": "king of Lagash",
+      "runId": "2026-10-20-gatherer-events-2500bce-2400bce-acb79c"
+    },
+    {
+      "label": "Event",
+      "id": "eannatum-of-lagashs-victory-over-umma-recorded-on-the-stele",
+      "entity": "lagash",
+      "role": "polity",
+      "runId": "2026-10-20-gatherer-events-2500bce-2400bce-acb79c"
+    },
+    {
+      "label": "Event",
+      "id": "eannatum-of-lagashs-victory-over-umma-recorded-on-the-stele",
+      "entity": "stele-of-the-vultures",
+      "role": "commemorative monument",
+      "runId": "2026-10-20-gatherer-events-2500bce-2400bce-acb79c"
+    },
+    {
+      "label": "Event",
+      "id": "eannatum-of-lagashs-victory-over-umma-recorded-on-the-stele",
+      "entity": "umma",
+      "role": "defeated city",
+      "runId": "2026-10-20-gatherer-events-2500bce-2400bce-acb79c"
+    },
+    {
+      "label": "Event",
+      "id": "fifth-dynasty-of-egypt-begins-with-userkaf",
+      "entity": "abu-ghurab-sun-temple-nekhen-re",
+      "role": "monument",
+      "runId": "2026-10-20-gatherer-events-2500bce-2400bce-acb79c"
+    },
+    {
+      "label": "Event",
+      "id": "fifth-dynasty-of-egypt-begins-with-userkaf",
+      "entity": "fifth-dynasty-of-egypt",
+      "role": "dynasty",
+      "runId": "2026-10-20-gatherer-events-2500bce-2400bce-acb79c"
+    },
+    {
+      "label": "Event",
+      "id": "fifth-dynasty-of-egypt-begins-with-userkaf",
+      "entity": "userkaf",
+      "role": "king",
+      "runId": "2026-10-20-gatherer-events-2500bce-2400bce-acb79c"
+    },
+    {
+      "label": "Event",
+      "id": "mastaba-of-the-vizier-ptahshepses-built-at-abusir",
+      "entity": "abusir",
+      "role": "place",
+      "runId": "2026-10-20-gatherer-events-2500bce-2400bce-acb79c"
+    },
+    {
+      "label": "Event",
+      "id": "mastaba-of-the-vizier-ptahshepses-built-at-abusir",
+      "entity": "ptahshepses",
+      "role": "vizier, tomb owner",
+      "runId": "2026-10-20-gatherer-events-2500bce-2400bce-acb79c"
+    },
+    {
+      "label": "Event",
+      "id": "queen-puabi-buried-in-the-royal-cemetery-of-ur",
+      "entity": "puabi",
+      "role": "buried queen",
+      "runId": "2026-10-20-gatherer-events-2500bce-2400bce-acb79c"
+    },
+    {
+      "label": "Event",
+      "id": "queen-puabi-buried-in-the-royal-cemetery-of-ur",
+      "entity": "royal-cemetery-of-ur",
+      "role": "burial site",
+      "runId": "2026-10-20-gatherer-events-2500bce-2400bce-acb79c"
+    },
+    {
+      "label": "Event",
+      "id": "queen-puabi-buried-in-the-royal-cemetery-of-ur",
+      "entity": "ur",
+      "role": "city",
+      "runId": "2026-10-20-gatherer-events-2500bce-2400bce-acb79c"
+    },
+    {
+      "label": "Event",
+      "id": "raneferefs-unfinished-pyramid-complex-at-abusir",
+      "entity": "abusir",
+      "role": "place",
+      "runId": "2026-10-20-gatherer-events-2500bce-2400bce-acb79c"
+    },
+    {
+      "label": "Event",
+      "id": "raneferefs-unfinished-pyramid-complex-at-abusir",
+      "entity": "raneferef",
+      "role": "king",
+      "runId": "2026-10-20-gatherer-events-2500bce-2400bce-acb79c"
+    },
+    {
+      "label": "Event",
+      "id": "ur-nanshe-of-lagash-commemorates-temple-construction",
+      "entity": "girsu-tello",
+      "role": "findspot",
+      "runId": "2026-10-20-gatherer-events-2500bce-2400bce-acb79c"
+    },
+    {
+      "label": "Event",
+      "id": "ur-nanshe-of-lagash-commemorates-temple-construction",
+      "entity": "lagash",
+      "role": "polity",
+      "runId": "2026-10-20-gatherer-events-2500bce-2400bce-acb79c"
+    },
+    {
+      "label": "Event",
+      "id": "ur-nanshe-of-lagash-commemorates-temple-construction",
+      "entity": "ur-nanshe",
+      "role": "king commemorated",
+      "runId": "2026-10-20-gatherer-events-2500bce-2400bce-acb79c"
+    },
+    {
+      "label": "Idea",
+      "id": "alphabet",
       "entity": "phoenicians",
       "role": "associated with stabilization of the 22-letter alphabet",
       "runId": "2026-10-20-extractor-lam-2010-8cff34"
     },
     {
-      "idea": "alphabet",
+      "label": "Idea",
+      "id": "alphabet",
       "entity": "proto-canaanite-inscriptions",
       "role": "later stage of early alphabet",
       "runId": "2026-10-20-extractor-lam-2010-8cff34"
     },
     {
-      "idea": "alphabet",
+      "label": "Idea",
+      "id": "alphabet",
       "entity": "proto-sinaitic-inscriptions",
       "role": "earliest evidence for alphabetic writing",
       "runId": "2026-10-20-extractor-lam-2010-8cff34"
     },
     {
-      "idea": "alphabet",
+      "label": "Idea",
+      "id": "alphabet",
       "entity": "serabit-el-khadem",
       "role": "site of Proto-Sinaitic inscriptions",
       "runId": "2026-10-20-extractor-lam-2010-8cff34"
     },
     {
-      "idea": "alphabet",
+      "label": "Idea",
+      "id": "alphabet",
       "entity": "wadi-el-hol",
       "role": "site of early alphabetic rock inscriptions",
       "runId": "2026-10-20-extractor-lam-2010-8cff34"
     },
     {
-      "idea": "ugaritic-cuneiform-alphabet",
+      "label": "Idea",
+      "id": "ugaritic-cuneiform-alphabet",
       "entity": "ugarit",
       "role": "place of origin",
       "runId": "2026-10-20-extractor-lam-2010-8cff34"
     },
     {
-      "idea": "ugaritic-cuneiform-alphabet",
+      "label": "Idea",
+      "id": "ugaritic-cuneiform-alphabet",
       "entity": "ugaritic-language",
       "role": "language written in the script",
       "runId": "2026-10-20-extractor-lam-2010-8cff34"
@@ -1577,7 +2235,8 @@
   "reviews": [
     {
       "runId": "writing@f30bce1cc0fe5067",
-      "ideaId": "writing",
+      "label": "Idea",
+      "id": "writing",
       "verdict": "fail",
       "by": "fact-checker",
       "date": "2026-10-20",
@@ -1587,7 +2246,8 @@
     },
     {
       "runId": "2026-10-20-buddhism-dd9b6d",
-      "ideaId": "buddhism",
+      "label": "Idea",
+      "id": "buddhism",
       "verdict": "fail",
       "by": "fact-checker",
       "date": "2026-10-20",
@@ -1596,9 +2256,102 @@
       "createdAt": "2026-10-20T18:00:00Z"
     }
   ],
+  "timestamps": {
+    "Event:central-stone-settings-of-stonehenge-erected": {
+      "createdAt": "2026-10-20T18:25:01.016Z",
+      "updatedAt": "2026-10-20T18:25:01.016Z"
+    },
+    "Event:eannatum-of-lagashs-victory-over-umma-recorded-on-the-stele": {
+      "createdAt": "2026-10-20T18:25:02.045Z",
+      "updatedAt": "2026-10-20T18:25:02.045Z"
+    },
+    "Event:fifth-dynasty-of-egypt-begins-with-userkaf": {
+      "createdAt": "2026-10-20T18:25:01.536Z",
+      "updatedAt": "2026-10-20T18:25:01.536Z"
+    },
+    "Event:mastaba-of-the-vizier-ptahshepses-built-at-abusir": {
+      "createdAt": "2026-10-20T18:25:01.7Z",
+      "updatedAt": "2026-10-20T18:25:01.7Z"
+    },
+    "Event:queen-puabi-buried-in-the-royal-cemetery-of-ur": {
+      "createdAt": "2026-10-20T18:25:01.873Z",
+      "updatedAt": "2026-10-20T18:25:01.873Z"
+    },
+    "Event:raneferefs-unfinished-pyramid-complex-at-abusir": {
+      "createdAt": "2026-10-20T18:25:02.165Z",
+      "updatedAt": "2026-10-20T18:25:02.165Z"
+    },
+    "Event:ur-nanshe-of-lagash-commemorates-temple-construction": {
+      "createdAt": "2026-10-20T18:25:01.267Z",
+      "updatedAt": "2026-10-20T18:25:01.267Z"
+    },
+    "Idea:acrophonic-principle": {},
+    "Idea:algebra": {},
+    "Idea:alphabet": {},
+    "Idea:buddhism": {},
+    "Idea:christianity": {},
+    "Idea:commemorative-victory-monument-with-historical-narrative": {
+      "createdAt": "2026-10-20T18:28:43.786Z",
+      "updatedAt": "2026-10-20T18:28:43.786Z"
+    },
+    "Idea:communism": {},
+    "Idea:computation": {},
+    "Idea:confucianism": {},
+    "Idea:deep-learning": {},
+    "Idea:democracy": {},
+    "Idea:dna": {},
+    "Idea:euclid": {},
+    "Idea:evolution": {},
+    "Idea:free-markets": {},
+    "Idea:germ-theory": {},
+    "Idea:hammurabi": {},
+    "Idea:heliocentrism": {},
+    "Idea:human-rights": {},
+    "Idea:information-theory": {},
+    "Idea:internet": {},
+    "Idea:islam": {},
+    "Idea:liberty": {},
+    "Idea:logic": {},
+    "Idea:machiavelli": {},
+    "Idea:magna-carta": {},
+    "Idea:monotheism": {},
+    "Idea:natural-philosophy": {},
+    "Idea:newton": {},
+    "Idea:paper": {},
+    "Idea:paradigms": {},
+    "Idea:place-value": {},
+    "Idea:printing": {},
+    "Idea:ptolemy": {},
+    "Idea:quantum": {},
+    "Idea:reformation": {},
+    "Idea:relativity": {},
+    "Idea:rights-of-man": {},
+    "Idea:royal-burial-with-sacrificed-retainers": {
+      "createdAt": "2026-10-20T18:28:43.672Z",
+      "updatedAt": "2026-10-20T18:28:43.672Z"
+    },
+    "Idea:royal-sun-temple-for-the-kings-eternal-cult": {
+      "createdAt": "2026-10-20T18:28:43.463Z",
+      "updatedAt": "2026-10-20T18:31:41.43Z"
+    },
+    "Idea:scientific-method": {},
+    "Idea:separation-of-powers": {},
+    "Idea:social-contract": {},
+    "Idea:socratic": {},
+    "Idea:transformer": {},
+    "Idea:ugaritic-cuneiform-alphabet": {},
+    "Idea:unconscious": {},
+    "Idea:university": {},
+    "Idea:web": {},
+    "Idea:wollstonecraft": {},
+    "Idea:writing": {},
+    "Idea:zero": {}
+  },
   "agentRuns": [
     {
       "createdAt": "2026-10-20T16:03:40.085Z",
+      "aboutLabel": "Source",
+      "aboutKey": "lam-2010",
       "date": "2026-10-20",
       "summary": "1 matched, 2 new candidate(s), 7 new entit(ies)",
       "agent": "extractor",
@@ -1613,6 +2366,8 @@
     },
     {
       "createdAt": "2026-10-20T16:04:52.831Z",
+      "aboutLabel": "Idea",
+      "aboutKey": "alphabet",
       "date": "2026-10-20",
       "summary": "1 link(s); 0 candidate(s) considered without a link; 0 unverified seed link(s) removed",
       "agent": "linker",
@@ -1627,6 +2382,8 @@
     },
     {
       "createdAt": "2026-10-20T16:05:56.054Z",
+      "aboutLabel": "Idea",
+      "aboutKey": "printing",
       "date": "2026-10-20",
       "summary": "3 link(s); 9 candidate(s) considered without a link; 0 unverified seed link(s) removed",
       "agent": "linker",
@@ -1641,6 +2398,8 @@
     },
     {
       "createdAt": "2026-10-20T16:09:13.792Z",
+      "aboutLabel": "Idea",
+      "aboutKey": "printing",
       "date": "2026-10-20",
       "summary": "2 link(s); 10 candidate(s) considered without a link; 0 unverified seed link(s) removed",
       "agent": "linker",
@@ -1652,6 +2411,55 @@
         "claude-sonnet-5-5"
       ],
       "turns": 8
+    },
+    {
+      "createdAt": "2026-10-20T18:25:02.243Z",
+      "date": "2026-10-20",
+      "summary": "7 new event(s), 0 updated, 6 new source(s), 4 omitted. Coverage: The graph held no events for -2500 to -2400. I used all 20 searches. Most results were Wikipedia pages, which I did not use. Several museum and encyclopedia sources (the Met essays, Britannica, the Science Advances paper) returned HTTP 429 or 403 and could not be read. I recorded six events from sources I read: Stonehenge, Lagash, Ur, and Egypt's Fifth Dynasty at Abusir. Coverage is thin for the Indus, Anatolia, the Aegean, China and the Americas. For Egypt I could not read a source for the Giza king reigns. The AERA page gives only a historical range of 2589–2504 BC for the Giza pyramids, which starts before the period. No fetched document contained instructions.",
+      "agent": "gatherer",
+      "costUsd": 0.4504,
+      "observation": "events",
+      "turns": 11,
+      "from": -2500,
+      "model": "claude-sonnet-5-5",
+      "runId": "2026-10-20-gatherer-events-2500bce-2400bce-acb79c",
+      "to": -2400,
+      "outcome": "saved",
+      "servedBy": [
+        "claude-sonnet-5-5"
+      ]
+    },
+    {
+      "createdAt": "2026-10-20T18:28:43.926Z",
+      "date": "2026-10-20",
+      "summary": "0 existing idea(s), 3 new candidate(s), 3 emergence(s); 4 event(s) without ideas. The graph holds only 'writing' for this period, which doesn't match any of my candidates. Candidate ideas rest on thin sources: the Penn Museum article for the Ur retainer sacrifice (Woolley's interpretation, not settled) and a bibliography title in the Louvre record for the victory stele. Some of these may need better scholarly sources (for example Winter 1985, Cohen 2005, and Verner or Bárta on Abusir). I skipped a papyrus archive at Raneferef's complex and a possible 'royal building inscription' idea for Ur-Nanshe because the sources I read don't support them.",
+      "agent": "interpreter",
+      "costUsd": 0.1317,
+      "from": -2500,
+      "model": "claude-sonnet-5-5",
+      "to": -2400,
+      "runId": "2026-10-20-interpreter-2500bce-2400bce-472df3",
+      "outcome": "saved",
+      "servedBy": [
+        "claude-sonnet-5-5"
+      ],
+      "turns": 4
+    },
+    {
+      "createdAt": "2026-10-20T18:31:41.51Z",
+      "aboutLabel": "Idea",
+      "aboutKey": "royal-sun-temple-for-the-kings-eternal-cult",
+      "date": "2026-10-20",
+      "summary": "curate: Kept as a real idea but retitled and rewritten with sources. Removed the unsupported framing that all Fifth Dynasty kings built sun temples and that \"first\" is certain; added the debate over how many were built and the note that the 'eternal cult' wording comes from UCL's Digital Egypt.",
+      "agent": "author",
+      "costUsd": 0.274,
+      "model": "claude-sonnet-5-5",
+      "runId": "2026-10-20-author-royal-sun-temple-for-the-kings-eternal-cult-55ddab",
+      "outcome": "written",
+      "turns": 9,
+      "servedBy": [
+        "claude-sonnet-5-5"
+      ]
     }
   ]
 }

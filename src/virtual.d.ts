@@ -1,4 +1,5 @@
 declare module "virtual:ideas" {
-  import type { RenderedIdea } from "./content/schema";
+  import type { RenderedEvent, RenderedIdea } from "./content/schema";
   export const ideas: RenderedIdea[];
+  export const events: RenderedEvent[];
 }

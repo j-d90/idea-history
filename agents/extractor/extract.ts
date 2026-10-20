@@ -3,7 +3,8 @@ import { join } from "node:path";
 import { stringify } from "yaml";
 import type { Idea, Source } from "../../src/content/schema.ts";
 import { refreshEmbeddings } from "../../kg/src/embeddings.ts";
-import { addDiscusses, addIdeaAliases, linkIdeaEntity, loadSources, putIdea, upsertEntity } from "../../kg/src/repository.ts";
+import { addAliases, addDiscusses, loadSources, putIdea } from "../../kg/src/repository.ts";
+import { writeEntities } from "../core/entities.ts";
 import { runAgentLoop } from "../core/loop.ts";
 import { SOURCE_POLICY } from "../core/policy.ts";
 import { recordAgentRun, startRun, withRead, withWrite, type Run, type Runtime } from "../core/runtime.ts";
@@ -92,7 +93,7 @@ export async function extractFromSource(key: string, rt: Runtime, opts: { dryRun
       let ideaId = item.existing_id;
       if (ideaId) {
         matched.push(ideaId);
-        if (item.aliases.length) await addIdeaAliases(tx, ideaId, item.aliases);
+        if (item.aliases.length) await addAliases(tx, "Idea", ideaId, item.aliases);
       } else {
         ideaId = await uniqueId(tx, "Idea", item.title, takenIdeas);
         takenIdeas.add(ideaId);
@@ -114,17 +115,7 @@ export async function extractFromSource(key: string, rt: Runtime, opts: { dryRun
       }
       await addDiscusses(tx, key, ideaId, { evidence: item.evidence, locator: item.locator ?? undefined, runId: run.id });
 
-      for (const e of item.entities) {
-        const ref = `${e.name.trim().toLowerCase()}|${e.kind}`;
-        let entityId = e.existing_id ?? entityIds.get(ref);
-        if (!entityId) {
-          entityId = await uniqueId(tx, "Entity", e.name);
-          entities++;
-        }
-        entityIds.set(ref, entityId);
-        await upsertEntity(tx, { id: entityId, name: e.name.trim(), kind: e.kind, description: e.description, aliases: e.aliases }, run.id);
-        await linkIdeaEntity(tx, ideaId, entityId, e.role, run.id);
-      }
+      entities += await writeEntities(tx, "Idea", ideaId, item.entities, run.id, entityIds);
     }
 
     const summary = `${matched.length} matched, ${created.length} new candidate(s), ${entities} new entit(ies)`;

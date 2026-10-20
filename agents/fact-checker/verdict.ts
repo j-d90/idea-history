@@ -10,7 +10,8 @@ import type { ReviewSubject } from "./types.ts";
 // taken from the model's say-so alone.
 
 export const CLAIM_VERDICTS = ["supported", "overstated", "unsupported", "contradicted", "unverifiable", "miscited"] as const;
-const LOCATIONS = ["title", "origin", "summary", "date", "body"] as const;
+/** "origin" is an idea's byline, "place" an event's. */
+const LOCATIONS = ["title", "origin", "place", "summary", "date", "body"] as const;
 
 // Strict tool schemas allow no numeric or length constraints, and every field is
 // required (optional values are nullable instead).
@@ -27,7 +28,7 @@ export const SubmissionSchema = z.strictObject({
         notes: z.string(),
       }),
     )
-    .describe("One entry per source the idea cites"),
+    .describe("One entry per source the entry cites"),
   claims: z.array(
     z.strictObject({
       id: z.number().describe("1, 2, 3, ..."),
@@ -107,27 +108,27 @@ export function createSubmitTool(subject: ReviewSubject, evidence: EvidenceLedge
 export function checkSubmission(s: Submission, subject: ReviewSubject, evidence: EvidenceLedger) {
   const problems: string[] = [];
   const verified: VerifiedEvidence = new Map();
-  const { idea } = subject;
+  const { entry } = subject;
   const keys = new Set(Object.keys(subject.sources));
 
   // Every cited source assessed, nothing invented.
   const assessed = s.sources.map((x) => x.key);
   for (const k of keys) if (!assessed.includes(k)) problems.push(`sources: no assessment for "${k}"`);
-  for (const k of assessed) if (!keys.has(k)) problems.push(`sources: "${k}" is not one of this idea's sources`);
+  for (const k of assessed) if (!keys.has(k)) problems.push(`sources: "${k}" is not one of this entry's sources`);
   if (new Set(assessed).size !== assessed.length) problems.push("sources: a key is assessed more than once");
 
   // Every part of the entry has claims.
   const ids = s.claims.map((c) => c.id);
   if (new Set(ids).size !== ids.length) problems.push("claims: ids must be unique");
-  const required: (typeof LOCATIONS)[number][] = ["title", "origin", "summary", "date"];
-  if (idea.body.trim()) required.push("body");
+  const required: (typeof LOCATIONS)[number][] = ["title", subject.label === "Event" ? "place" : "origin", "summary", "date"];
+  if (entry.body.trim()) required.push("body");
   for (const loc of required) {
     if (!s.claims.some((c) => c.location === loc)) problems.push(`claims: nothing listed for the ${loc}`);
   }
 
   // Supported claims need real, verbatim evidence from a document the agent read.
   for (const c of s.claims) {
-    if (c.source_key && !keys.has(c.source_key)) problems.push(`claim ${c.id}: "${c.source_key}" is not one of this idea's sources`);
+    if (c.source_key && !keys.has(c.source_key)) problems.push(`claim ${c.id}: "${c.source_key}" is not one of this entry's sources`);
     if (c.verdict !== "supported") continue;
     if (!c.source_key) problems.push(`claim ${c.id}: a supported claim needs a source_key`);
     if (!c.evidence) {

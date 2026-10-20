@@ -1,6 +1,6 @@
 import MarkdownIt from "markdown-it";
 import { CITATION, parseCitation, type Citation } from "../src/content/rules.ts";
-import type { Bibliography, Idea, IdeaLink, RenderedIdea, Source } from "../src/content/schema.ts";
+import type { Bibliography, Emergence, Entry, HistoricalEvent, Idea, IdeaLink, RenderedEvent, RenderedIdea, Source } from "../src/content/schema.ts";
 import { escapeHtml as esc, formatYear } from "../src/format.ts";
 
 // Raw HTML in content is escaped, and markdown-it refuses javascript: links.
@@ -32,12 +32,12 @@ function citationText(cites: Citation[], bib: Bibliography): string {
 }
 
 /** Replace [@...] groups in already-escaped HTML with linked author-date citations. */
-function linkCitations(html: string, ideaId: string, bib: Bibliography): string {
+function linkCitations(html: string, anchor: string, bib: Bibliography): string {
   return html.replace(CITATION, (_whole, inner: string) => {
     const cites = parseCitation(inner)!;
     const parts = cites.map(
       (c) =>
-        `<a class="cite" href="#ref-${ideaId}-${c.key}">${esc(shortLabel(bib[c.key]))}</a>` +
+        `<a class="cite" href="#ref-${anchor}-${c.key}">${esc(shortLabel(bib[c.key]))}</a>` +
         (c.locator ? `, ${c.locator}` : ""),
     );
     return `<span class="cite-group">(${parts.join("; ")})</span>`;
@@ -86,8 +86,8 @@ export function formatReference(s: Source): string {
   return out.join(" ");
 }
 
-function describeDate(idea: Idea, bib: Bibliography): string {
-  const d = idea.date;
+function describeDate(entry: Entry, bib: Bibliography): string {
+  const d = entry.date;
   const parts: string[] = [formatYear(d.year, d.approx) + (d.marks ? `: ${d.marks}.` : ".")];
   if (d.earliest !== undefined || d.latest !== undefined) {
     parts.push(`Estimates range ${formatYear(d.earliest ?? d.year)} – ${formatYear(d.latest ?? d.year)}.`);
@@ -96,16 +96,35 @@ function describeDate(idea: Idea, bib: Bibliography): string {
   return parts.join(" ");
 }
 
-export function renderIdea(idea: Idea, bib: Bibliography, links: IdeaLink[]): RenderedIdea {
-  const { body, sources, aliases: _aliases, ...rest } = idea;
+/** DOM id of an entry on the page. Events are prefixed, since an event and an idea may share an id. */
+export const anchorOf = (label: "Idea" | "Event", id: string) => (label === "Event" ? `event-${id}` : id);
+
+function renderCommon(entry: Entry, anchor: string, bib: Bibliography) {
   return {
-    ...rest,
-    links: links.filter((l) => l.from === idea.id).map(({ to, type, why, origin, status }) => ({ to, type, why, origin, status })),
-    bodyHtml: body ? linkCitations(md.render(body), idea.id, bib) : "",
-    dateText: describeDate(idea, bib),
-    references: sources
+    bodyHtml: entry.body ? linkCitations(md.render(entry.body), anchor, bib) : "",
+    dateText: describeDate(entry, bib),
+    references: entry.sources
       .map((key) => ({ key, source: bib[key] }))
       .sort((a, b) => shortLabel(a.source).localeCompare(shortLabel(b.source)))
       .map(({ key, source }) => ({ key, html: formatReference(source) })),
+  };
+}
+
+export function renderIdea(idea: Idea, bib: Bibliography, links: IdeaLink[], emergences: Emergence[]): RenderedIdea {
+  const { body: _b, sources: _s, aliases: _a, ...rest } = idea;
+  return {
+    ...rest,
+    ...renderCommon(idea, anchorOf("Idea", idea.id), bib),
+    links: links.filter((l) => l.from === idea.id).map(({ to, type, why, origin, status }) => ({ to, type, why, origin, status })),
+    emergesIn: emergences.filter((e) => e.idea === idea.id).map(({ event, stage, why, status }) => ({ event, stage, why, status })),
+  };
+}
+
+export function renderEvent(event: HistoricalEvent, bib: Bibliography, emergences: Emergence[]): RenderedEvent {
+  const { body: _b, sources: _s, aliases: _a, ...rest } = event;
+  return {
+    ...rest,
+    ...renderCommon(event, anchorOf("Event", event.id), bib),
+    ideas: emergences.filter((e) => e.event === event.id).map(({ idea, stage, why, status }) => ({ idea, stage, why, status })),
   };
 }

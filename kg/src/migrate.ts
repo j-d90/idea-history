@@ -23,7 +23,7 @@ try {
 
   // An existing vector index keeps its original dimensions; catch a mismatch early.
   const { records } = await driver.executeQuery(
-    `SHOW VECTOR INDEXES YIELD name, options WHERE name IN ["idea_embedding", "entity_embedding"]
+    `SHOW VECTOR INDEXES YIELD name, options WHERE name IN ["idea_embedding", "event_embedding", "entity_embedding"]
      RETURN name, options.indexConfig["vector.dimensions"] AS dims`,
   );
   for (const r of records) {

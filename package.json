@@ -11,6 +11,7 @@
     "typecheck": "tsc",
     "review-hash": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env scripts/review-hash.ts",
     "pdftext": "node --disable-warning=ExperimentalWarning scripts/pdftext.ts",
+    "check-tools": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env scripts/check-tools.ts",
     "review": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agents/fact-checker/cli.ts",
     "kg:up": "node --disable-warning=ExperimentalWarning kg/src/compose.ts up",
     "kg:down": "node --disable-warning=ExperimentalWarning kg/src/compose.ts down",
@@ -18,6 +19,10 @@
     "test": "node --disable-warning=ExperimentalWarning --test agents/test/*.test.ts kg/test/*.test.ts",
     "extract": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agents/extractor/cli.ts",
     "link": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agents/linker/cli.ts",
+    "gather": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agents/gatherer/cli.ts",
+    "interpret": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agents/interpreter/cli.ts",
+    "author": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agents/author/cli.ts",
+    "pipeline": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env agents/pipeline/cli.ts",
     "kg": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env kg/src/cli.ts"
   },
   "devDependencies": {

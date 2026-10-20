@@ -1,6 +1,6 @@
 # History of Ideas
 
-A visual, scrollable timeline of how human ideas have evolved and shaped history, from the invention of writing to the present.
+A visual, scrollable timeline of historical events and the ideas that emerged from them, from the invention of writing to the present. Events are the raw observations of history, gathered from sources; ideas are identified from them.
 
 ## Getting started
 
@@ -22,9 +22,14 @@ Requires Node 23.6+ (scripts run TypeScript directly via Node's type stripping) 
 | `npm run validate` | Check all content in the graph |
 | `npm run kg -- <command>` | Read and write the graph ([kg/README.md](kg/README.md)) |
 | `npm run kg:up` / `kg:down` / `kg:migrate` | Start or stop Neo4j; apply the schema |
-| `npm run extract -- <source>` | Extractor agent: ideas, aliases and entities from a source ([agents/README.md](agents/README.md)) |
+| `npm run gather -- events --from <y> --to <y>` | Gatherer agent: a period's events, from sources it reads ([agents/README.md](agents/README.md)) |
+| `npm run interpret -- --from <y> --to <y>` | Interpreter agent: the ideas a period's events show emerging |
+| `npm run author -- <id>` | Author agent: curate, source or revise an idea or event |
 | `npm run link -- <idea>` | Linker agent: typed, evidenced links to earlier ideas |
-| `npm run review -- <idea>` | Fact-checker agent: independent review of a sourced idea |
+| `npm run review -- <id>` | Fact-checker agent: independent review of a sourced idea or event |
+| `npm run extract -- <source>` | Extractor agent: ideas, aliases and entities from one source |
+| `npm run pipeline` | What everything needs next, with cost estimates; `--run --budget <usd>` runs it |
+| `npm run check-tools` | Confirm the API accepts every agent's tool schemas |
 | `npm test`, `npm run typecheck` | Unit tests, TypeScript |
 | `npm run review-hash -- <id>`, `npm run pdftext -- <src>` | Content hash for reviews; read a PDF source |
 
@@ -40,12 +45,12 @@ Requires Node 23.6+ (scripts run TypeScript directly via Node's type stripping) 
 src/                    the site; src/content/ holds the content schema and rules
 scripts/                site build (Vite plugin, rendering), validation
 kg/                     Neo4j: schema, repository, embeddings, CLI, snapshots (kg/seed/snapshot.json)
-agents/                 extractor, linker, fact-checker, and their shared core
+agents/                 gatherer, interpreter, author, linker, fact-checker, extractor, their shared core, and the pipeline
 ```
 
 ## Content model
 
-Content lives in the graph. Authors edit it through `npm run kg`, which validates before writing.
+Content lives in the graph. Authors edit it through `npm run kg`, which validates before writing. **Events** and **ideas** are both *entries*: they share the date, sourcing, status and review rules below. An event has a `kind` and a `place` where an idea has a `category` and an `origin`.
 
 **Ideas** are edited as Markdown with YAML frontmatter (`npm run kg -- idea get <id>` / `idea put <file>`):
 
@@ -71,6 +76,8 @@ The body is Markdown, shown under "Notes & sources". Cite as [@lam-2010, p. 190]
 or several at once as [@lam-2010, p. 189; @herrmann-2023].
 ```
 
+**Events** use the same format (`npm run kg -- event get <id>` / `event put <file>`), with `kind: military` (political, military, legal, religious, cultural, economic, technological, scientific, construction, migration or environmental) and `place: Girsu (modern Tello, Iraq)` in place of `category` and `origin`.
+
 **Sources** are bibliography entries (`npm run kg -- source get|put`), with fields for each kind of work:
 
 ```yaml
@@ -89,13 +96,15 @@ lam-2010:
   #           accessed, consulted: false (metadata only), note
 ```
 
+**Emergences** (`EMERGES_IN`) connect an idea to the events that show it emerging, with a stage (earliest evidence, articulation, institutionalization or spread), a verified excerpt and a confidence. The interpreter agent proposes them; the site shows them as "Seen in" on ideas and "Ideas" on events.
+
 **Links** between ideas (`BUILDS_ON`, `REACTS_AGAINST`, `PARALLELS`) are proposed by the linker agent with a verified excerpt as evidence. They point from the later idea to the earlier one. Links left from the original placeholder content are marked `seed` and shown as unverified.
 
 **Entities** (people, places, works, groups, institutions, traditions, languages, concepts, periods) and **synonyms** are recorded by the extractor agent, and feed vector search.
 
 ### Status and review
 
-- **candidate:** proposed by the extractor from a source, not yet curated. Hidden from the site.
+- **candidate:** proposed by an agent (interpreter or extractor), not yet curated. Hidden from the site.
 - **draft:** unverified. Shown with an "Unverified" badge.
 - **sourced:** the author has cited every claim. Requires `date.marks`, a body with citations, and every listed source cited.
 - **reviewed:** the fact-checker agent has independently checked every claim and passed it. The review record's hash must match the current content, including the cited sources. Editing the idea sends it back to `sourced`.
@@ -105,7 +114,8 @@ lam-2010:
 - Schemas: ids are kebab-case; unknown fields are rejected; `earliest <= year <= latest`; bibliography entries have the fields their `kind` needs.
 - Citations are well formed and refer to the idea's own sources; summaries carry no citations.
 - Links point to existing, non-candidate ideas; `BUILDS_ON` and `REACTS_AGAINST` can't point forward in time; linker links carry evidence.
-- Reviewed ideas match a passing review record and the current content hash.
+- Emergences connect existing ideas and events, once per pair, citing known sources.
+- Reviewed ideas and events match a passing review record and the current content hash.
 
 Breaking any rule fails `npm run build`, and shows Vite's error overlay in dev.
 

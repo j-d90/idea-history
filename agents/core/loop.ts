@@ -125,7 +125,7 @@ export async function runAgentLoop(o: LoopOptions): Promise<LoopResult> {
       const content: Anthropic.Beta.BetaContentBlockParam[] = await Promise.all(calls.map((c) => runTool(c, tools, o)));
       if (!warned && (costUsd >= 0.8 * o.maxUsd || turns >= 0.8 * o.maxTurns)) {
         warned = true;
-        content.push({ type: "text", text: "Budget notice: you are close to this review's turn or spend limit. Finish checking and call submit_review soon." });
+        content.push({ type: "text", text: "Budget notice: you are close to this run's turn or spend limit. Finish what you're doing and submit your result soon." });
       }
       messages.push({ role: "user", content });
       continue;
