@@ -12,7 +12,7 @@ npm run review -- writing --store graph   # read from and record to Neo4j instea
 
 Exit code: 0 if everything passed (or was skipped), 2 if any review failed, 1 if a run errored or stopped before producing a verdict.
 
-Configuration comes from `.env` (see `.env.example`): the API key, model (default `claude-opus-5-5`), effort (default `high`), per-review turn and spend limits, and which store to use.
+Configuration comes from `.env` (see `.env.example`): the API key, model (default `claude-sonnet-5-5`), effort (default `high`), per-review turn and spend limits, and which store to use.
 
 ## Architecture
 
@@ -78,7 +78,7 @@ The loop also enforces turn and spend limits, with a wrap-up warning at 80%. His
 - URLs come from the model, so `net.ts` allows only http(s), resolves each redirect hop and refuses private, loopback and link-local addresses (it can't reach Neo4j or cloud metadata endpoints), and caps time and size.
 - Fetched text is wrapped and labelled as data, and the system prompt tells the agent never to follow instructions in sources.
 
-**Model settings.** Claude Opus 5.5 with adaptive thinking (`display: "summarized"`, so the reasoning summary is in the transcript) at effort `high`, which suits intelligence-sensitive work. The system prompt and tools are fixed across runs, so they cache.
+**Model settings.** Claude Sonnet 5.5 by default, for cost (set `FACT_CHECKER_MODEL=claude-opus-5-5` for the strongest reviewer). Adaptive thinking (`display: "summarized"`, so the reasoning summary is in the transcript) at effort `high`, which suits intelligence-sensitive work. The system prompt and tools are fixed across runs, so they cache.
 
 Server-side refusal fallback (`fallbacks: "default"`) is on by default. If a safety classifier declines a turn, the API retries it on Anthropic's recommended fallback model. The report records which models actually served the review. Set `FACT_CHECKER_FALLBACK=off` to fail such runs instead.
 

@@ -6,13 +6,9 @@ import { z } from "zod";
  * fast with a readable message instead of midway through a paid run.
  */
 const EnvSchema = z.object({
-  ANTHROPIC_API_KEY: z
-    .string()
-    .min(1, "is required (see .env.example)")
-    .refine((k) => !k.includes("="), "contains '=': the value should be the key alone, not ANTHROPIC_API_KEY=… pasted again")
-    .refine((k) => k.trim() === k, "has leading or trailing whitespace"),
+  ANTHROPIC_API_KEY: z.string().min(1, "is required (see .env.example)"),
 
-  FACT_CHECKER_MODEL: z.string().default("claude-opus-5-5"),
+  FACT_CHECKER_MODEL: z.string().default("claude-sonnet-5-5"),
   FACT_CHECKER_EFFORT: z.enum(["low", "medium", "high", "xhigh", "max"]).default("high"),
   /** "default": on a safety-classifier refusal, the API retries on Anthropic's recommended fallback model. */
   FACT_CHECKER_FALLBACK: z.enum(["default", "off"]).default("default"),
@@ -54,6 +50,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
  * Estimates only: web search is billed separately and is not included.
  */
 const PRICES: Record<string, { input: number; output: number; cacheRead: number; cacheWrite: number }> = {
+  "claude-sonnet-5-5": { input: 2, output: 10, cacheRead: 0.2, cacheWrite: 2.5 },
+  "claude-sonnet-5": { input: 2, output: 10, cacheRead: 0.2, cacheWrite: 2.5 },
   "claude-opus-5-5": { input: 4, output: 20, cacheRead: 0.2, cacheWrite: 5 },
   "claude-opus-5": { input: 5, output: 25, cacheRead: 0.5, cacheWrite: 6.25 },
   "claude-opus-4-8": { input: 5, output: 25, cacheRead: 0.5, cacheWrite: 6.25 },
