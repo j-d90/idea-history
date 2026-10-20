@@ -374,6 +374,9 @@ a { color: inherit; text-decoration: none; }
 .status-reviewed { color: var(--cat-science); border-color: color-mix(in srgb, var(--cat-science) 35%, transparent); }
 
 .idea-year[title] { cursor: help; }
+.year-unit { display: block; font-size: 11px; color: var(--fg-faint); }
+.notes-loading { color: var(--fg-faint); font-size: 13px; }
+.timeline-end { height: 1px; }
 .idea-year-mark { margin-left: 1px; color: var(--fg-faint); }
 
 .idea-title {

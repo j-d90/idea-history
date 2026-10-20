@@ -6,7 +6,16 @@ import { escapeHtml as esc, formatYear } from "../src/format.ts";
 // Raw HTML in content is escaped, and markdown-it refuses javascript: links.
 const md = new MarkdownIt({ html: false, linkify: false, typographer: true });
 
-const surname = (name: string) => name.trim().split(/\s+/).pop()!;
+/**
+ * A name's surname. Handles "Joseph Lam" and the "Lam J" / "Lam JA" / "Lam, J."
+ * forms that bibliographic databases such as Europe PMC use.
+ */
+export function surname(name: string): string {
+  const parts = name.trim().replace(/,/g, " ").split(/\s+/);
+  const initials = (t: string) => /^([A-Z]\.?){1,3}$/.test(t);
+  if (parts.length > 1 && initials(parts.at(-1)!)) return parts.slice(0, -1).filter((t) => !initials(t)).join(" ") || parts[0];
+  return parts.at(-1)!;
+}
 
 function joinNames(names: string[]): string {
   if (names.length <= 1) return names.join("");

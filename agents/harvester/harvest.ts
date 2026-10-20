@@ -3,7 +3,7 @@ import { join } from "node:path";
 import type Anthropic from "@anthropic-ai/sdk";
 import type { ManagedTransaction } from "neo4j-driver";
 import type { HistoricalEvent, Source } from "../../src/content/schema.ts";
-import { embeddingText, loadEvent, loadSources, putEvent, putSource, setEmbedding, setHarvest, similarEvents } from "../../kg/src/repository.ts";
+import { embeddingText, harvestStates, loadEvent, loadSources, putEvent, putSource, setEmbedding, setEventScope, setHarvest, similarEvents } from "../../kg/src/repository.ts";
 import { estimateCost } from "../core/config.ts";
 import type { SourceDocument } from "../core/evidence.ts";
 import { recordAgentRun, startRun, withRead, withWrite, type Run, type Runtime } from "../core/runtime.ts";
@@ -24,6 +24,8 @@ const CHUNK_CHARS = 200_000;
 const MAX_CHUNKS = 8;
 /** Cosine similarity at or above which an extracted event is taken to be one already recorded. */
 const SAME_EVENT = 0.92;
+/** Events dated after this from documents found for an earlier period are research history or modern intrusions. */
+const LATEST_FOR_EARLY_PERIODS = 1500;
 const PARALLEL = 4;
 
 export interface HarvestResult {
@@ -38,6 +40,8 @@ export interface HarvestResult {
 
 interface Job {
   key: string;
+  /** The period the finder found it for, e.g. "150000bce-125001bce". */
+  foundFor?: string;
   source: Source;
   doc: SourceDocument;
   chunks: string[];
@@ -146,6 +150,12 @@ const cosine = (a: number[], b: number[]) => {
   return dot / Math.sqrt(na * nb);
 };
 
+/** The last year of a finder period slug ("150000bce-125001bce" gives -125001). */
+export function foundForEnd(slug: string | undefined): number | undefined {
+  const m = /-(\d+)(bce|ce)$/.exec(slug ?? "");
+  return m ? (m[2] === "bce" ? -Number(m[1]) : Number(m[1])) : undefined;
+}
+
 /** How far apart two dates can be and still be the same event: wider in deep time. */
 const tolerance = (year: number) => Math.max(50, Math.abs(year) * 0.05);
 
@@ -155,7 +165,7 @@ const tolerance = (year: number) => Math.max(50, Math.abs(year) * 0.05);
  */
 export async function harvestSources(keys: string[], rt: Runtime, opts: { batch?: boolean; dryRun?: boolean } = {}): Promise<HarvestResult[]> {
   const model = rt.config.harvestModel;
-  const bibliography = await withRead(rt.driver, (tx) => loadSources(tx, keys));
+  const { bibliography, states } = await withRead(rt.driver, async (tx) => ({ bibliography: await loadSources(tx, keys), states: await harvestStates(tx) }));
   const results: HarvestResult[] = [];
   const jobs: Job[] = [];
 
@@ -170,7 +180,7 @@ export async function harvestSources(keys: string[], rt: Runtime, opts: { batch?
     }
     try {
       const doc = await loadDocument(url, { evidence: run.evidence, signal: rt.signal });
-      jobs.push({ key, source, doc, chunks: chunkDocument(doc), run });
+      jobs.push({ key, foundFor: states[key]?.foundFor, source, doc, chunks: chunkDocument(doc), run });
       run.log.event("start", { key, url, model, chunks: jobs.at(-1)!.chunks.length, batch: !!opts.batch });
     } catch (e) {
       if (rt.signal.aborted) throw e;
@@ -207,14 +217,22 @@ export async function harvestSources(keys: string[], rt: Runtime, opts: { batch?
 
     const valid: HarvestedEvent[] = [];
     let rejected = 0;
+    const outOfScope: Record<string, number> = {};
+    const periodEnd = foundForEnd(job.foundFor);
     for (const e of extracted) {
+      const scope = e.scope !== "human-past" ? e.scope : periodEnd !== undefined && periodEnd < LATEST_FOR_EARLY_PERIODS && e.year > LATEST_FOR_EARLY_PERIODS ? "modern" : undefined;
+      if (scope) {
+        outOfScope[scope] = (outOfScope[scope] ?? 0) + 1;
+        job.run.log.event("out-of-scope", { event: e, scope });
+        continue;
+      }
       const problems = checkHarvested(e, job.doc.url, job.run.evidence);
       if (problems.length) {
         rejected++;
         job.run.log.event("rejected", { event: e, problems });
       } else valid.push(e);
     }
-    job.run.log.event("extracted", { extracted: extracted.length, valid: valid.length, rejected, notes });
+    job.run.log.event("extracted", { extracted: extracted.length, valid: valid.length, rejected, outOfScope, notes });
 
     if (opts.dryRun) {
       results.push({ key: job.key, status: "dry-run", created: valid.length, merged: 0, rejected, costUsd, note: notes.join("; ") || undefined });
@@ -251,6 +269,7 @@ export async function harvestSources(keys: string[], rt: Runtime, opts: { batch?
           body: [...new Set(citations.map(quote))].join("\n\n"),
         };
         await putEvent(tx, event);
+        await setEventScope(tx, id, "human-past", "harvester");
         await setEmbedding(tx, "Event", id, vectors[i], rt.embedder.hash(texts[i]));
         fresh.push({ id, year: e.year, vector: vectors[i] });
         c.created++;
@@ -261,7 +280,7 @@ export async function harvestSources(keys: string[], rt: Runtime, opts: { batch?
         model,
         loop: { stopped: "done", turns: job.chunks.length, costUsd, servedBy: [model] },
         outcome: status === "done" ? "saved" : "failed",
-        summary: `${c.created} new event(s), ${c.merged} merged into existing ones, ${rejected} rejected${notes.length ? `; ${notes.join("; ")}` : ""}`,
+        summary: `${c.created} new event(s), ${c.merged} merged into existing ones, ${rejected} rejected, out of scope: ${JSON.stringify(outOfScope)}${notes.length ? `; ${notes.join("; ")}` : ""}`,
         about: { label: "Source", key: job.key },
         props: { chunks: job.chunks.length, batch: opts.batch ? 1 : 0 },
       });

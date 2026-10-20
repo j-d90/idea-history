@@ -4,7 +4,7 @@ export const eras: Era[] = [
   {
     id: "toolmakers",
     name: "The First Toolmakers",
-    start: -3_400_000,
+    start: -4_000_000,
     end: -300_000,
     blurb: "Hominins shape stone, control fire and spread beyond Africa, over millions of years.",
   },

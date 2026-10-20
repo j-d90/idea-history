@@ -212,11 +212,11 @@ test("check: the full-review sample is stable and about the requested size", () 
 
 // ---------- Harvester ----------
 
-import { chunkDocument } from "../harvester/harvest.ts";
+import { chunkDocument, foundForEnd } from "../harvester/harvest.ts";
 import { checkHarvested, type HarvestedEvent } from "../harvester/schema.ts";
 
 const harvested = (over: Partial<HarvestedEvent> = {}): HarvestedEvent => ({
-  title: "Victory recorded at Girsu", kind: "military", place: "Girsu", summary: "Eannatum's victory over Umma is recorded.",
+  scope: "human-past", title: "Victory recorded at Girsu", kind: "military", place: "Girsu", summary: "Eannatum's victory over Umma is recorded.",
   year: -2450, earliest: -2450, latest: -2425, approx: true, date_marks: "about 2450 BCE", date_note: null,
   excerpts: [{ text: QUOTE, locator: "notice" }], ...over,
 });
@@ -245,4 +245,8 @@ test("harvester: documents are chunked on page boundaries", () => {
   assert.equal(chunks.length, 3);
   assert.ok(chunks[0].startsWith("=== PDF p. 1 ===") && chunks[1].startsWith("=== PDF p. 3 ==="));
   assert.ok(chunks.every((c) => c.length <= 200_100));
+});
+
+test("harvester: the end year of the period a source was found for", () => {
+  assert.deepEqual([foundForEnd("150000bce-125001bce"), foundForEnd("1200ce-1249ce"), foundForEnd(undefined)], [-125001, 1249, undefined]);
 });

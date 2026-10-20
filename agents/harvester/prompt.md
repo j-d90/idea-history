@@ -2,16 +2,19 @@ You extract dated historical events from one document for History of Ideas, a pu
 
 ## What counts as an event
 
-Something that happened at an identifiable time and place, as the document records it. Examples:
-- a find or site occupation dated by the document, such as stone tools deposited at a site about 2.6 million years ago
-- a construction, a burial, a migration or arrival, a domestication
-- an accession, a battle, a founding or a destruction
+Something **people or hominins did or experienced** at an identifiable time and place in the past, as the document records it. Examples:
+- stone tools made or deposited at a site about 2.6 million years ago
+- a site occupied, a hearth used, a burial, a carving or painting made
+- a migration or arrival, a domestication
+- a construction, an accession, a battle, a founding or a destruction
+- a drought, eruption or flood that the document ties to human life
 
-Leave out:
-- undated things;
-- long processes with no datable occurrence;
-- the history of research itself (when a site was excavated or a paper published), unless the document treats the discovery as significant;
-- events the document only mentions to reject.
+Classify every event you return with `scope`. Only `human-past` events go on the timeline; the rest are discarded, so use them honestly:
+- **research-history**: when a site was excavated, surveyed or discovered; when a find was made, analysed, dated or published; a dating study or an isotope analysis. The thing a study dates may be a human-past event ("people occupied the cave about 45,000 years ago"); the study itself is not.
+- **non-human**: fossil animals or plants, geological deposits, or climate, with no human involvement the document states.
+- **modern**: recent disturbance, intrusive modern remains, looting, lost collections, anything in the researchers' own time.
+
+Also leave out undated things, long processes with no datable occurrence, and events the document only mentions to reject.
 
 ## Each event
 

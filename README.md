@@ -38,7 +38,7 @@ Requires Node 23.6+ (scripts run TypeScript directly via Node's type stripping) 
 
 ## Stack
 
-- **Site:** Vite + TypeScript, no framework, plain CSS with design tokens and automatic light and dark mode. It's static; events are queried from Neo4j, validated with `zod` (along with the rest of the graph) and rendered at build time.
+- **Site:** Vite + TypeScript, no framework, plain CSS with design tokens and automatic light and dark mode. It's static; events are queried from Neo4j, validated with `zod` (along with the rest of the graph) and rendered at build time. The first load is a small index; each era's events load as you scroll to it and render in batches, and an event's notes load when opened. Dates before 50,000 years ago read as "years ago".
 - **Content store:** Neo4j 2026.09 in Docker, with vector indexes over OpenAI `text-embedding-3-large` embeddings (512 dimensions).
 - **Agents:** the Anthropic API (Claude Sonnet 5.5 by default), with a shared harness that verifies every quoted excerpt against the documents the agent actually read.
 

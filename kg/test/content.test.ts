@@ -132,3 +132,9 @@ test("citation locators may contain semicolons and ampersands", () => {
   assert.deepEqual(parseCitation("@a, sections 2; 4"), [{ key: "a", locator: "sections 2; 4" }]);
   assert.equal(parseCitation("@a; not a citation"), null);
 });
+
+import { surname } from "../../scripts/render.ts";
+
+test("surnames from both name orders", () => {
+  assert.deepEqual(["Joseph Lam", "Shea J", "Shea JJ", "Lam, J.", "de la Torre I", "Ashish Vaswani"].map(surname), ["Lam", "Shea", "Shea", "Lam", "de la Torre", "Vaswani"]);
+});

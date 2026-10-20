@@ -184,6 +184,17 @@ export const eventKinds = [
   "environmental",
 ] as const;
 
+/**
+ * Whether an event belongs on the timeline. Only "human-past" events are shown:
+ * human-past: something people or hominins did or experienced, or an environmental event the source ties to them.
+ * research-history: excavations, discoveries, surveys, publications, dating studies, analyses.
+ * non-human: fossil fauna or flora, geology, climate with no human involvement stated.
+ * modern: recent disturbance or events of the researchers' own time (intrusive remains, looting, lost collections).
+ * Recorded on the graph node by the harvester or the classifier, outside the editable entry.
+ */
+export const eventScopes = ["human-past", "research-history", "non-human", "modern"] as const;
+export type EventScope = (typeof eventScopes)[number];
+
 /** An event as authors edit it (`npm run kg -- event get|put`), minus the body. */
 export const eventFieldsSchema = z
   .object({
@@ -335,3 +346,18 @@ interface Rendered {
 }
 
 export type RenderedEvent = Omit<HistoricalEvent, "body" | "sources" | "aliases"> & Rendered;
+
+/** What the timeline needs to show an event's row; its notes load separately when opened. */
+export type EventSummary = Omit<RenderedEvent, "bodyHtml" | "references"> & { hasNotes: boolean };
+export type EventNotes = Pick<RenderedEvent, "bodyHtml" | "references">;
+
+/** The timeline's first load: enough to draw the page and know what to fetch. */
+export interface TimelineIndex {
+  total: number;
+  checked: number;
+  /** Earliest year shown. */
+  start: number;
+  kinds: EventKind[];
+  /** Events per era id. */
+  eras: Record<string, number>;
+}

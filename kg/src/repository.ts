@@ -11,6 +11,7 @@ import {
   type Entity,
   type Entry,
   type EntryLabel,
+  type EventScope,
   type HistoricalEvent,
   type Idea,
   type IdeaLink,
@@ -313,6 +314,19 @@ export async function addDiscusses(tx: Tx, sourceKey: string, ideaId: string, d:
      SET r.evidence = $evidence, r.locator = $locator, r.runId = $runId`,
     { sourceKey, ideaId, evidence: d.evidence, locator: d.locator ?? null, runId: d.runId },
   );
+}
+
+// ---------- Event scope ----------
+
+/** Record whether an event belongs on the timeline (see eventScopes), and who decided. */
+export async function setEventScope(tx: Tx, id: string, scope: EventScope, by: string, note?: string): Promise<void> {
+  await tx.run(`MATCH (e:Event {id: $id}) SET e.scope = $scope, e.scopeBy = $by, e.scopeNote = $note`, { id, scope, by, note: note ?? null });
+}
+
+/** Scope of every event that has one. Events without one count as in scope until classified. */
+export async function eventScopes(tx: Tx): Promise<Map<string, { scope: EventScope; by: string; note?: string }>> {
+  const res = await tx.run(`MATCH (e:Event) WHERE e.scope IS NOT NULL RETURN e.id AS id, e.scope AS scope, e.scopeBy AS by, e.scopeNote AS note`);
+  return new Map(res.records.map((r) => [r.get("id"), compact({ scope: r.get("scope"), by: r.get("by"), note: r.get("note") }) as unknown as { scope: EventScope; by: string; note?: string }]));
 }
 
 // ---------- Harvesting sources ----------

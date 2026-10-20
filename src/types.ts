@@ -1,4 +1,4 @@
-export type { EventKind, RenderedEvent, Status } from "./content/schema";
+export type { EventKind, EventNotes, EventSummary, RenderedEvent, Status, TimelineIndex } from "./content/schema";
 
 export interface Era {
   id: string;

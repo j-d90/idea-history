@@ -21,6 +21,7 @@ Everything here, including the site, needs Neo4j running (`npm run kg:up`).
   - `npm run extract -- <source-key>`
 
   Events are addressed as `event:<id>`; years are negative for BCE or written like `2500bce`.
+- `npm run classify-events`: decide which events belong on the timeline (human past) and hide the rest: research history, non-human, modern (cheap; through the Batch API)
 - `npm run pipeline`: show what events need next, with cost estimates (free); `--ideas` adds idea work. `--run --budget <usd>` runs it, which costs credits.
 - `npm run check-tools`: confirm the API accepts every agent's tool schemas (a fraction of a cent); run it after changing a submission schema
 - `npm run review-hash -- <id>`, `npm run pdftext -- <url-or-path>`

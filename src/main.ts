@@ -1,14 +1,10 @@
 import "./style.css";
-import { events } from "virtual:events";
+import { eraLoaders, index, notesLoaders } from "virtual:events";
 import { eras } from "./data/eras";
 import { formatYear } from "./format";
-import { observeReveal, renderFilters, renderTimeline, trackCurrentYear } from "./timeline";
+import { createReveal, createTimeline, renderFilters, trackCurrentYear } from "./timeline";
 
-const kinds = [...new Set(events.map((e) => e.kind))];
-const start = events.length ? Math.min(...events.map((e) => e.date.year)) : -3200;
-const span = new Date().getFullYear() - start;
-const checked = events.filter((e) => e.status === "checked" || e.status === "reviewed").length;
-
+const span = new Date().getFullYear() - index.start;
 const app = document.querySelector<HTMLDivElement>("#app")!;
 
 app.innerHTML = `
@@ -23,26 +19,25 @@ app.innerHTML = `
   <main id="top">
     <section class="hero">
       <div class="hero-grid" aria-hidden="true"></div>
-      <p class="eyebrow">${formatYear(start, true)} — Present</p>
+      <p class="eyebrow">${formatYear(index.start, true)} — Present</p>
       <h1>What happened,<br />and how we know.</h1>
       <p class="lede">
-        A timeline of recorded events, from the first marks pressed into clay to the present.
+        A timeline of recorded events, from the first stone tools to the present.
         Every entry quotes the sources it rests on.
       </p>
       <dl class="stats">
         <div><dt>Years</dt><dd>${span.toLocaleString("en-US")}</dd></div>
-        <div><dt>Events</dt><dd>${events.length}</dd></div>
-        <div><dt>Checked</dt><dd>${checked}<span class="stats-of">/${events.length}</span></dd></div>
+        <div><dt>Events</dt><dd>${index.total.toLocaleString("en-US")}</dd></div>
+        <div><dt>Checked</dt><dd>${index.checked.toLocaleString("en-US")}<span class="stats-of">/${index.total.toLocaleString("en-US")}</span></dd></div>
       </dl>
     </section>
 
     <nav class="filters" aria-label="Filter by kind of event">
-      <div class="filters-inner">${renderFilters(kinds)}</div>
+      <div class="filters-inner">${renderFilters(index.kinds)}</div>
     </nav>
 
-    <div class="timeline" id="timeline">
-      ${renderTimeline(eras, events)}
-    </div>
+    <div class="timeline" id="timeline"></div>
+    <div class="timeline-end" id="timeline-end" aria-hidden="true"></div>
 
     <footer class="footer">
       <p>History of Ideas · A work in progress</p>
@@ -50,32 +45,22 @@ app.innerHTML = `
   </main>
 `;
 
-const timeline = document.querySelector<HTMLElement>("#timeline")!;
-observeReveal(timeline);
-trackCurrentYear(timeline, document.querySelector<HTMLElement>("#current-year")!);
+const root = document.querySelector<HTMLElement>("#timeline")!;
+const timeline = createTimeline({
+  root,
+  sentinel: document.querySelector<HTMLElement>("#timeline-end")!,
+  eras,
+  index,
+  eraLoaders,
+  notesLoaders,
+  onRender: createReveal(),
+});
+trackCurrentYear(root, document.querySelector<HTMLElement>("#current-year")!);
 
-// Category filtering
 const filterButtons = document.querySelectorAll<HTMLButtonElement>(".filter");
 filterButtons.forEach((btn) =>
   btn.addEventListener("click", () => {
-    const f = btn.dataset.filter!;
     filterButtons.forEach((b) => b.classList.toggle("is-active", b === btn));
-    timeline.querySelectorAll<HTMLElement>(".entry").forEach((el) => {
-      el.hidden = f !== "all" && el.dataset.kind !== f;
-    });
-    timeline.querySelectorAll<HTMLElement>(".era").forEach((era) => {
-      era.classList.toggle("is-empty", !era.querySelector(".entry:not([hidden])"));
-    });
+    timeline.setFilter(btn.dataset.filter!);
   }),
 );
-
-// Briefly highlight an event when jumped to by link
-window.addEventListener("hashchange", () => {
-  const el = document.getElementById(location.hash.slice(1));
-  if (!el?.classList.contains("entry")) return;
-  el.hidden = false;
-  el.closest(".era")?.classList.remove("is-empty");
-  el.classList.add("is-visible", "is-flash");
-  el.scrollIntoView({ block: "center" });
-  setTimeout(() => el.classList.remove("is-flash"), 1600);
-});

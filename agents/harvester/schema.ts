@@ -1,5 +1,5 @@
 import { toJSONSchema, z } from "zod/v4";
-import { eventKinds } from "../../src/content/schema.ts";
+import { eventKinds, eventScopes } from "../../src/content/schema.ts";
 import type { EvidenceLedger } from "../core/evidence.ts";
 
 // The harvester's structured output (one response per document chunk) and the
@@ -12,6 +12,9 @@ const Excerpt = z.strictObject({
 });
 
 export const HarvestedEvent = z.strictObject({
+  scope: z
+    .enum(eventScopes)
+    .describe("human-past: people or hominins did or experienced it; research-history: excavation, discovery, survey, publication, dating study or analysis; non-human: fauna, flora, geology; modern: recent disturbance or the researchers' own time"),
   title: z.string(),
   kind: z.enum(eventKinds),
   place: z.string(),

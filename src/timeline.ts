@@ -1,62 +1,75 @@
-import type { Era, EventKind, RenderedEvent as Event } from "./types";
+import type { Era, EventKind, EventNotes, EventSummary as Event, TimelineIndex } from "./types";
 import { escapeHtml as esc, eventKindLabels, formatRange, formatYear, statusLabels } from "./format";
+
+// The timeline renders progressively: era by era, a batch of events at a time,
+// as the reader nears the bottom. Each era's events are fetched when it's
+// reached, and an event's notes only when they're opened.
+
+/** Events added to the page per batch. */
+const BATCH = 80;
 
 /** DOM id of an event (see anchorOf in scripts/render.ts). */
 const eventAnchor = (id: string) => `event-${id}`;
 
-function renderDetails(idea: Event, anchor: string): string {
-  if (!idea.bodyHtml && !idea.references.length) return "";
-
-  const review =
-    idea.status === "reviewed" && idea.review
-      ? `Reviewed by the ${esc(idea.review.by)} agent on ${idea.review.date}: every claim independently re-researched.`
-      : idea.status === "checked" && idea.review
-        ? `Checked by the ${esc(idea.review.by)} agent on ${idea.review.date}: its claims match the quoted excerpts, which were re-verified against the sources.`
-        : idea.status === "sourced"
-          ? "Sourced, awaiting a check."
-          : "Unverified draft.";
-
-  return `
-    <details class="idea-details">
-      <summary>Notes &amp; sources</summary>
-      <dl class="idea-facts">
-        <dt>Date</dt><dd>${esc(idea.dateText)}</dd>
-        <dt>Status</dt><dd>${review}</dd>
-      </dl>
-      ${idea.bodyHtml ? `<div class="prose">${idea.bodyHtml}</div>` : ""}
-      ${
-        idea.references.length
-          ? `<h4 class="refs-title">References</h4>
-             <ol class="refs">${idea.references.map((r) => `<li id="ref-${anchor}-${r.key}">${r.html}</li>`).join("")}</ol>`
-          : ""
-      }
-    </details>`;
+/** The year column: deep-time dates put "years ago" on a second line so they fit. */
+function yearHtml(year: number, approx: boolean): string {
+  const text = formatYear(year, approx);
+  return text.endsWith(" years ago") ? `${esc(text.slice(0, -" years ago".length))}<span class="year-unit">years ago</span>` : esc(text);
 }
 
-function renderEvent(event: Event): string {
-  const d = event.date;
-  const dateDetail = d.marks || d.note || d.earliest !== undefined || d.latest !== undefined;
+function statusText(e: Event): string {
+  if (e.status === "reviewed" && e.review) return `Reviewed by the ${esc(e.review.by)} agent on ${e.review.date}: every claim independently re-researched.`;
+  if (e.status === "checked" && e.review)
+    return `Checked by the ${esc(e.review.by)} agent on ${e.review.date}: its claims match the quoted excerpts, which were re-verified against the sources.`;
+  return e.status === "sourced" ? "Sourced, awaiting a check." : "Unverified draft.";
+}
 
+function renderEvent(e: Event, era: string): string {
+  const d = e.date;
+  const dateDetail = d.marks || d.note || d.earliest !== undefined || d.latest !== undefined;
   return `
-    <article class="entry event" id="${eventAnchor(event.id)}" data-kind="${event.kind}" data-status="${event.status}" data-year="${d.year}">
-      <div class="idea-year"${dateDetail ? ` title="${esc(event.dateText)}"` : ""}>
-        ${formatYear(d.year, d.approx)}${dateDetail ? `<span class="idea-year-mark" aria-hidden="true">*</span>` : ""}
+    <article class="entry event" id="${eventAnchor(e.id)}" data-kind="${e.kind}" data-status="${e.status}" data-year="${d.year}">
+      <div class="idea-year"${dateDetail ? ` title="${esc(e.dateText)}"` : ""}>
+        ${yearHtml(d.year, d.approx)}${dateDetail ? `<span class="idea-year-mark" aria-hidden="true">*</span>` : ""}
       </div>
       <div class="event-node" aria-hidden="true"></div>
       <div class="event-body">
         <div class="idea-meta">
-          <span>${eventKindLabels[event.kind]}</span>
-          <span class="event-place">${esc(event.place)}</span>
-          <span class="status status-${event.status}">${statusLabels[event.status]}</span>
+          <span>${eventKindLabels[e.kind]}</span>
+          <span class="event-place">${esc(e.place)}</span>
+          <span class="status status-${e.status}">${statusLabels[e.status]}</span>
         </div>
-        <h3 class="event-title">${esc(event.title)}</h3>
-        <p class="event-summary">${esc(event.summary)}</p>
-        ${renderDetails(event, eventAnchor(event.id))}
+        <h3 class="event-title">${esc(e.title)}</h3>
+        <p class="event-summary">${esc(e.summary)}</p>
+        ${
+          e.hasNotes
+            ? `<details class="idea-details" data-era="${era}" data-id="${e.id}">
+                 <summary>Notes &amp; sources</summary>
+                 <dl class="idea-facts">
+                   <dt>Date</dt><dd>${esc(e.dateText)}</dd>
+                   <dt>Status</dt><dd>${statusText(e)}</dd>
+                 </dl>
+                 <div class="notes" aria-live="polite"><p class="notes-loading">Loading…</p></div>
+               </details>`
+            : ""
+        }
       </div>
     </article>`;
 }
 
-function renderEra(era: Era, events: Event[]): string {
+function renderNotes(id: string, n: EventNotes): string {
+  const anchor = eventAnchor(id);
+  return `
+    ${n.bodyHtml ? `<div class="prose">${n.bodyHtml}</div>` : ""}
+    ${
+      n.references.length
+        ? `<h4 class="refs-title">References</h4>
+           <ol class="refs">${n.references.map((r) => `<li id="ref-${anchor}-${r.key}">${r.html}</li>`).join("")}</ol>`
+        : ""
+    }`;
+}
+
+function renderEraHeader(era: Era): string {
   return `
     <section class="era" id="era-${era.id}" data-year="${era.start}">
       <header class="era-header">
@@ -64,20 +77,8 @@ function renderEra(era: Era, events: Event[]): string {
         <h2 class="era-name">${era.name}</h2>
         <p class="era-blurb">${era.blurb}</p>
       </header>
-      <div class="era-ideas">
-        ${events.map(renderEvent).join("")}
-      </div>
+      <div class="era-ideas"></div>
     </section>`;
-}
-
-/** Events by year, grouped into eras; eras with no events are left out. */
-export function renderTimeline(eras: Era[], events: Event[]): string {
-  const sorted = [...events].sort((a, b) => a.date.year - b.date.year);
-  return eras
-    .map((era) => ({ era, events: sorted.filter((e) => e.date.year >= era.start && e.date.year < era.end) }))
-    .filter((x) => x.events.length)
-    .map((x) => renderEra(x.era, x.events))
-    .join("");
 }
 
 export function renderFilters(kinds: EventKind[]): string {
@@ -85,8 +86,112 @@ export function renderFilters(kinds: EventKind[]): string {
   return all + kinds.map((k) => `<button class="filter" data-filter="${k}">${eventKindLabels[k]}</button>`).join("");
 }
 
+export interface Timeline {
+  setFilter(kind: string): void;
+}
+
+/**
+ * Render the timeline into `root`, filling more whenever `sentinel` (placed
+ * after it) comes within a couple of screens of the viewport.
+ */
+export function createTimeline(o: {
+  root: HTMLElement;
+  sentinel: HTMLElement;
+  eras: Era[];
+  index: TimelineIndex;
+  eraLoaders: Record<string, () => Promise<{ events: Event[] }>>;
+  notesLoaders: Record<string, () => Promise<{ notes: Record<string, EventNotes> }>>;
+  onRender: (added: HTMLElement[]) => void;
+}): Timeline {
+  const eras = o.eras.filter((e) => o.index.eras[e.id]);
+  const loaded = new Map<string, Promise<Event[]>>();
+  const loadEra = (id: string) => loaded.get(id) ?? loaded.set(id, o.eraLoaders[id]().then((m) => [...m.events].sort((a, b) => a.date.year - b.date.year))).get(id)!;
+
+  let filter = "all";
+  let generation = 0;
+  let eraPos = 0;
+  let itemPos = 0;
+  let current: { events: Event[]; list: HTMLElement } | undefined;
+  let filling = false;
+
+  const nearBottom = () => o.sentinel.getBoundingClientRect().top < window.innerHeight * 3;
+
+  async function fill(): Promise<void> {
+    if (filling) return;
+    filling = true;
+    const gen = generation;
+    try {
+      while (gen === generation && nearBottom() && eraPos < eras.length) {
+        if (!current) {
+          const era = eras[eraPos];
+          const events = (await loadEra(era.id)).filter((e) => filter === "all" || e.kind === filter);
+          if (gen !== generation) return;
+          if (!events.length) {
+            eraPos++;
+            continue;
+          }
+          o.root.insertAdjacentHTML("beforeend", renderEraHeader(era));
+          const section = o.root.lastElementChild as HTMLElement;
+          current = { events, list: section.querySelector(".era-ideas")! };
+          o.onRender([section.querySelector<HTMLElement>(".era-header")!, section]);
+        }
+        const batch = current.events.slice(itemPos, itemPos + BATCH);
+        current.list.insertAdjacentHTML("beforeend", batch.map((e) => renderEvent(e, eras[eraPos].id)).join(""));
+        o.onRender(Array.from(current.list.children).slice(-batch.length) as HTMLElement[]);
+        itemPos += batch.length;
+        if (itemPos >= current.events.length) {
+          current = undefined;
+          itemPos = 0;
+          eraPos++;
+        }
+        // Let the browser lay out the batch before measuring again.
+        await new Promise(requestAnimationFrame);
+      }
+    } finally {
+      filling = false;
+      // A filter change during this pass starts a fresh one.
+      if (gen !== generation) void fill();
+    }
+  }
+
+  new IntersectionObserver(() => void fill(), { rootMargin: "0px 0px 200% 0px" }).observe(o.sentinel);
+
+  // Notes load the first time they're opened ("toggle" doesn't bubble, so listen in the capture phase).
+  o.root.addEventListener(
+    "toggle",
+    async (ev) => {
+      const details = ev.target as HTMLDetailsElement;
+      if (!details.open || details.dataset.loaded) return;
+      details.dataset.loaded = "1";
+      const box = details.querySelector<HTMLElement>(".notes")!;
+      try {
+        const { notes } = await o.notesLoaders[details.dataset.era!]();
+        const n = notes[details.dataset.id!];
+        box.innerHTML = n ? renderNotes(details.dataset.id!, n) : "";
+      } catch {
+        delete details.dataset.loaded;
+        box.innerHTML = `<p class="notes-loading">Couldn't load the notes. Close and reopen to try again.</p>`;
+      }
+    },
+    true,
+  );
+
+  void fill();
+  return {
+    setFilter(kind: string) {
+      filter = kind;
+      generation++;
+      eraPos = 0;
+      itemPos = 0;
+      current = undefined;
+      o.root.innerHTML = "";
+      void fill();
+    },
+  };
+}
+
 /** Fade entries in as they enter the viewport. */
-export function observeReveal(root: HTMLElement): void {
+export function createReveal(): (els: HTMLElement[]) => void {
   const io = new IntersectionObserver(
     (entries) => {
       for (const e of entries) {
@@ -98,26 +203,29 @@ export function observeReveal(root: HTMLElement): void {
     },
     { rootMargin: "0px 0px -10% 0px" },
   );
-  root.querySelectorAll(".entry, .era-header").forEach((el) => io.observe(el));
+  return (els) => els.filter((el) => el.matches(".entry, .era-header")).forEach((el) => io.observe(el));
 }
 
 /** Keep the header's year readout in sync with whatever is at the top of the viewport. */
 export function trackCurrentYear(root: HTMLElement, out: HTMLElement): void {
-  const marks = Array.from(root.querySelectorAll<HTMLElement>("[data-year]"));
   let ticking = false;
-
   const update = () => {
     ticking = false;
     const line = window.innerHeight * 0.35;
-    let current: HTMLElement | undefined;
-    for (const m of marks) {
-      if (m.offsetParent === null) continue; // hidden by filter
-      if (m.getBoundingClientRect().top <= line) current = m;
-      else break;
+    // Binary search over the rendered rows, which are in year order.
+    const marks = root.querySelectorAll<HTMLElement>(".entry");
+    let lo = 0;
+    let hi = marks.length - 1;
+    let found: HTMLElement | undefined;
+    while (lo <= hi) {
+      const mid = (lo + hi) >> 1;
+      if (marks[mid].getBoundingClientRect().top <= line) {
+        found = marks[mid];
+        lo = mid + 1;
+      } else hi = mid - 1;
     }
-    out.textContent = current ? formatYear(Number(current.dataset.year)) : "";
+    out.textContent = found ? formatYear(Number(found.dataset.year)) : "";
   };
-
   window.addEventListener(
     "scroll",
     () => {
